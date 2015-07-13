@@ -8,7 +8,6 @@ data_files = searchFiles('frames',[path_sep,'data.mat']);
 label_files = searchFiles('frames',[path_sep,'label.mat']);
 has_label_files = searchFiles('frames',[path_sep,'has_label.mat']);
 
-
 % network parameters
 num_pooling_layer = 2;
 patch_size = 64;

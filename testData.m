@@ -6,7 +6,7 @@ this_dir = '/home/yenchiah/caffe/smoke-detection-caffe';
 
 % create net
 model = [this_dir,'/caffe/smoke_deploy.prototxt'];
-weights = [this_dir,'/caffe/smoke_iter_10000.caffemodel'];
+weights = [this_dir,'/caffe/smoke_iter_30000.caffemodel'];
 caffe.set_mode_gpu();
 gpu_id = 0; 
 caffe.set_device(gpu_id);
@@ -20,7 +20,9 @@ load(fullfile(path,'has_label.mat'));
 
 % print weights
 C1 = net.layers('C1').params(1).get_data();
-imdisp(mat2gray(C1),'Border',[0.02 0.02]);
+C1 = reshape(C1,size(C1,1),size(C1,2),[]);
+C1 = permute(C1,[1 2 4 3]);
+imdisp(mat2gray(C1),'Border',[0.05 0.05]);
 
 % net forwarding
 has_label_idx = find(has_label==1);
