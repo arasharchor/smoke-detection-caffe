@@ -2,9 +2,12 @@ clear all;
 addpath(genpath('util'));
 
 % load data and label
-data_files = searchFiles('frames','\data.mat');
-label_files = searchFiles('frames','\label.mat');
-has_label_files = searchFiles('frames','\has_label.mat');
+% path_sep = '\'; % for windows
+path_sep = '/'; % for unix
+data_files = searchFiles('frames',[path_sep,'data.mat']);
+label_files = searchFiles('frames',[path_sep,'label.mat']);
+has_label_files = searchFiles('frames',[path_sep,'has_label.mat']);
+
 
 % network parameters
 num_pooling_layer = 2;
@@ -46,7 +49,7 @@ for i=1:size(data_files,1)
     if ~exist(target_dir,'dir')
         mkdir(target_dir);
     end
-    h5name_parts = strsplit(data_files{i},'\');
+    h5name_parts = strsplit(data_files{i},path_sep);
     h5name_parts(1) = [];
     h5name_parts(end) = [];
     h5name = strjoin(h5name_parts,'.');
@@ -68,10 +71,10 @@ for i=1:size(data_files,1)
     % display images
     figure
     subplot(3,1,1)
-    imagesc(permute(squeeze(data_caffe_posi(:,:,:,j)),[2 1 3])+0.5)
+    imshow(permute(squeeze(data_caffe_posi(:,:,:,j)),[2 1 3])+0.5)
     subplot(3,1,2)
-    imagesc(squeeze(label_mat.label(:,:,:,has_label_idx(j))))
+    imshow(mat2gray(squeeze(label_mat.label(:,:,:,has_label_idx(j)))))
     subplot(3,1,3)
-    imagesc(permute(squeeze(label_caffe_posi(:,:,:,j)),[2 1]))
+    imshow(mat2gray(permute(squeeze(label_caffe_posi(:,:,:,j)),[2 1])))
 end
 fprintf('Done\n');

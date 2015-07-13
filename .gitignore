@@ -1,5 +1,5 @@
 *~
 .DS_Store
 frames/
-caffe/
+caffe/*.h5
 tile.mp4
