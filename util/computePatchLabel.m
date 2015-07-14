@@ -8,6 +8,6 @@ function patch_label = computePatchLabel( label_img,patch_size,patch_shift )
         [height,width] = computePatchLabelSize(size(label_img),patch_size,patch_shift);
         patch_label = zeros(height,width);
     end
-    patch_label = permute(patch_label,[2 1]);
+    patch_label = patch_label(:);
 end
 

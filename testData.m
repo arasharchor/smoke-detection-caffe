@@ -6,7 +6,7 @@ this_dir = '/home/yenchiah/caffe/smoke-detection-caffe';
 
 % create net
 model = [this_dir,'/caffe/smoke_deploy.prototxt'];
-weights = [this_dir,'/caffe/smoke_iter_30000.caffemodel'];
+weights = [this_dir,'/caffe/smoke_iter_6000.caffemodel'];
 caffe.set_mode_gpu();
 gpu_id = 0; 
 caffe.set_device(gpu_id);
@@ -39,4 +39,4 @@ imshow(permute(img,[2 1 3])+0.5)
 subplot(3,1,2)
 imshow(mat2gray(squeeze(label_mat.label(:,:,:,idx))))
 subplot(3,1,3)
-imshow(mat2gray(permute(map,[2 1])))
+imshow(reshape(map,35,74))

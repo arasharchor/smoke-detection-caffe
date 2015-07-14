@@ -5,9 +5,21 @@ input_dim: 3
 input_dim: 200
 input_dim: 356
 layer {
+  name: "N1"
+  type: "LRN"
+  bottom: "data"
+  top: "N1"
+  lrn_param {
+    norm_region: WITHIN_CHANNEL
+    local_size: 5
+    alpha: 1
+    beta: 0.5
+  }
+}
+layer {
   name: "C1"
   type: "Convolution"
-  bottom: "data"
+  bottom: "N1"
   top: "C1"
   param {
     lr_mult: 1
@@ -209,9 +221,9 @@ layer {
     } 
   } 
 }
-layer { 
-  name: "R6"
-  type: "ReLU"
+layer {
+  name: "flatten"
+  type: "Flatten"
   bottom: "C6"
-  top: "R6"
+  top: "map_vec"
 }

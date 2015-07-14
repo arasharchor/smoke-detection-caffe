@@ -31,18 +31,18 @@ for i=1:size(data_files,1)
     [patch_label_height,patch_label_width] = computePatchLabelSize(size(label_img),patch_size,patch_shift);
     data_caffe_posi = zeros(size(data_img,2),size(data_img,1),size(data_img,3),numel(has_label_idx));
     data_caffe_nega = zeros(size(data_img,2),size(data_img,1),size(data_img,3),numel(no_label_idx));
-    label_caffe_posi = zeros(patch_label_width,patch_label_height,1,numel(has_label_idx));
-    label_caffe_nega = zeros(patch_label_width,patch_label_height,1,numel(no_label_idx));
+    label_caffe_posi = zeros(patch_label_width*patch_label_height,numel(has_label_idx));
+    label_caffe_nega = zeros(patch_label_width*patch_label_height,numel(no_label_idx));
     % construct positive data and label
     for j=1:numel(has_label_idx)
         fprintf('(Positive) Processing frame %d of dataset %d\n',j,i);
-        label_caffe_posi(:,:,:,j) = computePatchLabel(squeeze(label_mat.label(:,:,:,has_label_idx(j))),patch_size,patch_shift);
+        label_caffe_posi(:,j) = computePatchLabel(squeeze(label_mat.label(:,:,:,has_label_idx(j))),patch_size,patch_shift);
         data_caffe_posi(:,:,:,j) = normalizeData(data_mat.data(:,:,:,has_label_idx(j)));
     end
     % construct negative data and label
     for k=1:numel(no_label_idx)
         fprintf('(Negative) Processing frame %d of dataset %d\n',k,i);
-        label_caffe_nega(:,:,:,k) = computePatchLabel(squeeze(label_mat.label(:,:,:,no_label_idx(k))),patch_size,patch_shift);
+        label_caffe_nega(:,k) = computePatchLabel(squeeze(label_mat.label(:,:,:,no_label_idx(k))),patch_size,patch_shift);
         data_caffe_nega(:,:,:,k) = normalizeData(data_mat.data(:,:,:,no_label_idx(k)));
     end
     % save as HDF5
@@ -76,6 +76,6 @@ for i=1:size(data_files,1)
     subplot(3,1,2)
     imshow(mat2gray(squeeze(label_mat.label(:,:,:,has_label_idx(j)))))
     subplot(3,1,3)
-    imshow(permute(squeeze(label_caffe_posi(:,:,:,j)),[2 1]))
+    imshow(reshape(label_caffe_posi(:,j),patch_label_height,patch_label_width))
 end
 fprintf('Done\n');
