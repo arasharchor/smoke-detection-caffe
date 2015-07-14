@@ -186,6 +186,16 @@ layer {
   bottom: "C4"
   top: "R4"
 }
+layer {
+  name: "D1"
+  type: "Dropout"
+  bottom: "R4"
+  top: "R4"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+  include: { phase: TRAIN }
+}
 layer { 
   name: "C5"
   type: "Convolution"
@@ -218,10 +228,22 @@ layer {
   top: "R5"
 }
 layer {
+  name: "D2"
+  type: "Dropout"
+  bottom: "R5"
+  top: "R5"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+  include: { phase: TRAIN }
+}
+layer {
   name: "C6"
   type: "Convolution"
-  bottom: "R5"
+  bottom: "D2"
   top: "C6"
+py image
+img_eny = entropyfilt(imgs_diff_hsv(:,:,3),ones(9));
   param {
     lr_mult: 1
   } 

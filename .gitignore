@@ -3,3 +3,6 @@
 frames/
 caffe/*.h5
 tile.mp4
+caffe/*.swp
+caffe/*.caffemodel
+caffe/*.solverstate
