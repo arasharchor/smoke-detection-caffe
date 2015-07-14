@@ -23,8 +23,8 @@ for i=1:size(data_files,1)
     % compute idx
     has_label_idx = find(has_label==1);
     no_label_idx = find(has_label==0);
-    subsample_ratio = 24;
-    no_label_idx = no_label_idx(1:subsample_ratio:end);
+    subsample_ratio = 16;
+    no_label_idx = no_label_idx(day_start_idx:subsample_ratio:day_end_idx);
     % allocate data and label for caffe training
     data_img = squeeze(data_mat.data(:,:,:,has_label_idx(1)));
     label_img = squeeze(label_mat.label(:,:,:,has_label_idx(1)));
