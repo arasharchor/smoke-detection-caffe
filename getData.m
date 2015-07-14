@@ -28,16 +28,16 @@ fprintf('Processing frame 1\n');
 img = imresize(readFrame(tile),img_scale);
 img_height = size(img,1);
 img_width = size(img,2);
-data = zeros(r_json.frames,3,img_height,img_width,'uint8');
-label = false(r_json.frames,1,img_height,img_width);
-has_label = false(r_json.frames,1);
-data(1,:,:,:) = permute(img,[3 1 2]);
+data = zeros(img_height,img_width,3,r_json.frames,'uint8');
+label = false(img_height,img_width,1,r_json.frames);
+has_label = false(1,r_json.frames);
+data(:,:,:,1) = img;
 %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
 
 % separate video into frames
 for i=2:r_json.frames
     fprintf('Processing frame %d\n', i);
-    data(i,:,:,:) = permute(imresize(readFrame(tile),img_scale),[3 1 2]);
+    data(:,:,:,i) = imresize(readFrame(tile),img_scale);
     %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
 end
 
