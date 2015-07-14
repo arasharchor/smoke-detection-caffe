@@ -14,6 +14,8 @@ patch_size = 64;
 patch_shift = 2^num_pooling_layer;
 
 for i=1:size(data_files,1)
+    day_start_idx = 4300;
+    day_end_idx = 14400;
     % read files
     data_mat = matfile(data_files{i});
     label_mat = matfile(label_files{i});
@@ -74,6 +76,6 @@ for i=1:size(data_files,1)
     subplot(3,1,2)
     imshow(mat2gray(squeeze(label_mat.label(:,:,:,has_label_idx(j)))))
     subplot(3,1,3)
-    imshow(mat2gray(permute(squeeze(label_caffe_posi(:,:,:,j)),[2 1])))
+    imshow(permute(squeeze(label_caffe_posi(:,:,:,j)),[2 1]))
 end
 fprintf('Done\n');
