@@ -23,12 +23,14 @@ layer {
   top: "C1"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -66,12 +68,14 @@ layer {
   top: "C2"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -109,12 +113,14 @@ layer {
   top: "C3"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -141,12 +147,14 @@ layer {
   top: "C4"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 512
     kernel_size: 16
     stride: 1
     weight_filler {
@@ -172,12 +180,14 @@ layer {
   top: "C5"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 64
+    num_output: 256
     kernel_size: 1
     stride: 1
     weight_filler {
@@ -203,9 +213,11 @@ layer {
   top: "C6"
   param {
     lr_mult: 1
+    decay_mult: 1
   } 
   param {
     lr_mult: 2
+    decay_mult: 0
   } 
   convolution_param {
     num_output: 1 

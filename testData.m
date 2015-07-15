@@ -6,7 +6,7 @@ this_dir = '/home/yenchiah/caffe/smoke-detection-caffe';
 
 % create net
 model = [this_dir,'/caffe/smoke_deploy.prototxt'];
-weights = [this_dir,'/caffe/smoke_iter_3000.caffemodel'];
+weights = [this_dir,'/caffe/smoke_iter_24000.caffemodel'];
 caffe.set_mode_gpu();
 gpu_id = 0; 
 caffe.set_device(gpu_id);

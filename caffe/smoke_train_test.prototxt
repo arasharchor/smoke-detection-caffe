@@ -9,7 +9,7 @@ layer {
   }
   hdf5_data_param {
     source: "/home/yenchiah/caffe/smoke-detection-caffe/caffe/train.txt"
-    batch_size: 64
+    batch_size: 16
   }
 }
 layer {
@@ -44,12 +44,14 @@ layer {
   top: "C1"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -87,12 +89,14 @@ layer {
   top: "C2"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -130,12 +134,14 @@ layer {
   top: "C3"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 20
+    num_output: 64
     kernel_size: 5
     stride: 1
     pad: 2
@@ -162,12 +168,14 @@ layer {
   top: "C4"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 128
+    num_output: 512
     kernel_size: 16
     stride: 1
     weight_filler {
@@ -203,12 +211,14 @@ layer {
   top: "C5"
   param {
     lr_mult: 1
+    decay_mult: 1
   }
   param {
     lr_mult: 2
+    decay_mult: 0
   }
   convolution_param {
-    num_output: 64
+    num_output: 256
     kernel_size: 1
     stride: 1
     weight_filler {
@@ -240,15 +250,15 @@ layer {
 layer {
   name: "C6"
   type: "Convolution"
-  bottom: "D2"
+  bottom: "R5"
   top: "C6"
-py image
-img_eny = entropyfilt(imgs_diff_hsv(:,:,3),ones(9));
   param {
     lr_mult: 1
+    decay_mult: 1
   } 
   param {
     lr_mult: 2
+    decay_mult: 0
   } 
   convolution_param {
     num_output: 1 
