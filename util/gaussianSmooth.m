@@ -1,12 +1,11 @@
-function [ img_smooth ] = gaussianSmooth( img, sigma )
-    channel = cell(1,1,size(img,3));
-    width = 2*ceil(3*sigma)+1;
-    h = fspecial('gaussian',[width width],sigma);
-    for i=1:size(img,3)
-        img_c = img(:,:,i);
-        img_c = imfilter(img_c,h,'same');
-        channel{i} = img_c;
+function [ imgs_smooth ] = gaussianSmooth( imgs,sigma )
+    imgs_smooth = imgs;
+    h_size = 2*ceil(3*sigma)+1;
+    h = fspecial('gaussian',[h_size h_size],sigma);
+    for i=1:size(imgs,4)
+        for j=1:size(imgs,3)
+            imgs_smooth(:,:,j,i) = imfilter(imgs(:,:,j,i),h,'same');
+        end
     end
-    img_smooth = cell2mat(channel);
 end
 

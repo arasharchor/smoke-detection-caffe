@@ -1,8 +1,7 @@
-function [ img_DoG ] = diffOfGaussian( img, sigma, K )
-    img = rgb2gray(img);
+function imgs_DoG = diffOfGaussian( imgs,sigma,K )
     sigma1 = sigma;
     sigma2 = sigma*K;
-    img_DoG = gaussianSmooth(img,sigma1) - gaussianSmooth(img,sigma2);
-    img_DoG = im2double(img_DoG);
+    imgs_DoG = gaussianSmooth(imgs,sigma1) - gaussianSmooth(imgs,sigma2);
+    imgs_DoG = im2double(imgs_DoG);
 end
 

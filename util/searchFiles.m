@@ -1,4 +1,4 @@
-function fileList = searchFiles(dirName,searchStr)
+function fileList = searchFiles( dirName,searchStr )
     fileList = {};
     files = getAllFiles(dirName);
     for i=1:length(files)
@@ -8,6 +8,5 @@ function fileList = searchFiles(dirName,searchStr)
         end
     end
     fileList = fileList';
-    
 end
 
