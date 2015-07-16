@@ -17,7 +17,7 @@ load(fullfile(path,'data.mat'));
 fprintf('Loading bbox.mat\n');
 load(fullfile(path,'bbox.mat'));
 
-% crop all images
+% crop images
 fprintf('Cropping images\n');
 data = data(bbox_row,bbox_col,:,:);
 
