@@ -14,13 +14,13 @@ function [ responses,imgs_filtered ] = detectSmoke( img,imgs_bg )
     end
 
     % return
-    imgs_filtered.img_bg_60 = imgs_bs(:,:,:,1);
-    responses.img_bg_60 = sum(imgs_filtered.img_bg_60(:));
-    imgs_filtered.img_bg_120 = imgs_bs(:,:,:,2);
-    responses.img_bg_120 = sum(imgs_filtered.img_bg_120(:));
-    imgs_filtered.img_bg_360 = imgs_bs(:,:,:,3);
-    responses.img_bg_360 = sum(imgs_filtered.img_bg_360(:));
-    imgs_filtered.img_bg_720 = imgs_bs(:,:,:,4);
-    responses.img_bg_720 = sum(imgs_filtered.img_bg_720(:));
+    imgs_filtered.img_bs_60 = imgs_bs(:,:,:,1);
+    responses.img_bs_60 = sum(imgs_filtered.img_bs_60(:));
+    imgs_filtered.img_bs_120 = imgs_bs(:,:,:,2);
+    responses.img_bs_120 = sum(imgs_filtered.img_bs_120(:));
+    imgs_filtered.img_bs_360 = imgs_bs(:,:,:,3);
+    responses.img_bs_360 = sum(imgs_filtered.img_bs_360(:));
+    imgs_filtered.img_bs_720 = imgs_bs(:,:,:,4);
+    responses.img_bs_720 = sum(imgs_filtered.img_bs_720(:));
 end
 

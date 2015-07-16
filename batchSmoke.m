@@ -71,5 +71,5 @@ end
 
 % save file
 fprintf('Saving feature.mat\n');
-save(fullfile(path,'feature.mat'),'feature');
+save(fullfile(path,'feature_smoke.mat'),'feature');
 fprintf('Done\n');

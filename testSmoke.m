@@ -98,36 +98,36 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)
     
     subplot(img_rows,img_cols,7)
-    imshow(imgs_filtered.img_bg_60)
+    imshow(imgs_filtered.img_bs_60)
     str = '$\mathrm{abs}(I_t-B1_t)/(I_t+B1_t)$';
-    math = num2str(responses.img_bg_60);
+    math = num2str(responses.img_bs_60);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
 
     subplot(img_rows,img_cols,8)
-    imshow(imgs_filtered.img_bg_120)
+    imshow(imgs_filtered.img_bs_120)
     str = '$\mathrm{abs}(I_t-B2_t)/(I_t+B2_t)$';
-    math = num2str(responses.img_bg_120);
+    math = num2str(responses.img_bs_120);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)  
 
     subplot(img_rows,img_cols,9)
-    imshow(imgs_filtered.img_bg_360)
+    imshow(imgs_filtered.img_bs_360)
     str = '$\mathrm{abs}(I_t-B3_t)/(I_t+B3_t)$';
-    math = num2str(responses.img_bg_360);
+    math = num2str(responses.img_bs_360);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)  
     
     subplot(img_rows,img_cols,10)
-    imshow(imgs_filtered.img_bg_720)
+    imshow(imgs_filtered.img_bs_720)
     str = '$\mathrm{abs}(I_t-B4_t)/(I_t+B4_t)$';
-    math = num2str(responses.img_bg_720);
+    math = num2str(responses.img_bs_720);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
