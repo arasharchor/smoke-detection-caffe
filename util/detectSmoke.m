@@ -1,26 +1,37 @@
-function [ responses,imgs_filtered ] = detectSmoke( img,imgs_bg )
+function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     % image smoothing
     img_smooth = gaussianSmooth(img,0.5);
     
     % background subtraction
-    imgs_bs = zeros(size(imgs_bg));
-    for i=1:size(imgs_bs,4)
-        img_bs = backgroundSubtraction(img_smooth,imgs_bg(:,:,:,i),'Normalize');
-        % remove noise and small regions
-        img_bs = morphology(img_bs,5);
-        img_bs = removeNoise(img_bs);
-        img_bs = removeSmallRegions(img_bs,100);
-        imgs_bs(:,:,:,i) = img_bs;
-    end
-
-    % return
-    imgs_filtered.img_bs_60 = imgs_bs(:,:,:,1);
-    responses.img_bs_60 = sum(imgs_filtered.img_bs_60(:));
-    imgs_filtered.img_bs_120 = imgs_bs(:,:,:,2);
-    responses.img_bs_120 = sum(imgs_filtered.img_bs_120(:));
-    imgs_filtered.img_bs_360 = imgs_bs(:,:,:,3);
-    responses.img_bs_360 = sum(imgs_filtered.img_bs_360(:));
-    imgs_filtered.img_bs_720 = imgs_bs(:,:,:,4);
-    responses.img_bs_720 = sum(imgs_filtered.img_bs_720(:));
+    img_bs = backgroundSubtraction(img_smooth,img_bg,'NormalizeWithSign');
+    imgs_filtered.img_bs = img_bs;
+    responses.img_bs = sum(imgs_filtered.img_bs(:));
+    
+    % threshold
+    thr = 0.1;
+    img_bs_thr = img_bs;
+    img_bs_thr(img_bs_thr<thr) = 0;
+    imgs_filtered.img_bs_thr = img_bs_thr;
+    responses.img_bs_thr = sum(imgs_filtered.img_bs_thr(:));
+    
+    % create a mask
+    img_bs_mask_gray = rgb2gray(img_bs_thr);
+    img_bs_mask = false(size(img_bs_mask_gray));
+    img_bs_mask(img_bs_mask_gray>0) = true;
+    imgs_filtered.img_bs_mask = img_bs_mask;
+    responses.img_bs_mask = sum(imgs_filtered.img_bs_mask(:)); 
+    
+    % smooth the mask
+    img_bs_mask_smooth = img_bs_mask;
+    img_bs_mask_smooth = morphology(img_bs_mask_smooth,3);
+    imgs_filtered.img_bs_mask_smooth = img_bs_mask_smooth;
+    responses.img_bs_mask_smooth = sum(imgs_filtered.img_bs_mask_smooth(:)); 
+    
+    % remove small regions and noise
+    img_bs_mask_clean = img_bs_mask_smooth;
+    img_bs_mask_clean = removeSmallRegions(img_bs_mask_clean,100);
+    img_bs_mask_clean = removeNoise(img_bs_mask_clean);
+    imgs_filtered.img_bs_mask_clean = img_bs_mask_clean;
+    responses.img_bs_mask_clean = sum(imgs_filtered.img_bs_mask_clean(:));   
 end
 

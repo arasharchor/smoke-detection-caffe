@@ -35,15 +35,7 @@ for i=1:length(fields)
     % apply smoothing
     vec = filter1D(vec,2);
     % find peaks
-    if(i==1)
-        min_peak_prominence = 0.2;
-    elseif(i==2)
-        min_peak_prominence = 0.15;
-    elseif(i==3)
-        min_peak_prominence = 0.1;
-    elseif(i==4)
-        min_peak_prominence = 0.1;
-    end
+    min_peak_prominence = 0.15;
     min_peak_height = 0;
     min_peak_distance = 0;
     thr = 0;
@@ -77,46 +69,14 @@ set(gca,'YTick',[]);
 title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
 subplot(img_rows,img_cols,2)
-plot(feature.img_bs_60.vec,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (5 min = 60 frames)')
-hold on
-plot(feature.img_bs_60.locs,feature.img_bs_60.pks,'ro')
-hold off
-
-subplot(img_rows,img_cols,3)
-plot(feature.img_bs_120.vec,'b')
+plot(feature.img_bs_mask_clean.vec,'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (10 min = 120 frames)')
 hold on
-plot(feature.img_bs_120.locs,feature.img_bs_120.pks,'ro')
+plot(feature.img_bs_60.locs,feature.img_bs_60.pks,'ro')
 hold off
-
-subplot(img_rows,img_cols,4)
-plot(feature.img_bs_360.vec,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (30 min = 360 frames)')
-hold on
-plot(feature.img_bs_360.locs,feature.img_bs_360.pks,'ro')
-hold off
-
-subplot(img_rows,img_cols,5)
-plot(feature.img_bs_720.vec,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (60 min = 720 frames)')
-hold on
-plot(feature.img_bs_720.locs,feature.img_bs_720.pks,'ro')
-hold off
-
-tightfig;
 
 % plot prediction
 figure(101)
@@ -129,31 +89,8 @@ set(gca,'YTick',[]);
 title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
 subplot(img_rows,img_cols,2)
-bar(uint8(feature.img_bs_60.predict),'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (5 min = 60 frames)')
-
-subplot(img_rows,img_cols,3)
-bar(uint8(feature.img_bs_120.predict),'b')
+bar(uint8(feature.img_bs_mask_clean.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (10 min = 120 frames)')
-
-subplot(img_rows,img_cols,4)
-bar(uint8(feature.img_bs_360.predict),'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (30 min = 360 frames)')
-
-subplot(img_rows,img_cols,5)
-bar(uint8(feature.img_bs_720.predict),'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Background subtraction (60 min = 720 frames)')
-
-tightfig;

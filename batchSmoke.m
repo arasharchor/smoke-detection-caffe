@@ -11,11 +11,9 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 fprintf('Loading data.mat\n');
-load(fullfile(path,'data.mat'));
-data_median_60_mat = matfile(fullfile(path,'data_median_60.mat'));
-data_median_120_mat = matfile(fullfile(path,'data_median_120.mat'));
-data_median_360_mat = matfile(fullfile(path,'data_median_360.mat'));
-data_median_720_mat = matfile(fullfile(path,'data_median_720.mat'));
+data = load(fullfile(path,'data.mat'));
+fprintf('Loading data_median_120.mat\n');
+data_median = load(fullfile(path,'data_median_120.mat'));
 
 % read mask
 fprintf('Loading bbox.mat\n');
@@ -23,7 +21,8 @@ load(fullfile(path,'bbox.mat'));
 
 % crop images
 fprintf('Cropping images\n');
-data = data(bbox_row,bbox_col,:,:);
+data = data.data(bbox_row,bbox_col,:,:);
+data_median = data_median.median(bbox_row,bbox_col,:,:);
 
 % allocate spaces
 num_imgs = size(data,4);
@@ -42,12 +41,8 @@ matlabpool('local',numCores);
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
     img = data(:,:,:,t);
-    imgs_bg = zeros([size(img),4],'uint8');
-    imgs_bg(:,:,:,1) = data_median_60_mat.median(bbox_row,bbox_col,:,t);
-    imgs_bg(:,:,:,2) = data_median_120_mat.median(bbox_row,bbox_col,:,t);
-    imgs_bg(:,:,:,3) = data_median_360_mat.median(bbox_row,bbox_col,:,t);
-    imgs_bg(:,:,:,4) = data_median_720_mat.median(bbox_row,bbox_col,:,t);
-    [responses,~] = detectSmoke(img,imgs_bg);
+    img_bg = data_median(:,:,:,t);
+    [responses,~] = detectSmoke(img,img_bg);
     responses_all{t} = responses;
 end
 
