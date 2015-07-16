@@ -14,6 +14,10 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
+data_median_60_mat = matfile(fullfile(path,'data_median_60.mat'));
+data_median_120_mat = matfile(fullfile(path,'data_median_120.mat'));
+data_median_360_mat = matfile(fullfile(path,'data_median_360.mat'));
+data_median_720_mat = matfile(fullfile(path,'data_median_720.mat'));
 
 % define mask
 t_ref = 5936;
@@ -30,9 +34,14 @@ for i=1:numel(t)
         continue;
     end
     
-    % crop an image and compute responses
-    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-2:t(i));
-    [responses,imgs_filtered] = computeResponse(imgs);
+    % crop an image and detect smoke
+    img = data_mat.data(bbox_row,bbox_col,:,t(i));
+    imgs_bg = zeros([size(img),4],'uint8');
+    imgs_bg(:,:,:,1) = data_median_60_mat.median(bbox_row,bbox_col,:,t(i));
+    imgs_bg(:,:,:,2) = data_median_120_mat.median(bbox_row,bbox_col,:,t(i));
+    imgs_bg(:,:,:,3) = data_median_360_mat.median(bbox_row,bbox_col,:,t(i));
+    imgs_bg(:,:,:,4) = data_median_720_mat.median(bbox_row,bbox_col,:,t(i));
+    [responses,imgs_filtered] = detectSmoke(img,imgs_bg);
     
     % visualize images
     fig = figure(50);
@@ -43,7 +52,7 @@ for i=1:numel(t)
     font_size = 12;
 
     subplot(img_rows,img_cols,1)
-    imshow(imgs(:,:,:,end))
+    imshow(img)
     title(['t = ',num2str(t(i))])
     str = 'Time t';
     math = '$$I_t$$';
@@ -53,85 +62,76 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)
 
     subplot(img_rows,img_cols,2)
-    imshow(imgs(:,:,:,end-1))
-    str = 'Time t-1';
-    math = '$$I_{t-1}$$';
+    imshow(imgs_bg(:,:,:,1))
+    str = 'Background $B1_t$ (5 mins)';
+    math = '$$\mathrm{median}(I_{t-59}...I_{t})$$';
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    set(gca,'FontSize',font_size)    
 
     subplot(img_rows,img_cols,3)
-    imshow(imgs(:,:,:,end-2))
-    str = 'Time t-2';
-    math = '$$I_{t-2}$$';
+    imshow(imgs_bg(:,:,:,2))
+    str = 'Background $B2_t$ (10 mins)';
+    math = '$$\mathrm{median}(I_{t-119}...I_{t})$$';
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
-
+    set(gca,'FontSize',font_size)   
+ 
     subplot(img_rows,img_cols,4)
-    imshow(mat2gray(imgs_filtered.img_s_diff))
-    str = 'Temp diff of S channel';
-    math = num2str(responses.img_s_diff);
+    imshow(imgs_bg(:,:,:,3))
+    str = 'Background $B3_t$ (30 mins)';
+    math = '$$\mathrm{median}(I_{t-359}...I_{t})$$';
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    set(gca,'FontSize',font_size) 
 
     subplot(img_rows,img_cols,5)
-    imshow(mat2gray(imgs_filtered.img_v_diff))
-    str = 'Temp diff of V channel';
-    math = num2str(responses.img_v_diff);
+    imshow(imgs_bg(:,:,:,4))
+    str = 'Background $B4_t$ (60 mins)';
+    math = '$$\mathrm{median}(I_{t-719}...I_{t})$$';
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
-
-    subplot(img_rows,img_cols,6)
-    imshow(mat2gray(imgs_filtered.img_DoG))
-    str = 'Difference of Gaussian (DoG)';
-    math = num2str(responses.img_DoG);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
-
+    
     subplot(img_rows,img_cols,7)
-    imshow(mat2gray(imgs_filtered.img_DoG_diff))
-    str = 'Temp diff of DoG';
-    math = num2str(responses.img_DoG_diff);
+    imshow(imgs_filtered.img_bg_60)
+    str = '$\mathrm{abs}(I_t-B1_t)/(I_t+B1_t)$';
+    math = num2str(responses.img_bg_60);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
 
     subplot(img_rows,img_cols,8)
-    imshow(mat2gray(imgs_filtered.img_entropy))
-    str = 'Local entropy of temp diff';
-    math = num2str(responses.img_entropy);
+    imshow(imgs_filtered.img_bg_120)
+    str = '$\mathrm{abs}(I_t-B2_t)/(I_t+B2_t)$';
+    math = num2str(responses.img_bg_120);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    set(gca,'FontSize',font_size)  
 
     subplot(img_rows,img_cols,9)
-    imshow(imgs_filtered.img_s)
-    str = 'S channel of HSV';
-    math = num2str(responses.img_s);
+    imshow(imgs_filtered.img_bg_360)
+    str = '$\mathrm{abs}(I_t-B3_t)/(I_t+B3_t)$';
+    math = num2str(responses.img_bg_360);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
-
+    set(gca,'FontSize',font_size)  
+    
     subplot(img_rows,img_cols,10)
-    imshow(imgs_filtered.img_v)
-    str = 'V channel of HSV';
-    math = num2str(responses.img_v);
+    imshow(imgs_filtered.img_bg_720)
+    str = '$\mathrm{abs}(I_t-B4_t)/(I_t+B4_t)$';
+    math = num2str(responses.img_bg_720);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)   
+    set(gca,'FontSize',font_size) 
     
     % print figure
     print_dir = 'figs';

@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -19,7 +19,6 @@ has_label_mat = matfile(fullfile(path,'has_label.mat'),'Writable',true);
 % label images
 global t
 % t = 4368;
-t = 4300;
-% t = 14400;
+t = 13384;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListener,r_json.frames,data_mat,label_mat,has_label_mat});
