@@ -19,6 +19,6 @@ has_label_mat = matfile(fullfile(path,'has_label.mat'),'Writable',true);
 % label images
 global t
 % t = 4368;
-t = 13384;
+t = 6500;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListener,r_json.frames,data_mat,label_mat,has_label_mat});

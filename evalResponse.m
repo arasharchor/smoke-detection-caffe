@@ -38,7 +38,7 @@ img_rows = 5;
 figure(98)
 
 subplot(img_rows,img_cols,1)
-plot(sum_smoke_pixel,'r')
+bar(sum_smoke_pixel,'r')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);

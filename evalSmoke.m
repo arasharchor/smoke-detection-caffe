@@ -20,16 +20,48 @@ load(fullfile(path,'bbox.mat'));
 day_min_idx = 4300;
 day_max_idx = 14000;
 
-% count the number of smoke pixels in each images
+% count the number of smoke pixels in each images and rescale to 0~1
 sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
+sum_smoke_pixel = sum_smoke_pixel - min(sum_smoke_pixel(:));
+sum_smoke_pixel = sum_smoke_pixel/max(abs(sum_smoke_pixel(:)));
 
-% rescale all features between 0 and 1 and apply smoothing
+% process features
 fields = fieldnames(feature);
 for i=1:length(fields)
+    % rescale all features between 0 and 1
     vec = feature.(fields{i});
     vec = vec - min(vec(day_min_idx:day_max_idx));
     vec = vec/max(abs(vec(day_min_idx:day_max_idx)));
-    feature.(fields{i}) = filter1D(vec,2);
+    % apply smoothing
+    vec = filter1D(vec,2);
+    % find peaks
+    if(i==1)
+        min_peak_prominence = 0.2;
+    elseif(i==2)
+        min_peak_prominence = 0.15;
+    elseif(i==3)
+        min_peak_prominence = 0.1;
+    elseif(i==4)
+        min_peak_prominence = 0.1;
+    end
+    min_peak_height = 0;
+    min_peak_distance = 0;
+    thr = 0;
+    max_peak_width = 1000;
+    [pks,locs,w,p] = findpeaks(vec,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
+    % prediction
+    predict = false(size(vec));
+    for j=1:length(locs)
+        w_half = w(j)/2;
+        predict(round(locs(j)-w_half/2):round(locs(j)+w_half)) = true;
+    end
+    % write back
+    feature.(fields{i}) = [];
+    feature.(fields{i}).pks = pks;
+    feature.(fields{i}).locs = locs;
+    feature.(fields{i}).w = w;
+    feature.(fields{i}).predict = predict;
+    feature.(fields{i}).vec = vec;
 end
 
 % plot ground truth and features
@@ -38,50 +70,90 @@ img_rows = 5;
 figure(98)
 
 subplot(img_rows,img_cols,1)
-plot(sum_smoke_pixel,'r')
+bar(sum_smoke_pixel,'r')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
 subplot(img_rows,img_cols,2)
-plot(feature.img_bs_60,'b')
+plot(feature.img_bs_60.vec,'b')
+xlim([day_min_idx day_max_idx])
+set(gca,'YTickLabel',[]);
+set(gca,'YTick',[]);
+title('Background subtraction (5 min = 60 frames)')
+hold on
+plot(feature.img_bs_60.locs,feature.img_bs_60.pks,'ro')
+hold off
+
+subplot(img_rows,img_cols,3)
+plot(feature.img_bs_120.vec,'b')
+xlim([day_min_idx day_max_idx])
+set(gca,'YTickLabel',[]);
+set(gca,'YTick',[]);
+title('Background subtraction (10 min = 120 frames)')
+hold on
+plot(feature.img_bs_120.locs,feature.img_bs_120.pks,'ro')
+hold off
+
+subplot(img_rows,img_cols,4)
+plot(feature.img_bs_360.vec,'b')
+xlim([day_min_idx day_max_idx])
+set(gca,'YTickLabel',[]);
+set(gca,'YTick',[]);
+title('Background subtraction (30 min = 360 frames)')
+hold on
+plot(feature.img_bs_360.locs,feature.img_bs_360.pks,'ro')
+hold off
+
+subplot(img_rows,img_cols,5)
+plot(feature.img_bs_720.vec,'b')
+xlim([day_min_idx day_max_idx])
+set(gca,'YTickLabel',[]);
+set(gca,'YTick',[]);
+title('Background subtraction (60 min = 720 frames)')
+hold on
+plot(feature.img_bs_720.locs,feature.img_bs_720.pks,'ro')
+hold off
+
+tightfig;
+
+% plot prediction
+figure(101)
+
+subplot(img_rows,img_cols,1)
+bar(uint8(sum_smoke_pixel>0),'r')
+xlim([day_min_idx day_max_idx])
+set(gca,'YTickLabel',[]);
+set(gca,'YTick',[]);
+title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
+
+subplot(img_rows,img_cols,2)
+bar(uint8(feature.img_bs_60.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (5 min = 60 frames)')
 
 subplot(img_rows,img_cols,3)
-plot(feature.img_bs_120,'b')
+bar(uint8(feature.img_bs_120.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (10 min = 120 frames)')
 
 subplot(img_rows,img_cols,4)
-plot(feature.img_bs_360,'b')
+bar(uint8(feature.img_bs_360.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (30 min = 360 frames)')
 
 subplot(img_rows,img_cols,5)
-plot(feature.img_bs_720,'b')
+bar(uint8(feature.img_bs_720.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (60 min = 720 frames)')
 
 tightfig;
-
-% plot prediction
-% figure(101)
-% 
-% subplot(img_rows,img_cols,1)
-% bar(uint8(sum_smoke_pixel>0),'r')
-% xlim([day_min_idx day_max_idx])
-% set(gca,'YTickLabel',[]);
-% set(gca,'YTick',[]);
-% set(gca,'XTickLabel',[]);
-% set(gca,'XTick',[]);
-% title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])

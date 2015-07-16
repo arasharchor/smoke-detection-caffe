@@ -2,8 +2,8 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-t = 5936;
-% t = [5936,6617,7438,7543,4015,7577,9008,12494,12566,12929,6205];
+% t = 5936;
+t = [5936,6617,7438,7543,4015,7577,9008,12494,12566,12929,6205];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
