@@ -49,8 +49,13 @@ matlabpool('local',numCores);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
-    imgs = data(:,:,:,t-2:t);
-    [responses,~] = detectSmoke(imgs);
+    img = data(:,:,:,t);
+    imgs_bg = zeros([size(img),4],'uint8');
+    imgs_bg(:,:,:,1) = data_median_60.median(:,:,:,t);
+    imgs_bg(:,:,:,2) = data_median_120.median(:,:,:,t);
+    imgs_bg(:,:,:,3) = data_median_360.median(:,:,:,t);
+    imgs_bg(:,:,:,4) = data_median_720.median(:,:,:,t);
+    [responses,~] = detectSmoke(img,imgs_bg);
     responses_all{t} = responses;
 end
 
