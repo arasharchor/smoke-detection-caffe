@@ -42,8 +42,13 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     b_vec = img_smooth(:,:,3);
     b_vec = b_vec(img_bs_mask_clean==1);
     gray_level = double(abs(r_vec-g_vec)+abs(g_vec-b_vec)+abs(b_vec-r_vec));
-    gray_level_mean = mean(gray_level);
-    gray_level_std = std(gray_level);
+    if(numel(gray_level)==0)
+        gray_level_mean = 0;
+        gray_level_std = 0;
+    else
+        gray_level_mean = mean(gray_level);
+        gray_level_std = std(gray_level);
+    end
     responses.gray_level_mean = gray_level_mean;
     responses.gray_level_std = gray_level_std;
 end
