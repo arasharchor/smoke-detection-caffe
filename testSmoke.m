@@ -2,10 +2,10 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-t = 5936;
+% t = 5936;
 % t = [5936,6617,7543];
-% t = [5936,7543,7543,9008,6205];
-% t = [5936,6617,7438,7543,4015,7577,9008,12494,12566,12929,6205];
+t = [5936,7543,7543,9008,6205];
+t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -16,8 +16,8 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
-label_mat = matfile(fullfile(path,'label.mat'));
-data_median_mat = matfile(fullfile(path,'data_median_120.mat'));
+label_mat = matfile(fullfile(path,'label_black_smoke.mat'));
+data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
 % define mask
 t_ref = 5936;
@@ -44,7 +44,7 @@ for i=1:numel(t)
     fig = figure(50);
     nl = sprintf('\n');
     xlabel_offset = 8;
-    img_cols = 4;
+    img_cols = 7;
     img_rows = 2;
     font_size = 12;
 
@@ -60,8 +60,8 @@ for i=1:numel(t)
     
     subplot(img_rows,img_cols,2)
     imshow(img_bg)
-    str = 'Estimated Background';
-    math = '$$B_t = \mathrm{median}(I_{t-119}...I_{t})$$';
+    str = 'Background';
+    math = '$$B_t$$';
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
@@ -69,7 +69,7 @@ for i=1:numel(t)
 
     subplot(img_rows,img_cols,3)
     imshow(imgs_filtered.img_bs)
-    str = '$D_t = (I_t-B_t)/(I_t+B_t)$';
+    str = '$$D_t = \frac{abs(I_t-B_t)}{I_t+B_t}$$';
     math = num2str(responses.img_bs);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
@@ -83,9 +83,63 @@ for i=1:numel(t)
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size) 
-    
+    set(gca,'FontSize',font_size)
+
     subplot(img_rows,img_cols,5)
+    imshow(imgs_filtered.img_gray_px)
+    str = 'Grayish pixels';
+    math = num2str(responses.img_gray_px);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+    
+    subplot(img_rows,img_cols,6)
+    imshow(imgs_filtered.img_bs_rmcolor)
+    str = 'Remove non-grayish';
+    math = num2str(responses.img_bs_rmcolor);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+
+    subplot(img_rows,img_cols,7)
+    imshow(imgs_filtered.img_lowS_px)
+    str = 'Low S pixels';
+    math = num2str(responses.img_lowS_px);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)    
+    
+    subplot(img_rows,img_cols,8)
+    imshow(imgs_filtered.img_bs_rmlowS)
+    str = 'Remove high S';
+    math = num2str(responses.img_bs_rmlowS);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+    
+    subplot(img_rows,img_cols,9)
+    imshow(imgs_filtered.img_black_px)
+    str = 'Black pixels';
+    math = num2str(responses.img_black_px);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)    
+    
+    subplot(img_rows,img_cols,10)
+    imshow(imgs_filtered.img_bs_rmblack)
+    str = 'Remove non-black';
+    math = num2str(responses.img_bs_rmblack);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+    
+    subplot(img_rows,img_cols,11)
     imshow(imgs_filtered.img_bs_mask)
     str = 'Create a mask';
     math = num2str(responses.img_bs_mask);
@@ -94,7 +148,7 @@ for i=1:numel(t)
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
     
-    subplot(img_rows,img_cols,6)
+    subplot(img_rows,img_cols,12)
     imshow(imgs_filtered.img_bs_mask_smooth)
     str = 'Smooth the mask';
     math = num2str(responses.img_bs_mask_smooth);
@@ -103,16 +157,16 @@ for i=1:numel(t)
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)  
     
-    subplot(img_rows,img_cols,7)
+    subplot(img_rows,img_cols,13)
     imshow(imgs_filtered.img_bs_mask_clean)
-    str = 'Remove noise and small regions';
+    str = 'Remove noise';
     math = num2str(responses.img_bs_mask_clean);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
     
-    subplot(img_rows,img_cols,8)
+    subplot(img_rows,img_cols,14)
     imshow(img_label)
     str = 'Ground truth';
     math = '$$T_t$$';

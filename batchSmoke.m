@@ -12,8 +12,8 @@ target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 fprintf('Loading data.mat\n');
 data = load(fullfile(path,'data.mat'));
-fprintf('Loading data_median_120.mat\n');
-data_median = load(fullfile(path,'data_median_120.mat'));
+fprintf('Loading data_median_60.mat\n');
+data_median = load(fullfile(path,'data_median_60.mat'));
 
 % read mask
 fprintf('Loading bbox.mat\n');

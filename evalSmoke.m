@@ -20,43 +20,45 @@ load(fullfile(path,'bbox.mat'));
 day_min_idx = 4300;
 day_max_idx = 14000;
 
-% count the number of smoke pixels in each images and rescale to 0~1
+% count the number of smoke pixels in each images
 sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
-% sum_smoke_pixel = sum_smoke_pixel - min(sum_smoke_pixel(:));
-% sum_smoke_pixel = sum_smoke_pixel/max(abs(sum_smoke_pixel(:)));
 
-% process features
-fields = fieldnames(feature);
-for i=1:length(fields)
-    % rescale all features between 0 and 1
-    vec = feature.(fields{i});
-%     vec = vec - min(vec(day_min_idx:day_max_idx));
-%     vec = vec/max(abs(vec(day_min_idx:day_max_idx)));
-    % apply smoothing
-%     vec = filter1D(vec,2);
-    % find peaks
-    min_peak_prominence = 0.2*max(vec(:));
-    min_peak_height = 0;
-    min_peak_distance = 0;
-    thr = 0;
-    max_peak_width = 0;
-    [pks,locs,w,p] = findpeaks(vec,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
-    % prediction
-    predict = false(size(vec));
-    for j=1:length(locs)
-        w_half = w(j)/2;
-        predict(round(locs(j)-w_half/2):round(locs(j)+w_half)) = true;
-    end
-    % write back
-    feature.(fields{i}) = [];
-    feature.(fields{i}).pks = pks;
-    feature.(fields{i}).locs = locs;
-    feature.(fields{i}).w = w;
-    feature.(fields{i}).predict = predict;
-    feature.(fields{i}).vec = vec;
+% smoothing
+% wid = 5;       % bilateral filter half-width
+% sigma = [3 0.1]; % bilateral filter standard deviations
+% max = max(feature.img_bs_mask_clean);
+% feature.img_bs_mask_clean = feature.img_bs_mask_clean./max;
+% feature.img_bs_mask_clean = bfilter2(feature.img_bs_mask_clean,wid,sigma);
+% feature.img_bs_mask_clean = feature.img_bs_mask_clean.*max;
+% feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
+
+% find local max
+min_peak_prominence = 500;
+min_peak_height = 500;
+min_peak_distance = 30;
+thr = 0;
+max_peak_width = 100;
+[pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
+
+% remove peaks that are too high
+feature.img_bs_mask_clean.vec = feature.img_bs_mask_clean;
+idx_remove = find(pks>15000);
+pks(idx_remove) = [];
+feature.img_bs_mask_clean.pks = pks;
+locs(idx_remove) = [];
+feature.img_bs_mask_clean.locs = locs;
+w(idx_remove) = [];
+p(idx_remove) = [];
+
+% prediction
+predict = false(size(feature.img_bs_mask_clean.vec));
+for j=1:length(locs)
+    w_half = w(j)/2;
+    predict(round(locs(j)-w_half/2):round(locs(j)+w_half)) = true;
 end
+feature.img_bs_mask_clean.predict = predict;
 
-% plot ground truth and features
+% plot ground truth and prediction
 img_cols = 1;
 img_rows = 5;
 figure(98)
@@ -72,22 +74,6 @@ xlim([day_min_idx day_max_idx])
 title('Background subtraction (10 min = 120 frames)')
 hold on
 plot(feature.img_bs_mask_clean.locs,feature.img_bs_mask_clean.pks,'ro')
-hold off
-
-subplot(img_rows,img_cols,3)
-plot(feature.gray_level_mean.vec,'b')
-xlim([day_min_idx day_max_idx])
-title('Grayish level mean')
-hold on
-plot(feature.gray_level_mean.locs,feature.gray_level_mean.pks,'ro')
-hold off
-
-subplot(img_rows,img_cols,4)
-plot(feature.gray_level_std.vec,'b')
-xlim([day_min_idx day_max_idx])
-title('Grayish level std')
-hold on
-plot(feature.gray_level_std.locs,feature.gray_level_mean.pks,'ro')
 hold off
 
 % plot prediction
@@ -106,17 +92,3 @@ xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction (10 min = 120 frames)')
-
-subplot(img_rows,img_cols,3)
-bar(uint8(feature.gray_level_mean.predict),'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Grayish level mean')
-
-subplot(img_rows,img_cols,4)
-bar(uint8(feature.gray_level_std.predict),'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Grayish level std')
