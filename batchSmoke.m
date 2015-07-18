@@ -27,6 +27,8 @@ data_median = data_median.median(bbox_row,bbox_col,:,:);
 % allocate spaces
 num_imgs = size(data,4);
 responses_all = cell(num_imgs,1);
+label_predict = false(size(data,1),size(data,2),1,size(data,4));
+has_label_predict = false(1,size(data,4));
 
 % create workers
 numCores = 3;
@@ -42,8 +44,12 @@ parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
     img = data(:,:,:,t);
     img_bg = data_median(:,:,:,t);
-    [responses,~] = detectSmoke(img,img_bg);
+    [responses,imgs_filtered] = detectSmoke(img,img_bg);
     responses_all{t} = responses;
+    label_predict(:,:,:,t) = imgs_filtered.img_bs_mask_clean;
+    if(sum(imgs_filtered.img_bs_mask_clean(:))>0)
+        has_label_predict(t) = true;
+    end
 end
 
 % close workers
@@ -63,5 +69,9 @@ end
 
 % save file
 fprintf('Saving feature.mat\n');
-save(fullfile(path,'feature_smoke.mat'),'feature');
+save(fullfile(path,'feature_black_smoke.mat'),'feature','-v7.3');
+fprintf('Saving label_predict.mat\n');
+save(fullfile(path,'label_predict_black_smoke.mat'),'label_predict','-v7.3');
+fprintf('Saving has_label_predict.mat\n');
+save(fullfile(path,'has_label_predict_black_smoke.mat'),'has_label_predict','-v7.3');
 fprintf('Done\n');

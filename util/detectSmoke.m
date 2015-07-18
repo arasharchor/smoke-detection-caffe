@@ -8,7 +8,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     responses.img_bs = sum(imgs_filtered.img_bs(:));
     
     % threshold
-    thr = 0.05;
+    thr = 0.07;
     img_bs_thr = img_bs;
     img_bs_thr(img_bs_thr<thr) = 0;
     imgs_filtered.img_bs_thr = img_bs_thr;
@@ -56,7 +56,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     
     % smooth the mask
     img_bs_mask_smooth = img_bs_mask;
-    img_bs_mask_smooth = morphology(img_bs_mask_smooth,1);
+    img_bs_mask_smooth = im2double(morphology(img_bs_mask_smooth,1));
     imgs_filtered.img_bs_mask_smooth = img_bs_mask_smooth;
     responses.img_bs_mask_smooth = sum(imgs_filtered.img_bs_mask_smooth(:)); 
     

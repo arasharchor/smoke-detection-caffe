@@ -1,4 +1,4 @@
-function keyDownListener( src,event,num_frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only )
+function keyDownListenerLabelData( src,event,num_frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only )
     global t
     if(strcmp(event.Key,'rightarrow'))
         if(show_has_label_only==0 && t<num_frames)

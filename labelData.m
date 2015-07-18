@@ -11,7 +11,6 @@ tile_path = '1/2/2.mp4';
 % read images
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
-fprintf('Loading data.mat / label.mat / info.mat\n');
 load(fullfile(path,'info.mat'));
 data_mat = matfile(fullfile(path,'data.mat'));
 label_mat = matfile(fullfile(path,'label_black_smoke.mat'),'Writable',true);
@@ -26,4 +25,4 @@ global t
 % t = 4368;
 t = 6500;
 fig = figure(1);
-set(fig,'KeyPressFcn',{@keyDownListener,r_json.frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only});
+set(fig,'KeyPressFcn',{@keyDownListenerLabelData,r_json.frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only});

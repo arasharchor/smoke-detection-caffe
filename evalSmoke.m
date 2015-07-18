@@ -11,7 +11,7 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 load(fullfile(path,'label_black_smoke.mat'));
-load(fullfile(path,'feature_smoke.mat'));
+load(fullfile(path,'feature_black_smoke.mat'));
 
 % read mask
 load(fullfile(path,'bbox.mat'));
@@ -23,13 +23,15 @@ day_max_idx = 14000;
 % count the number of smoke pixels in each images
 sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 
-% smoothing
+% bilateral smoothing
 % wid = 5;       % bilateral filter half-width
 % sigma = [3 0.1]; % bilateral filter standard deviations
 % max = max(feature.img_bs_mask_clean);
 % feature.img_bs_mask_clean = feature.img_bs_mask_clean./max;
 % feature.img_bs_mask_clean = bfilter2(feature.img_bs_mask_clean,wid,sigma);
 % feature.img_bs_mask_clean = feature.img_bs_mask_clean.*max;
+
+% Gaussian smoothing
 % feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
