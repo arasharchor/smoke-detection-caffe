@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -16,14 +16,15 @@ data_mat = matfile(fullfile(path,'data.mat'));
 numCores = 3;
 try
     fprintf('Closing any pools...\n');
-    matlabpool close;
+    delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-matlabpool('local',numCores);
+parpool('local',numCores);
 
 % compute median images over a time period
-ranges = [60,120,360,720]; % 5min,10min,30min,60min
+% ranges = [60,120,360,720]; % 5min,10min,30min,60min
+ranges = [60]; % 5min
 for j=1:length(ranges)
     median = zeros(size(data_mat,'data'),'uint8');
     parfor i=1:3
@@ -36,4 +37,4 @@ for j=1:length(ranges)
 end
 
 % close workers
-matlabpool close
+delete(gcp('nocreate'));

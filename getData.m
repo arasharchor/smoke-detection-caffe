@@ -4,7 +4,7 @@ addpath(genpath('util'));
 
 % set data source
 url_path = 'http://tiles.cmucreatelab.org/ecam/timemachines/shenango1/';
-date_path = '2015-05-04.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 

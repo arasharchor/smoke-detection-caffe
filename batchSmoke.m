@@ -34,11 +34,11 @@ has_label_predict = false(1,size(data,4));
 numCores = 3;
 try
     fprintf('Closing any pools...\n');
-    matlabpool close;
+    delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-matlabpool('local',numCores);
+parpool('local',numCores);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
@@ -53,7 +53,7 @@ parfor t=3:num_imgs
 end
 
 % close workers
-matlabpool close
+delete(gcp('nocreate'));
 
 % process features
 fprintf('Computing feature vector\n');
