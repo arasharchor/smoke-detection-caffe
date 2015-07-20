@@ -15,15 +15,27 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     imgs_filtered.img_bs_thr = img_bs_thr;
     responses.img_bs_thr = sum(imgs_filtered.img_bs_thr(:));
 
-    % remove pixels that are not gray
+    % remove pixels that are not black
     r = double(img(:,:,1));
     g = double(img(:,:,2));
-    b = double(img(:,:,3));
+    b = double(img(:,:,3));    
+    r_thr = 110;
+    g_thr = 130;
+    b_thr = 150;
+    img_black_px = r<r_thr & g<g_thr & b<b_thr;
+    img_bs_rmblack = img_bs_thr;
+    img_bs_rmblack(~repmat(img_black_px,1,1,3)) = 0;
+    imgs_filtered.img_bs_rmblack = img_bs_rmblack;
+    responses.img_bs_rmblack = sum(imgs_filtered.img_bs_rmblack(:));    
+    imgs_filtered.img_black_px = img_black_px;
+    responses.img_black_px = sum(imgs_filtered.img_black_px(:));
+    
+    % remove pixels that are not gray
     rg_thr = 25;
     gb_thr = 25;
     rb_thr = 45;
     img_gray_px = abs(r-g)<=rg_thr & abs(r-b)<=rb_thr & abs(g-b)<=gb_thr;
-    img_bs_rmcolor = img_bs_thr;
+    img_bs_rmcolor = img_bs_rmblack;
     img_bs_rmcolor(~repmat(img_gray_px,1,1,3)) = 0;
     imgs_filtered.img_bs_rmcolor = img_bs_rmcolor;
     responses.img_bs_rmcolor = sum(imgs_filtered.img_bs_rmcolor(:));    
@@ -39,18 +51,6 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     responses.img_bs_rmlowS = sum(imgs_filtered.img_bs_rmlowS(:));    
     imgs_filtered.img_lowS_px = img_lowS_px;
     responses.img_lowS_px = sum(imgs_filtered.img_lowS_px(:));
-    
-    % remove pixels that are not black
-    r_thr = 110;
-    g_thr = 130;
-    b_thr = 150;
-    img_black_px = r<r_thr & g<g_thr & b<b_thr;
-    img_bs_rmblack = img_bs_rmlowS;
-    img_bs_rmblack(~repmat(img_black_px,1,1,3)) = 0;
-    imgs_filtered.img_bs_rmblack = img_bs_rmblack;
-    responses.img_bs_rmblack = sum(imgs_filtered.img_bs_rmblack(:));    
-    imgs_filtered.img_black_px = img_black_px;
-    responses.img_black_px = sum(imgs_filtered.img_black_px(:));
 
     % remove pixels that have low background subtraction of DoG
     img_DoG = diffOfGaussian(img_smooth,0.5,3);
@@ -62,7 +62,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     img_DoGdiff_entropy_px = img_DoGdiff(:,:,1)>r_thr & img_DoGdiff(:,:,2)>g_thr & img_DoGdiff(:,:,3)>b_thr;
     img_DoGdiff_entropy_px = entropyfilt(img_DoGdiff_entropy_px,true(7,7));
     img_DoGdiff_entropy_px(img_DoGdiff_entropy_px<0.7) = 0;
-    img_bs_rmLowDoGdiff = img_bs_rmblack;
+    img_bs_rmLowDoGdiff = img_bs_rmlowS;
     img_bs_rmLowDoGdiff(~repmat(img_DoGdiff_entropy_px,1,1,3)) = 0;
     imgs_filtered.img_DoGdiff_entropy_px = img_DoGdiff_entropy_px;
     responses.img_DoGdiff_entropy_px = sum(imgs_filtered.img_DoGdiff_entropy_px(:));

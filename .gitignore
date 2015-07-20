@@ -7,3 +7,4 @@ tile.mp4
 caffe/*.swp
 caffe/*.caffemodel
 caffe/*.solverstate
+*.asv

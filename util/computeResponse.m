@@ -27,9 +27,7 @@ function [ responses,imgs_filtered ] = computeResponse( imgs )
     responses.img_DoG_diff = sum(img_DoG_diff(:));
     
     % compute entropy image of DoG
-    img_entropy = entropyfilt(img_DoG_diff,true(21,21));
-%     h = ones(21,21);
-%     img_entropy = filter2(h,rgb2gray(imgs_DoG(:,:,:,end)),'valid');
+    img_entropy = entropyfilt(img_DoG_diff,true(13,13));
     imgs_filtered.img_entropy = img_entropy;
     responses.img_entropy = sum(img_entropy(:));
     

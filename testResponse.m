@@ -2,10 +2,12 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-% t = 5936;
-% t = [5936,6617,7438,7543,4015,7577,9008,12494,12566,12929,6205];
+t = 5936;
+% t = [5936,6617,7543];
+% t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
+% t = [5936,6617,7543,6205,9008];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
-t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
+% t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -38,102 +40,60 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(50);
-    nl = sprintf('\n');
-    xlabel_offset = 8;
     img_cols = 5;
     img_rows = 2;
-    font_size = 12;
+    fig_idx = 1;
 
-    subplot(img_rows,img_cols,1)
-    imshow(imgs(:,:,:,end))
-    title(['t = ',num2str(t(i))])
+    I = imgs(:,:,:,end);
+    header = ['t = ',num2str(t(i))];
     str = 'Time t';
     math = '$$I_t$$';
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math);
 
-    subplot(img_rows,img_cols,2)
-    imshow(imgs(:,:,:,end-1))
+    I = imgs(:,:,:,end-1);
     str = 'Time t-1';
     math = '$$I_{t-1}$$';
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,3)
-    imshow(imgs(:,:,:,end-2))
+    I = imgs(:,:,:,end-2);
     str = 'Time t-2';
     math = '$$I_{t-2}$$';
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,4)
-    imshow(mat2gray(imgs_filtered.img_s_diff))
+    I = mat2gray(imgs_filtered.img_s_diff);
     str = 'Temp diff of S channel';
     math = num2str(responses.img_s_diff);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,5)
-    imshow(mat2gray(imgs_filtered.img_v_diff))
+    I = mat2gray(imgs_filtered.img_v_diff);
     str = 'Temp diff of V channel';
     math = num2str(responses.img_v_diff);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,6)
-    imshow(mat2gray(imgs_filtered.img_DoG))
+    I = mat2gray(imgs_filtered.img_DoG);
     str = 'Difference of Gaussian (DoG)';
     math = num2str(responses.img_DoG);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,7)
-    imshow(mat2gray(imgs_filtered.img_DoG_diff))
+    I = mat2gray(imgs_filtered.img_DoG_diff);
     str = 'Temp diff of DoG';
     math = num2str(responses.img_DoG_diff);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,8)
-    imshow(mat2gray(imgs_filtered.img_entropy))
-    str = 'Local entropy of DoG';
+    I = mat2gray(imgs_filtered.img_entropy);
+    str = 'Local entropy of DoG diff';
     math = num2str(responses.img_entropy);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,9)
-    imshow(imgs_filtered.img_s)
+    I = imgs_filtered.img_s;
     str = 'S channel of HSV';
     math = num2str(responses.img_s);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    subplot(img_rows,img_cols,10)
-    imshow(imgs_filtered.img_v)
+    I = imgs_filtered.img_v;
     str = 'V channel of HSV';
     math = num2str(responses.img_v);
-    xlabel([str,nl,math],'Interpreter','latex')
-    xlabh = get(gca,'XLabel');
-    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
-    set(gca,'FontSize',font_size)   
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     % print figure
     print_dir = 'figs';
