@@ -18,12 +18,16 @@ label_predict_mat = matfile(fullfile(path,'label_predict_black_smoke.mat'));
 has_label_predict_mat = matfile(fullfile(path,'has_label_predict_black_smoke.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
+% read mask
+fprintf('Loading bbox.mat\n');
+load(fullfile(path,'bbox.mat'));
+
 % find frames that have labels
 has_label_predict = has_label_predict_mat.has_label_predict;
 has_label_predict_idx = find(has_label_predict==1);
 
 % label images
 global t
-t = 4300;
+t = 5900;
 fig = figure(1);
-set(fig,'KeyPressFcn',{@keyDownListenerShowData,r_json.frames,data_mat,label_mat,has_label_predict_mat,has_label_predict_idx,show_has_label_predict_only,label_predict_mat,data_median_mat});
+set(fig,'KeyPressFcn',{@keyDownListenerShowData,r_json.frames,data_mat,label_mat,has_label_predict_mat,has_label_predict_idx,show_has_label_predict_only,label_predict_mat,data_median_mat,bbox_row,bbox_col});
