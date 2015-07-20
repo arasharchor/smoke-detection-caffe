@@ -28,6 +28,6 @@ has_label_predict_idx = find(has_label_predict==1);
 
 % label images
 global t
-t = 9014;
+t = 6500;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerShowData,r_json.frames,data_mat,label_mat,has_label_predict_mat,has_label_predict_idx,show_has_label_predict_only,label_predict_mat,data_median_mat,bbox_row,bbox_col});

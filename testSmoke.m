@@ -2,13 +2,14 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-% t = 5936;
+t = 5936;
 % t = 7543;
+% t = 6617;
 % t = [5936,6617,7543];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [5936,6617,7543,6205,9008];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
-t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
+% t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -41,7 +42,9 @@ for i=1:numel(t)
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     img = data_mat.data(bbox_row,bbox_col,:,t(i));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
+    tic
     [responses,imgs_filtered] = detectSmoke(img,img_bg);
+    toc
     
     % visualize images
     fig = figure(50);
@@ -63,7 +66,7 @@ for i=1:numel(t)
     I = imgs_filtered.img_smooth_lcn;
     str = '$$I_t = \mathrm{LCN}(I_t)$$';
     math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math);
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bg_smooth_lcn;
     str = '$$B_t = \mathrm{LCN}(B_t)$$';

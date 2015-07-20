@@ -32,19 +32,19 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 % feature.img_bs_mask_clean = feature.img_bs_mask_clean.*max;
 
 % Gaussian smoothing
-% feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
+feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
-min_peak_prominence = 200;
-min_peak_height = 200;
+min_peak_prominence = 100;
+min_peak_height = 100;
 min_peak_distance = 30;
-thr = 30;
+thr = 0;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 
 % remove night time idx and peaks that are too high
 feature.img_bs_mask_clean.vec = feature.img_bs_mask_clean;
-idx_remove = find(pks>5000 | locs<day_min_idx | locs>day_max_idx);
+idx_remove = find(pks>2200 | locs<day_min_idx | locs>day_max_idx);
 pks(idx_remove) = [];
 feature.img_bs_mask_clean.pks = pks;
 locs(idx_remove) = [];
@@ -55,7 +55,8 @@ p(idx_remove) = [];
 % prediction
 predict = false(size(feature.img_bs_mask_clean.vec));
 for j=1:length(locs)
-    predict(round(locs(j)-w):round(locs(j)+w)) = true;
+    w_ = w*1.5;
+    predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
 end
 feature.img_bs_mask_clean.predict = predict;
 

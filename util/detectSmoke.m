@@ -4,8 +4,8 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     img_bg_smooth = gaussianSmooth(img_bg,0.5);
 
     % local contrast normalization
-    img_smooth_lcn = mat2gray(localnormalize(double(img_smooth),50,50));
-    img_bg_smooth_lcn = mat2gray(localnormalize(double(img_bg_smooth),50,50));
+    img_smooth_lcn = mat2gray(localnormalize(double(img_smooth),64,64));
+    img_bg_smooth_lcn = mat2gray(localnormalize(double(img_bg_smooth),64,64));
     
     imgs_filtered.img_smooth_lcn = img_smooth_lcn;   
     imgs_filtered.img_bg_smooth_lcn = img_bg_smooth_lcn; 
@@ -17,7 +17,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     responses.img_bs = sum(imgs_filtered.img_bs(:));
 
     % threshold
-    thr = 0.15;
+    thr = 0.07;
 	img_bs_thr = img_bs;
     img_bs_thr(repmat(rgb2gray(img_bs_thr)<thr,1,1,3)) = 0;
     
@@ -28,9 +28,9 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     r = img_smooth_lcn(:,:,1);
     g = img_smooth_lcn(:,:,2);
     b = img_smooth_lcn(:,:,3);
-    r_thr = 0.2;
-    g_thr = 0.2;
-    b_thr = 0.35;
+    r_thr = 0.4;
+    g_thr = 0.4;
+    b_thr = 0.6;
     img_black_px = r<r_thr & g<g_thr & b<b_thr;
     img_bs_rmblack = img_bs_thr;
     img_bs_rmblack(~repmat(img_black_px,1,1,3)) = 0;
@@ -108,7 +108,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     % remove noise
     img_bs_mask_clean = img_bs_mask_smooth;
     img_bs_mask_clean = removeNoise(img_bs_mask_clean);
-    img_bs_mask_clean = removeSmallRegions(img_bs_mask_clean,100);
+    img_bs_mask_clean = removeSmallRegions(img_bs_mask_clean,50);
 
     imgs_filtered.img_bs_mask_clean = img_bs_mask_clean;
     responses.img_bs_mask_clean = sum(imgs_filtered.img_bs_mask_clean(:));
