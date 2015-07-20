@@ -2,8 +2,10 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-t = 5936;
+% t = 5936;
 % t = [5936,6617,7438,7543,4015,7577,9008,12494,12566,12929,6205];
+% t = [4369,5108,5936,6613,6617,7298,7435,7543];
+t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -108,7 +110,7 @@ for i=1:numel(t)
 
     subplot(img_rows,img_cols,8)
     imshow(mat2gray(imgs_filtered.img_entropy))
-    str = 'Local entropy of temp diff';
+    str = 'Local entropy of DoG';
     math = num2str(responses.img_entropy);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');

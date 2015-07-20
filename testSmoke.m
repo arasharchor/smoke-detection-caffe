@@ -5,7 +5,9 @@ select_box = 0;
 % t = 5936;
 % t = [5936,6617,7543];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
-t = [5936,6617,7543,6205,9008];
+% t = [5936,6617,7543,6205,9008];
+t = [4369,5108,5936,6613,6617,7298,7435,7543];
+% t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -44,7 +46,7 @@ for i=1:numel(t)
     fig = figure(50);
     nl = sprintf('\n');
     xlabel_offset = 8;
-    img_cols = 7;
+    img_cols = 8;
     img_rows = 2;
     font_size = 12;
 
@@ -68,7 +70,7 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)   
 
     subplot(img_rows,img_cols,3)
-    imshow(imgs_filtered.img_bs)
+    imshow(mat2gray(imgs_filtered.img_bs))
     str = '$$D_t = \frac{abs(I_t-B_t)}{I_t+B_t}$$';
     math = num2str(responses.img_bs);
     xlabel([str,nl,math],'Interpreter','latex')
@@ -77,7 +79,7 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)
 
     subplot(img_rows,img_cols,4)
-    imshow(imgs_filtered.img_bs_thr)
+    imshow(mat2gray(imgs_filtered.img_bs_thr))
     str = 'Apply threshold';
     math = num2str(responses.img_bs_thr);
     xlabel([str,nl,math],'Interpreter','latex')
@@ -95,7 +97,7 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)
     
     subplot(img_rows,img_cols,6)
-    imshow(imgs_filtered.img_bs_rmcolor)
+    imshow(mat2gray(imgs_filtered.img_bs_rmcolor))
     str = 'Remove non-grayish';
     math = num2str(responses.img_bs_rmcolor);
     xlabel([str,nl,math],'Interpreter','latex')
@@ -113,7 +115,7 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)    
     
     subplot(img_rows,img_cols,8)
-    imshow(imgs_filtered.img_bs_rmlowS)
+    imshow(mat2gray(imgs_filtered.img_bs_rmlowS))
     str = 'Remove high S';
     math = num2str(responses.img_bs_rmlowS);
     xlabel([str,nl,math],'Interpreter','latex')
@@ -131,15 +133,33 @@ for i=1:numel(t)
     set(gca,'FontSize',font_size)    
     
     subplot(img_rows,img_cols,10)
-    imshow(imgs_filtered.img_bs_rmblack)
+    imshow(mat2gray(imgs_filtered.img_bs_rmblack))
     str = 'Remove non-black';
     math = num2str(responses.img_bs_rmblack);
     xlabel([str,nl,math],'Interpreter','latex')
     xlabh = get(gca,'XLabel');
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
-    
+
     subplot(img_rows,img_cols,11)
+    imshow(imgs_filtered.img_DoGdiff_entropy_px)
+    str = 'DoG diff';
+    math = num2str(responses.img_DoGdiff_entropy_px);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+
+    subplot(img_rows,img_cols,12)
+    imshow(mat2gray(imgs_filtered.img_bs_rmLowDoGdiff))
+    str = 'Filter DoG diff';
+    math = num2str(responses.img_bs_rmLowDoGdiff);
+    xlabel([str,nl,math],'Interpreter','latex')
+    xlabh = get(gca,'XLabel');
+    set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
+    set(gca,'FontSize',font_size)
+    
+    subplot(img_rows,img_cols,13)
     imshow(imgs_filtered.img_bs_mask)
     str = 'Create a mask';
     math = num2str(responses.img_bs_mask);
@@ -148,7 +168,7 @@ for i=1:numel(t)
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
     
-    subplot(img_rows,img_cols,12)
+    subplot(img_rows,img_cols,14)
     imshow(imgs_filtered.img_bs_mask_smooth)
     str = 'Smooth the mask';
     math = num2str(responses.img_bs_mask_smooth);
@@ -157,7 +177,7 @@ for i=1:numel(t)
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)  
     
-    subplot(img_rows,img_cols,13)
+    subplot(img_rows,img_cols,15)
     imshow(imgs_filtered.img_bs_mask_clean)
     str = 'Remove noise';
     math = num2str(responses.img_bs_mask_clean);
@@ -166,7 +186,7 @@ for i=1:numel(t)
     set(xlabh,'Position',get(xlabh,'Position')-[0 xlabel_offset 0])
     set(gca,'FontSize',font_size)
     
-    subplot(img_rows,img_cols,14)
+    subplot(img_rows,img_cols,16)
     imshow(img_label)
     str = 'Ground truth';
     math = '$$T_t$$';
