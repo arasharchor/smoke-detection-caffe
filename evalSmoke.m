@@ -61,7 +61,7 @@ feature.img_bs_mask_clean.predict = predict;
 
 % plot ground truth and prediction
 img_cols = 1;
-img_rows = 5;
+img_rows = 2;
 figure(98)
 
 subplot(img_rows,img_cols,1)

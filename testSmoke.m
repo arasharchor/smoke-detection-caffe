@@ -2,12 +2,13 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-t = 5936;
+% t = 5936;
+% t = 7543;
 % t = [5936,6617,7543];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [5936,6617,7543,6205,9008];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
-% t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
+t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -44,7 +45,7 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(50);
-    img_cols = 7;
+    img_cols = 8;
     img_rows = 3;
     fig_idx = 1;
 
@@ -59,13 +60,23 @@ for i=1:numel(t)
     math = '$$B_t$$';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs);
+    I = imgs_filtered.img_smooth_lcn;
+    str = '$$I_t = \mathrm{LCN}(I_t)$$';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math);
+
+    I = imgs_filtered.img_bg_smooth_lcn;
+    str = '$$B_t = \mathrm{LCN}(B_t)$$';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);    
+
+    I = imgs_filtered.img_bs;
     str = '$$D_t = \frac{|I_t-B_t|}{I_t+B_t}$$';
     math = num2str(responses.img_bs);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs_thr);
-    str = 'Thresholding';
+    I = imgs_filtered.img_bs_thr;
+    str = 'Threshold $D_t$';
     math = num2str(responses.img_bs_thr);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
@@ -74,7 +85,7 @@ for i=1:numel(t)
     math = num2str(responses.img_black_px);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs_rmblack);
+    I = imgs_filtered.img_bs_rmblack;
     str = 'Remove non-black';
     math = num2str(responses.img_bs_rmblack);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
@@ -84,7 +95,7 @@ for i=1:numel(t)
     math = num2str(responses.img_gray_px);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs_rmcolor);
+    I = imgs_filtered.img_bs_rmcolor;
     str = 'Remove non-grayish';
     math = num2str(responses.img_bs_rmcolor);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
@@ -94,18 +105,38 @@ for i=1:numel(t)
     math = num2str(responses.img_lowS_px);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs_rmlowS);
+    I = imgs_filtered.img_bs_rmlowS;
     str = 'Remove high S';
     math = num2str(responses.img_bs_rmlowS);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
+    I = imgs_filtered.img_DoG;
+    str = '$$I_{dg} = \mathrm{DoG}(I_t)$$';
+    math = num2str(responses.img_DoG);
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_bg_DoG;
+    str = '$$B_{dg} = \mathrm{DoG}(B_t)$$';
+    math = num2str(responses.img_bg_DoG);
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_DoGdiff;
+    str = '$$D_{dg} = \frac{|I_{dg}-B_{dg}|}{I_{dg}+B_{dg}}$$';
+    math = num2str(responses.img_DoGdiff);
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_DoGdiff_thr;
+    str = 'Threshold $D_{dg}$';
+    math = num2str(responses.img_DoGdiff_thr);
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
     I = imgs_filtered.img_DoGdiff_entropy_px;
-    str = 'DoG diff';
+    str = '$$E_{dg} = \mathrm{Entropy}(D_{dg})$$';
     math = num2str(responses.img_DoGdiff_entropy_px);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = mat2gray(imgs_filtered.img_bs_rmLowDoGdiff);
-    str = 'Filter DoG diff';
+    I = imgs_filtered.img_bs_rmLowDoGdiff;
+    str = 'Remove small $E_{dg}$';
     math = num2str(responses.img_bs_rmLowDoGdiff);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 

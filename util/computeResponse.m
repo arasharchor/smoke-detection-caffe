@@ -22,12 +22,13 @@ function [ responses,imgs_filtered ] = computeResponse( imgs )
     responses.img_DoG = sum(imgs_filtered.img_DoG(:));
     
     % three frame differencing of DoG
-    img_DoG_diff = threeFrameDiff(imgs_DoG);
+    img_DoG_diff = mat2gray(threeFrameDiff(imgs_DoG));
+    img_DoG_diff(img_DoG_diff<0.1) = 0;
     imgs_filtered.img_DoG_diff = img_DoG_diff;
     responses.img_DoG_diff = sum(img_DoG_diff(:));
     
     % compute entropy image of DoG
-    img_entropy = entropyfilt(img_DoG_diff,true(13,13));
+    img_entropy = entropyfilt(img_DoG_diff,true(21,21));
     imgs_filtered.img_entropy = img_entropy;
     responses.img_entropy = sum(img_entropy(:));
     
@@ -37,6 +38,6 @@ function [ responses,imgs_filtered ] = computeResponse( imgs )
     responses.img_rgb_diff = rgbDiff(imgs_smooth_double);
     
     % compute wavelet energy
-    [cA,cH,cV,cD] = dwt2(imgs_smooth(:,:,:,end),'db1');
+    [~,cH,cV,cD] = dwt2(imgs_smooth(:,:,:,end),'db1');
     responses.wavelet_energy = sum(cH(:).^2+cV(:).^2+cD(:).^2);
 end

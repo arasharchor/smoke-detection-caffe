@@ -4,4 +4,3 @@ function imgs_DoG = diffOfGaussian( imgs,sigma,K )
     imgs_DoG = gaussianSmooth(imgs,sigma1) - gaussianSmooth(imgs,sigma2);
     imgs_DoG = im2double(imgs_DoG);
 end
-
