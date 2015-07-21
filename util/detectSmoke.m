@@ -44,7 +44,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     rg_thr = 0.07;
     gb_thr = 0.07;
     rb_thr = 0.15;
-    img_gray_px = abs(r-g)<=rg_thr & abs(r-b)<=rb_thr & abs(g-b)<=gb_thr;
+    img_gray_px = abs(r-g)<rg_thr & abs(r-b)<rb_thr & abs(g-b)<gb_thr;
     img_bs_rmcolor = img_bs_rmblack;
     img_bs_rmcolor(~repmat(img_gray_px,1,1,3)) = 0;
 
@@ -72,8 +72,8 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     g_thr = 0.1;
     b_thr = 0.1;
     img_DoGdiff_thr = img_DoGdiff(:,:,1)>r_thr & img_DoGdiff(:,:,2)>g_thr & img_DoGdiff(:,:,3)>b_thr;
-    img_DoGdiff_entropy_px = entropyfilt(img_DoGdiff_thr,true(7,7));
-    img_DoGdiff_entropy_px(img_DoGdiff_entropy_px<0.7) = 0;
+    img_DoGdiff_entropy_px = entropyfilt(img_DoGdiff_thr,true(13,13));
+    img_DoGdiff_entropy_px = im2bw(img_DoGdiff_entropy_px,0.8);
     img_bs_rmLowDoGdiff = img_bs_rmlowS;
     img_bs_rmLowDoGdiff(~repmat(img_DoGdiff_entropy_px,1,1,3)) = 0;
 
@@ -88,10 +88,29 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     imgs_filtered.img_DoGdiff_entropy_px = img_DoGdiff_entropy_px;
     responses.img_DoGdiff_entropy_px = sum(imgs_filtered.img_DoGdiff_entropy_px(:));
     imgs_filtered.img_bs_rmLowDoGdiff = img_bs_rmLowDoGdiff;
-    responses.img_bs_rmLowDoGdiff = max(imgs_filtered.img_bs_rmLowDoGdiff(:));
+    responses.img_bs_rmLowDoGdiff = sum(imgs_filtered.img_bs_rmLowDoGdiff(:));
 
+    % remove pixels that have low entropy in the current image
+    img_entropy = mat2gray(entropyfilt(img_smooth_lcn,true(9,9)));
+    r_en = img_entropy(:,:,1);
+    g_en = img_entropy(:,:,2);
+    b_en = img_entropy(:,:,3);
+    rg_thr = 0.15;
+    gb_thr = 0.15;
+    rb_thr = 0.15;
+    img_entropy_px = abs(r_en-g_en)<rg_thr & abs(r_en-b_en)<rb_thr & abs(g_en-b_en)<gb_thr;
+    img_bs_rmLowEntropy = img_bs_rmLowDoGdiff;
+    img_bs_rmLowEntropy(~repmat(img_entropy_px,1,1,3)) = 0;
+    
+    imgs_filtered.img_entropy = img_entropy;
+    responses.img_entropy = sum(imgs_filtered.img_entropy(:));
+    imgs_filtered.img_entropy_px = img_entropy_px;
+    responses.img_entropy_px = sum(imgs_filtered.img_entropy_px(:));  
+    imgs_filtered.img_bs_rmLowEntropy = img_bs_rmLowEntropy;
+    responses.img_bs_rmLowEntropy = sum(imgs_filtered.img_bs_rmLowEntropy(:));
+    
     % create a mask
-    img_bs_mask_gray = rgb2gray(img_bs_rmLowDoGdiff);
+    img_bs_mask_gray = rgb2gray(img_bs_rmLowEntropy);
     img_bs_mask = false(size(img_bs_mask_gray));
     img_bs_mask(img_bs_mask_gray>0) = true;
 
