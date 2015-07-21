@@ -69,7 +69,6 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     img_DoG = mat2gray(diffOfGaussian(img_smooth,0.5,3));
     img_bg_DoG = mat2gray(diffOfGaussian(img_bg_smooth,0.5,3));
     img_DoGdiff = mat2gray(backgroundSubtraction(img_DoG,img_bg_DoG,'Normalize'));
-    img_DoGdiff = mat2gray(localnormalize(double(img_DoGdiff),64,64));
     r_thr = 0.1;
     g_thr = 0.1;
     b_thr = 0.1;

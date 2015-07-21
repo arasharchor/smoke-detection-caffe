@@ -44,7 +44,7 @@ max_peak_width = 100;
 
 % remove night time idx and peaks that are too high
 feature.img_bs_mask_clean.vec = feature.img_bs_mask_clean;
-idx_remove = find(pks>3500 | locs<day_min_idx | locs>day_max_idx);
+idx_remove = find(pks>4000 | locs<day_min_idx | locs>day_max_idx);
 pks(idx_remove) = [];
 feature.img_bs_mask_clean.pks = pks;
 locs(idx_remove) = [];

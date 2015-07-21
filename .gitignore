@@ -8,3 +8,4 @@ caffe/*.swp
 caffe/*.caffemodel
 caffe/*.solverstate
 *.asv
+images/
