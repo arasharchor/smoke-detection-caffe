@@ -13,8 +13,8 @@ target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 load(fullfile(path,'info.mat'));
 data_mat = matfile(fullfile(path,'data.mat'));
-label_mat = matfile(fullfile(path,'label_black_smoke.mat'),'Writable',true);
-has_label_mat = matfile(fullfile(path,'has_label_black_smoke.mat'),'Writable',true);
+label_mat = matfile(fullfile(path,'label.mat'),'Writable',true);
+has_label_mat = matfile(fullfile(path,'has_label.mat'),'Writable',true);
 
 % find frames that have labels
 has_label = has_label_mat.has_label;
@@ -23,6 +23,6 @@ has_label_idx = find(has_label==1);
 % label images
 global t
 % t = 4368;
-t = 6500;
+t = 7436;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerLabelData,r_json.frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only});

@@ -12,7 +12,8 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     
     % background subtraction
     img_bs = backgroundSubtraction(img_smooth_lcn,img_bg_smooth_lcn,'Normalize');
-
+    img_bs = mat2gray(localnormalize(double(img_bs),64,64));
+    
     imgs_filtered.img_bs = img_bs;
     responses.img_bs = sum(imgs_filtered.img_bs(:));
 
@@ -68,12 +69,13 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     img_DoG = mat2gray(diffOfGaussian(img_smooth,0.5,3));
     img_bg_DoG = mat2gray(diffOfGaussian(img_bg_smooth,0.5,3));
     img_DoGdiff = mat2gray(backgroundSubtraction(img_DoG,img_bg_DoG,'Normalize'));
+    img_DoGdiff = mat2gray(localnormalize(double(img_DoGdiff),64,64));
     r_thr = 0.1;
     g_thr = 0.1;
     b_thr = 0.1;
     img_DoGdiff_thr = img_DoGdiff(:,:,1)>r_thr & img_DoGdiff(:,:,2)>g_thr & img_DoGdiff(:,:,3)>b_thr;
     img_DoGdiff_entropy_px = entropyfilt(img_DoGdiff_thr,true(13,13));
-    img_DoGdiff_entropy_px = im2bw(img_DoGdiff_entropy_px,0.8);
+    img_DoGdiff_entropy_px = im2bw(img_DoGdiff_entropy_px,0.75);
     img_bs_rmLowDoGdiff = img_bs_rmlowS;
     img_bs_rmLowDoGdiff(~repmat(img_DoGdiff_entropy_px,1,1,3)) = 0;
 
@@ -132,4 +134,3 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg )
     imgs_filtered.img_bs_mask_clean = img_bs_mask_clean;
     responses.img_bs_mask_clean = sum(imgs_filtered.img_bs_mask_clean(:));
 end
-

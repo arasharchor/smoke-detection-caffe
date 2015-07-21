@@ -35,16 +35,16 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
-min_peak_prominence = 100;
+min_peak_prominence = 200;
 min_peak_height = 100;
 min_peak_distance = 30;
-thr = 0;
+thr = 10;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 
 % remove night time idx and peaks that are too high
 feature.img_bs_mask_clean.vec = feature.img_bs_mask_clean;
-idx_remove = find(pks>2200 | locs<day_min_idx | locs>day_max_idx);
+idx_remove = find(pks>3500 | locs<day_min_idx | locs>day_max_idx);
 pks(idx_remove) = [];
 feature.img_bs_mask_clean.pks = pks;
 locs(idx_remove) = [];
@@ -55,14 +55,14 @@ p(idx_remove) = [];
 % prediction
 predict = false(size(feature.img_bs_mask_clean.vec));
 for j=1:length(locs)
-    w_ = w*1.5;
+    w_ = w*1;
     predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
 end
 feature.img_bs_mask_clean.predict = predict;
 
 % plot ground truth and prediction
 img_cols = 1;
-img_rows = 2;
+img_rows = 4;
 figure(98)
 
 subplot(img_rows,img_cols,1)
@@ -78,17 +78,14 @@ hold on
 plot(feature.img_bs_mask_clean.locs,feature.img_bs_mask_clean.pks,'ro')
 hold off
 
-% plot prediction
-figure(101)
-
-subplot(img_rows,img_cols,1)
+subplot(img_rows,img_cols,3)
 bar(uint8(sum_smoke_pixel>0),'r')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
-subplot(img_rows,img_cols,2)
+subplot(img_rows,img_cols,4)
 bar(uint8(feature.img_bs_mask_clean.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
