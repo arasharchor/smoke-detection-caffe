@@ -11,8 +11,7 @@ tile_path = '1/2/2.mp4';
 % read frames
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
-fprintf('Loading data.mat\n');
-load(fullfile(path,'data.mat'));
+texture_mat = matfile(fullfile(path,'texture.mat'));
 
 % create workers
 try
@@ -23,25 +22,21 @@ catch ME
 end
 local_cluster = parcluster('local');
 num_workers = 3;
-if(local_cluster.NumWorkers > num_workers + 1)
-    num_workers = local_cluster.NumWorkers;
-end
 parpool('local',num_workers);
 
-% compute texture for every image
-texture = zeros(size(data),'uint8');
-parfor t=1:size(data,4)
-    fprintf('Processing frame %d\n',t);
-    img = double(data(:,:,:,t));
-    img_smooth = gaussianSmooth(img,0.5);
-    img_smooth_lcn = mat2gray(localnormalize(img_smooth,64,64));
-    texture(:,:,:,t) = im2uint8(mat2gray(entropyfilt(img_smooth_lcn,true(9,9))));
+% compute median images over a time period
+[day_min_idx,day_max_idx] = getDayIdx();
+size_texture = size(texture_mat,'texture');
+texture_median = zeros([size_texture(1),size_texture(2),size_texture(3)],'uint8');
+parfor i=1:3
+    fprintf('Processing channel %d\n',i);
+    texture_median(:,:,i) = median(texture_mat.texture(:,:,i,day_min_idx:day_max_idx),4);
 end
 
 % save file
-filename = 'texture.mat';
+filename = 'texture_median.mat';
 fprintf('Saving %s\n',filename);
-save(fullfile(path,filename),'texture','-v7.3');
+save(fullfile(path,filename),'texture_median','-v7.3');
 
 % close workers
 delete(gcp('nocreate'));

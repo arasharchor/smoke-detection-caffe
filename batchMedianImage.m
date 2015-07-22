@@ -30,7 +30,7 @@ ranges = [60]; % 5min
 for j=1:length(ranges)
     median = zeros(size(data_mat,'data'),'uint8');
     parfor i=1:3
-        median(:,:,i,:) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j));
+        median(:,:,i) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j));
     end
     % save file
     filename = ['data_median_',num2str(ranges(j)),'.mat'];
