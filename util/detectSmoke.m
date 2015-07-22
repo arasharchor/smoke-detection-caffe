@@ -10,7 +10,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg,tex,tex_bg )
     imgs_filtered.img_smooth_lcn = img_smooth_lcn;   
     imgs_filtered.img_bg_smooth_lcn = img_bg_smooth_lcn; 
     
-    % background subtraction
+    % background subtraction of images
     img_bs = backgroundSubtraction(img_smooth_lcn,img_bg_smooth_lcn,'Normalize');
     img_bs = mat2gray(localnormalize(double(img_bs),64,64));
     
@@ -91,13 +91,20 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg,tex,tex_bg )
     imgs_filtered.img_bs_rmLowDoGdiff = img_bs_rmLowDoGdiff;
     responses.img_bs_rmLowDoGdiff = sum(imgs_filtered.img_bs_rmLowDoGdiff(:));
 
+    % background subtraction of textures
+    tex_bs = backgroundSubtraction(tex,tex_bg,'Normalize');
+    tex_bs = mat2gray(localnormalize(double(tex_bs),64,64));
+    
+    imgs_filtered.tex_bs = tex_bs;
+    responses.tex_bs = sum(imgs_filtered.tex_bs(:));    
+    
     % remove pixels that have non-grayish texture in the current image
     r_tex = tex(:,:,1);
     g_tex = tex(:,:,2);
     b_tex = tex(:,:,3);
-    rg_thr = 0.15;
-    gb_thr = 0.15;
-    rb_thr = 0.15;
+    rg_thr = 25;
+    gb_thr = 25;
+    rb_thr = 25;
     tex_gray_px = abs(r_tex-g_tex)<rg_thr & abs(r_tex-b_tex)<rb_thr & abs(g_tex-b_tex)<gb_thr;
     img_bs_rmColorTex = img_bs_rmLowDoGdiff;
     img_bs_rmColorTex(~repmat(tex_gray_px,1,1,3)) = 0;
