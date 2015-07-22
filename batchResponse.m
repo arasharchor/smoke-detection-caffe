@@ -26,14 +26,18 @@ num_imgs = size(data,4);
 responses_all = cell(num_imgs,1);
 
 % create workers
-numCores = 4;
 try
     fprintf('Closing any pools...\n');
     delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-parpool('local',numCores);
+local_cluster = parcluster('local');
+num_workers = 3;
+if(local_cluster.NumWorkers > num_workers + 1)
+    num_workers = local_cluster.NumWorkers;
+end
+parpool('local',num_workers);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);

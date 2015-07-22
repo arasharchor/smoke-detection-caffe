@@ -13,14 +13,15 @@ path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
 
 % create workers
-numCores = 3;
 try
     fprintf('Closing any pools...\n');
     delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-parpool('local',numCores);
+local_cluster = parcluster('local');
+num_workers = 3;
+parpool('local',num_workers);
 
 % compute median images over a time period
 % ranges = [60,120,360,720]; % 5min,10min,30min,60min

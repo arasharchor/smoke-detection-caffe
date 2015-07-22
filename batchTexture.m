@@ -14,14 +14,18 @@ fprintf('Loading data.mat\n');
 load(fullfile(path,'data.mat'));
 
 % create workers
-numCores = 3;
 try
     fprintf('Closing any pools...\n');
     delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-parpool('local',numCores);
+local_cluster = parcluster('local');
+num_workers = 3;
+if(local_cluster.NumWorkers > num_workers + 1)
+    num_workers = local_cluster.NumWorkers;
+end
+parpool('local',num_workers);
 
 % compute texture for every image
 texture = zeros(size(data),'uint8');
