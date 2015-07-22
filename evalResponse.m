@@ -17,8 +17,7 @@ load(fullfile(path,'feature.mat'));
 load(fullfile(path,'bbox.mat'));
 
 % parameters
-day_min_idx = 4300;
-day_max_idx = 14000;
+[day_min_idx,day_max_idx] = getDayIdx();
 
 % count the number of smoke pixels in each images
 sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
