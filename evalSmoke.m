@@ -10,8 +10,8 @@ tile_path = '1/2/2.mp4';
 % read ground truth and responses
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
-load(fullfile(path,'label_black_smoke.mat'));
-load(fullfile(path,'feature_black_smoke.mat'));
+load(fullfile(path,'label.mat'));
+load(fullfile(path,'feature.mat'));
 
 % read mask
 load(fullfile(path,'bbox.mat'));
@@ -35,10 +35,10 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
-min_peak_prominence = 200;
+min_peak_prominence = 300;
 min_peak_height = 100;
 min_peak_distance = 30;
-thr = 10;
+thr = 2;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 

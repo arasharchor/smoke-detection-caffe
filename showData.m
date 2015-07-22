@@ -13,9 +13,9 @@ target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 load(fullfile(path,'info.mat'));
 data_mat = matfile(fullfile(path,'data.mat'));
-label_mat = matfile(fullfile(path,'label_black_smoke.mat'));
-label_predict_mat = matfile(fullfile(path,'label_predict_black_smoke.mat'));
-has_label_predict_mat = matfile(fullfile(path,'has_label_predict_black_smoke.mat'));
+label_mat = matfile(fullfile(path,'label.mat'));
+label_predict_mat = matfile(fullfile(path,'label_predict.mat'));
+has_label_predict_mat = matfile(fullfile(path,'has_label_predict.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
 % read mask

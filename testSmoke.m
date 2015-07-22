@@ -2,10 +2,11 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
+
 % t = 5936;
 % t = 7543;
 % t = 6617;
-% t = 4406;
+t = 4406;
 % t = 9011;
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [10312,10523];
@@ -28,7 +29,7 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
-label_mat = matfile(fullfile(path,'label_black_smoke.mat'));
+label_mat = matfile(fullfile(path,'label.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
 % define mask
@@ -56,19 +57,18 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(50);
-    img_cols = 8;
-    img_rows = 3;
+    img_cols = 7;
+    img_rows = 4;
     fig_idx = 1;
 
     I = img;
-    header = ['t = ',num2str(t(i))];
-    str = 'Current image';
-    math = '$$I_t$$';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math);
+    str = 'Current image $I_t$';
+    math = ['t = ',num2str(t(i))];
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = img_bg;
-    str = 'Background';
-    math = '$$B_t$$';
+    str = 'Background $B_t$';
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_smooth_lcn;
@@ -132,7 +132,7 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_DoGdiff;
-    str = '$$D_{dg} = \frac{|I_{dg}-B_{dg}|}{I_{dg}+B_{dg}}$$';
+    str = '$$D_{dg} = |I_{dg}-B_{dg}|/(I_{dg}+B_{dg})$$';
     math = num2str(responses.img_DoGdiff);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 

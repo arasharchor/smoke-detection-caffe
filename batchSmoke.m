@@ -69,9 +69,9 @@ end
 
 % save file
 fprintf('Saving feature.mat\n');
-save(fullfile(path,'feature_black_smoke.mat'),'feature','-v7.3');
+save(fullfile(path,'feature.mat'),'feature','-v7.3');
 fprintf('Saving label_predict.mat\n');
-save(fullfile(path,'label_predict_black_smoke.mat'),'label_predict','-v7.3');
+save(fullfile(path,'label_predict.mat'),'label_predict','-v7.3');
 fprintf('Saving has_label_predict.mat\n');
-save(fullfile(path,'has_label_predict_black_smoke.mat'),'has_label_predict','-v7.3');
+save(fullfile(path,'has_label_predict.mat'),'has_label_predict','-v7.3');
 fprintf('Done\n');
