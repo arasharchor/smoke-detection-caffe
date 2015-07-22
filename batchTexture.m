@@ -1,3 +1,4 @@
+tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
@@ -42,3 +43,4 @@ save(fullfile(path,filename),'texture','-v7.3');
 
 % close workers
 delete(gcp('nocreate'));
+toc

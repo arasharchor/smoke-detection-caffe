@@ -1,3 +1,4 @@
+tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
@@ -75,3 +76,4 @@ save(fullfile(path,'label_predict.mat'),'label_predict','-v7.3');
 fprintf('Saving has_label_predict.mat\n');
 save(fullfile(path,'has_label_predict.mat'),'has_label_predict','-v7.3');
 fprintf('Done\n');
+toc

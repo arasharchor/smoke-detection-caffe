@@ -1,3 +1,4 @@
+tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
@@ -39,3 +40,4 @@ end
 
 % close workers
 delete(gcp('nocreate'));
+toc

@@ -1,3 +1,4 @@
+tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
@@ -65,3 +66,4 @@ end
 fprintf('Saving feature.mat\n');
 save(fullfile(path,'feature.mat'),'feature');
 fprintf('Done\n');
+toc
