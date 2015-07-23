@@ -11,7 +11,7 @@ select_box = 0;
 % t = [10312,10523];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
-t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
+t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
 
 % t = [4371 4412 4448 4483 4531 4565 4606 4649 4680 4723 4773 4819 4872 ...
 %      4916 4981 5032 5069 5108 5152 5192 5231 5279 5325 5368 5410 5449 ...
@@ -190,12 +190,12 @@ for i=1:numel(t)
     math = num2str(responses.img_bs_rmColorTex);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = imgs_filtered.tex_DoG;
+    I = mat2gray(imgs_filtered.tex_DoG);
     str = '$$T_{dg} = \mathrm{DoG}(T_t)$$';
     math = num2str(responses.tex_DoG);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = imgs_filtered.tex_bg_DoG;
+    I = mat2gray(imgs_filtered.tex_bg_DoG);
     str = '$$P_{dg} = \mathrm{DoG}(P_t)$$';
     math = num2str(responses.tex_bg_DoG);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
