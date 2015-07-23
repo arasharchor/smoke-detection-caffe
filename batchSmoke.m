@@ -15,6 +15,10 @@ fprintf('Loading data.mat\n');
 data = load(fullfile(path,'data.mat'));
 fprintf('Loading data_median_60.mat\n');
 data_median = load(fullfile(path,'data_median_60.mat'));
+fprintf('Loading texture.mat\n');
+texture = load(fullfile(path,'texture.mat'));
+fprintf('Loading texture_median.mat\n');
+texture_median = load(fullfile(path,'texture_median.mat'));
 
 % read mask
 fprintf('Loading bbox.mat\n');
@@ -24,6 +28,8 @@ load(fullfile(path,'bbox.mat'));
 fprintf('Cropping images\n');
 data = data.data(bbox_row,bbox_col,:,:);
 data_median = data_median.median(bbox_row,bbox_col,:,:);
+texture = texture.texture(bbox_row,bbox_col,:,:);
+tex_bg = texture_median.texture_median(bbox_row,bbox_col,:);
 
 % allocate spaces
 num_imgs = size(data,4);
@@ -32,20 +38,25 @@ label_predict = false(size(data,1),size(data,2),1,size(data,4));
 has_label_predict = false(1,size(data,4));
 
 % create workers
-numCores = 3;
 try
     fprintf('Closing any pools...\n');
     delete(gcp('nocreate'));
 catch ME
     disp(ME.message);
 end
-parpool('local',numCores);
+local_cluster = parcluster('local');
+num_workers = 3;
+if(local_cluster.NumWorkers > num_workers + 1)
+    num_workers = local_cluster.NumWorkers;
+end
+parpool('local',num_workers);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
     img = data(:,:,:,t);
     img_bg = data_median(:,:,:,t);
-    [responses,imgs_filtered] = detectSmoke(img,img_bg);
+    tex = texture(:,:,:,t);
+    [responses,imgs_filtered] = detectSmoke(img,img_bg,tex,tex_bg);
     responses_all{t} = responses;
     label_predict(:,:,:,t) = imgs_filtered.img_bs_mask_clean;
     if(sum(imgs_filtered.img_bs_mask_clean(:))>0)
