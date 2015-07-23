@@ -10,7 +10,7 @@ select_box = 0;
 % t = 9011;
 % t = [10312,10523];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
-% t = [4369,5108,5936,6613,6617,7298,7435,7543];
+t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,13100,13190,13418,13583,13871];
 
 % t = [4371 4412 4448 4483 4531 4565 4606 4649 4680 4723 4773 4819 4872 ...
@@ -90,10 +90,10 @@ for i=1:numel(t)
     math = num2str(responses.img_bs);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = rgb2gray(imgs_filtered.img_bs_thr)>0;
-    str = 'Threshold $D_{lcn}$';
-    math = num2str(responses.img_bs_thr);
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+%     I = rgb2gray(imgs_filtered.img_bs_thr)>0;
+%     str = 'Threshold $D_{lcn}$';
+%     math = num2str(responses.img_bs_thr);
+%     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_black_px;
     str = 'Black $I_{lcn}$ px';
@@ -155,21 +155,21 @@ for i=1:numel(t)
     math = num2str(responses.img_bs_rmLowDoGdiff);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = tex;
+    I = bilateralSmooth(tex);
     str = 'Current texture $T_t$';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
     
-    I = tex_bg;
+    I = bilateralSmooth(tex_bg);
     str = 'Background texture $BT_t$';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
 
     I = imgs_filtered.tex_bs;
     str = '$$DT_{t} = \frac{|T_t-BT_t|}{T_t+BT_t}$$';
-    math = '';
+    math = num2str(responses.tex_bs);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);    
-    
+
     I = imgs_filtered.tex_gray_px;
     str = 'Grayish $T_t$ px';
     math = num2str(responses.tex_gray_px);
