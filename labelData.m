@@ -22,7 +22,7 @@ has_label_idx = find(has_label==1);
 
 % label images
 global t
-t = 6055;
+t = 6460;
 % t = 7436;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerLabelData,r_json.frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only});
