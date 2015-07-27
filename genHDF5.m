@@ -71,11 +71,11 @@ for i=1:size(data_files,1)
     h5write(h5name_nega, '/label', label_caffe_nega);
     % display images
     figure
-    subplot(3,1,1)
+    subplot(1,3,1)
     imshow(permute(squeeze(data_caffe_posi(:,:,:,j)),[2 1 3])+0.5)
-    subplot(3,1,2)
+    subplot(1,3,2)
     imshow(mat2gray(squeeze(label_mat.label(:,:,:,has_label_idx(j)))))
-    subplot(3,1,3)
+    subplot(1,3,3)
     imshow(reshape(label_caffe_posi(:,j),patch_label_height,patch_label_width))
 end
 fprintf('Done\n');

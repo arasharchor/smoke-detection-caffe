@@ -191,12 +191,12 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = mat2gray(imgs_filtered.tex_DoG);
-    str = '$$T_{dg} = \mathrm{DoG}(T_t)$$';
+    str = '$$T_{dg} = \mathrm{DoG}(T_{bi})$$';
     math = num2str(responses.tex_DoG);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = mat2gray(imgs_filtered.tex_bg_DoG);
-    str = '$$P_{dg} = \mathrm{DoG}(P_t)$$';
+    str = '$$P_{dg} = \mathrm{DoG}(P_{bi})$$';
     math = num2str(responses.tex_bg_DoG);
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 

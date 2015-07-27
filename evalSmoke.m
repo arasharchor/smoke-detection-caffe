@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-05-03.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -31,13 +31,13 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 % feature.img_bs_mask_clean = feature.img_bs_mask_clean.*max;
 
 % Gaussian smoothing
-feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,2);
+feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
-min_peak_prominence = 200;
+min_peak_prominence = 150;
 min_peak_height = 100;
 min_peak_distance = 20;
-thr = 0;
+thr = 10;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 
@@ -67,12 +67,12 @@ figure(98)
 subplot(img_rows,img_cols,1)
 bar(sum_smoke_pixel,'r')
 xlim([day_min_idx day_max_idx])
-title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
+title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
 subplot(img_rows,img_cols,2)
 plot(feature.img_bs_mask_clean.vec,'b')
 xlim([day_min_idx day_max_idx])
-title('Background subtraction (10 min = 120 frames)')
+title('Background subtraction')
 hold on
 plot(feature.img_bs_mask_clean.locs,feature.img_bs_mask_clean.pks,'ro')
 hold off
@@ -82,11 +82,11 @@ bar(uint8(sum_smoke_pixel>0),'r')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
-title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
+title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
 subplot(img_rows,img_cols,4)
 bar(uint8(feature.img_bs_mask_clean.predict),'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
-title('Background subtraction (10 min = 120 frames)')
+title('Background subtraction')
