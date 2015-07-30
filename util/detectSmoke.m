@@ -92,8 +92,8 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg,tex,tex_bg )
     responses.img_bs_rmLowDoGdiff = sum(imgs_filtered.img_bs_rmLowDoGdiff(:));
 
     % background subtraction of textures
-    tex_smooth = bilateralSmooth(tex);
-    tex_bg_smooth = bilateralSmooth(tex_bg);
+    tex_smooth = bilateralSmooth(tex,0.2,10);
+    tex_bg_smooth = bilateralSmooth(tex_bg,0.2,10);
     tex_bs = backgroundSubtraction(tex_smooth,tex_bg_smooth,'Normalize');
     tex_bs = mat2gray(localnormalize(double(tex_bs),64,64));
 

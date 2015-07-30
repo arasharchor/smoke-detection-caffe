@@ -1,4 +1,4 @@
-function [ imgs_smooth ] = gaussianSmooth( imgs,sigma )
+function imgs_smooth = gaussianSmooth( imgs,sigma )
     imgs_smooth = imgs;
     h_size = 2*ceil(3*sigma)+1;
     h = fspecial('gaussian',[h_size h_size],sigma);
