@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-03.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -34,9 +34,9 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 feature.img_bs_mask_clean = filter1D(feature.img_bs_mask_clean,1);
 
 % find local max
-min_peak_prominence = 150;
+min_peak_prominence = 200;
 min_peak_height = 100;
-min_peak_distance = 20;
+min_peak_distance = 30;
 thr = 10;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(feature.img_bs_mask_clean,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
@@ -54,7 +54,7 @@ p(idx_remove) = [];
 % prediction
 predict = false(size(feature.img_bs_mask_clean.vec));
 for j=1:length(locs)
-    w_ = w*1;
+    w_ = w*1.5;
     predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
 end
 feature.img_bs_mask_clean.predict = predict;
@@ -90,3 +90,13 @@ xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
 title('Background subtraction')
+
+% output a json file
+vec = feature.img_bs_mask_clean.vec;
+vec(1:day_min_idx) = 0;
+vec(day_max_idx:end) = 0;
+vec = round(vec);
+js = array2json(vec);
+fileID = fopen(fullfile(path,'smoke.js'),'w');
+fprintf(fileID,js);
+fclose(fileID);
