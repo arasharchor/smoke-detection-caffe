@@ -1,4 +1,4 @@
-function img_clean = removeNoise( img )
+function img_clean = removeLabelNoise( img )
     channel = cell(1,1,size(img,3));
     for i=1:size(img,3)
         img_c = img(:,:,i);

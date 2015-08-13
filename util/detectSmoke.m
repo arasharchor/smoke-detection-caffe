@@ -6,7 +6,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg,tex,tex_bg )
     % local contrast normalization
     img_smooth_lcn = mat2gray(localnormalize(double(img_smooth),64,64));
     img_bg_smooth_lcn = mat2gray(localnormalize(double(img_bg_smooth),64,64));
-    
+     
     imgs_filtered.img_smooth_lcn = img_smooth_lcn;   
     imgs_filtered.img_bg_smooth_lcn = img_bg_smooth_lcn; 
     
@@ -156,7 +156,7 @@ function [ responses,imgs_filtered ] = detectSmoke( img,img_bg,tex,tex_bg )
 
     % smooth the mask
     img_bs_mask_smooth = img_bs_mask;
-    img_bs_mask_smooth = im2double(morphology(img_bs_mask_smooth,5));
+    img_bs_mask_smooth = im2double(morphology(img_bs_mask_smooth,5,'close'));
 
     imgs_filtered.img_bs_mask_smooth = img_bs_mask_smooth;
     responses.img_bs_mask_smooth = sum(imgs_filtered.img_bs_mask_smooth(:)); 

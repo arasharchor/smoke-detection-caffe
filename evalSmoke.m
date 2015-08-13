@@ -54,7 +54,7 @@ p(idx_remove) = [];
 % prediction
 predict = false(size(feature.img_bs_mask_clean.vec));
 for j=1:length(locs)
-    w_ = w*1.5;
+    w_ = w*2;
     predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
 end
 feature.img_bs_mask_clean.predict = predict;
@@ -96,7 +96,8 @@ vec = feature.img_bs_mask_clean.vec;
 vec(1:day_min_idx) = 0;
 vec(day_max_idx:end) = 0;
 vec = round(vec);
-js = array2json(vec);
+predict = feature.img_bs_mask_clean.predict;
+js = array2json(vec,predict);
 fileID = fopen(fullfile(path,'smoke.js'),'w');
 fprintf(fileID,js);
 fclose(fileID);
