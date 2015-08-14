@@ -4,13 +4,14 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-t = 5936;
+% t = 5936;
 % t = 7543;
 % t = 6617;
 % t = 4406;
 % t = 9011;
 % t = 12929;
-% t = [4369,5108,5936,6613,6617,7298,7435,7543,12929,12566];
+% t = 12566;
+t = [4369,4406,5108,5936,6613,6617,7298,7435,7543,9011,12929,12566];
 
 % set data source
 date_path = '2015-05-02/';
@@ -60,11 +61,16 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(68);
-    img_cols = 4;
-    img_rows = 2;
+    img_cols = 6;
+    img_rows = 3;
     fig_idx = 1;
     
     I = img;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.img_lcn;
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
@@ -74,7 +80,42 @@ for i=1:numel(t)
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
+    I = imgs_filtered.img_histeq;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
     I = label2rgb(imgs_filtered.tex);
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = label2rgb(imgs_filtered.tex_filtered);
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_gray_px;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = label2rgb(imgs_filtered.tex_rm_nongray);
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = label2rgb(imgs_filtered.tex_rm_nongray_filtered);
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.img_black_px;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = label2rgb(imgs_filtered.tex_rm_nonblack);
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
@@ -83,13 +124,28 @@ for i=1:numel(t)
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
+    
+    I = imgs_filtered.img_entropy;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = imgs_filtered.img_DoG_entropy;
+    I = imgs_filtered.img_entropy_white_px;
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.img_DoG_entropy_gray;
+    I = imgs_filtered.img_entropy_black_px;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = label2rgb(imgs_filtered.tex_rm_highfreq);
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = label2rgb(imgs_filtered.tex_clean);
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
