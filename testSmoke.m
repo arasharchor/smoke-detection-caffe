@@ -57,7 +57,7 @@ for i=1:numel(t)
     tex = texture_mat.texture(bbox_row,bbox_col,:,t(i));
     tex_bg = texture_median_mat.texture_median(bbox_row,bbox_col,:);
     tic
-    [responses,imgs_filtered] = detectSmoke(img,img_bg,tex,tex_bg);
+    imgs_filtered = detectSmoke(img,img_bg,tex,tex_bg);
     toc
     
     % visualize images
@@ -88,72 +88,72 @@ for i=1:numel(t)
 
     I = imgs_filtered.img_bs;
     str = '$$D_{lcn} = \mathrm{bgSub}(I_{lcn},B_{lcn})$$';
-    math = num2str(responses.img_bs);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-%     I = rgb2gray(imgs_filtered.img_bs_thr)>0;
-%     str = 'Threshold $D_{lcn}$';
-%     math = num2str(responses.img_bs_thr);
-%     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    I = rgb2gray(imgs_filtered.img_bs_thr)>0;
+    str = 'Threshold $D_{lcn}$';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_black_px;
     str = 'Black $I_{lcn}$ px';
-    math = num2str(responses.img_black_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_rmblack;
     str = 'Remove non-black $I_{lcn}$';
-    math = num2str(responses.img_bs_rmblack);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_gray_px;
     str = 'Grayish $I_{lcn}$ px';
-    math = num2str(responses.img_gray_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_rmcolor;
     str = 'Remove non-grayish $I_{lcn}$';
-    math = num2str(responses.img_bs_rmcolor);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_lowS_px;
     str = 'Low S px in $I_{lcn}$';
-    math = num2str(responses.img_lowS_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_rmlowS;
     str = 'Remove high S in $I_{lcn}$';
-    math = num2str(responses.img_bs_rmlowS);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_DoG;
     str = '$$I_{dg} = \mathrm{DoG}(I_t)$$';
-    math = num2str(responses.img_DoG);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bg_DoG;
     str = '$$B_{dg} = \mathrm{DoG}(B_t)$$';
-    math = num2str(responses.img_bg_DoG);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_DoGdiff;
     str = '$$D_{dg} = \mathrm{bgSub}(I_{dg},B_{dg})$$';
-    math = num2str(responses.img_DoGdiff);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_DoGdiff_thr;
     str = 'Threshold $D_{dg}$';
-    math = num2str(responses.img_DoGdiff_thr);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_DoGdiff_entropy_px;
     str = '$$E_{dg} = \mathrm{Entropy}(D_{dg})$$';
-    math = num2str(responses.img_DoGdiff_entropy_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_rmLowDoGdiff;
     str = 'Remove low $E_{dg}$';
-    math = num2str(responses.img_bs_rmLowDoGdiff);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = tex;
@@ -168,72 +168,72 @@ for i=1:numel(t)
     
     I = imgs_filtered.tex_smooth;
     str = '$$T_{bi} = \mathrm{bltSmooth}(T_t)$$';
-    math = num2str(responses.tex_smooth);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
     
     I = imgs_filtered.tex_bg_smooth;
     str = '$$P_{bi} = \mathrm{bltSmooth}(P_t)$$';
-    math = num2str(responses.tex_bg_smooth);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);     
     
     I = imgs_filtered.tex_bs;
     str = '$$S_{bi} = \mathrm{bgSub}(T_{bi},P_{bi})$$';
-    math = num2str(responses.tex_bs);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);    
     
     I = imgs_filtered.tex_gray_px;
     str = 'Grayish $T_{bi}$ px';
-    math = num2str(responses.tex_gray_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.img_bs_rmColorTex;
     str = 'Remove non-grayish $T_{bi}$';
-    math = num2str(responses.img_bs_rmColorTex);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = mat2gray(imgs_filtered.tex_DoG);
     str = '$$T_{dg} = \mathrm{DoG}(T_{bi})$$';
-    math = num2str(responses.tex_DoG);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = mat2gray(imgs_filtered.tex_bg_DoG);
     str = '$$P_{dg} = \mathrm{DoG}(P_{bi})$$';
-    math = num2str(responses.tex_bg_DoG);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.tex_DoGdiff;
     str = '$$S_{dg} = \mathrm{bgSub}(T_{dg},P_{dg})$$';
-    math = num2str(responses.tex_DoGdiff);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.tex_DoGdiff_thr;
     str = 'Threshold $S_{dg}$';
-    math = num2str(responses.tex_DoGdiff_thr);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.tex_DoGdiff_entropy_px;
     str = '$$N_{dg} = \mathrm{Entropy}(S_{dg})$$';
-    math = num2str(responses.tex_DoGdiff_entropy_px);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_rmLowDoGTexdiff;
     str = 'Remove low $N_{dg}$';
-    math = num2str(responses.img_bs_rmLowDoGTexdiff);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_mask;
     str = 'Create a mask';
-    math = num2str(responses.img_bs_mask);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_mask_smooth;
     str = 'Smooth the mask';
-    math = num2str(responses.img_bs_mask_smooth);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = imgs_filtered.img_bs_mask_clean;
     str = 'Remove noise';
-    math = num2str(responses.img_bs_mask_clean);
+    math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     I = img_label;

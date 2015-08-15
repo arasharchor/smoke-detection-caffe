@@ -33,9 +33,10 @@ texture = zeros(size(data),'uint8');
 parfor t=1:size(data,4)
     fprintf('Processing frame %d\n',t);
     img = double(data(:,:,:,t));
-    img_smooth = gaussianSmooth(img,0.5);
-    img_smooth_lcn = mat2gray(localnormalize(img_smooth,64,64));
-    texture(:,:,:,t) = im2uint8(mat2gray(entropyfilt(img_smooth_lcn,true(9,9))));
+    img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
+    img_DoG = mat2gray(abs(diffOfGaussian(img_lcn,0.5,3)));
+    img_entropy = mat2gray(entropyfilt(img_DoG,true(9,9)));
+    texture(:,:,:,t) = im2uint8(img_entropy);
 end
 
 % save file
