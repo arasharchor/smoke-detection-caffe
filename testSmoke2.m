@@ -3,8 +3,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 5936;
-t = 7543;
+t = 5936;
+% t = 7543;
 % t = 6617;
 % t = 4406;
 % t = 9011;
@@ -33,8 +33,7 @@ path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
 label_mat = matfile(fullfile(path,'label.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
-texture_mat = matfile(fullfile(path,'texture.mat'));
-texture_median_mat = matfile(fullfile(path,'texture_median.mat'));
+entropy_mat = matfile(fullfile(path,'entropy.mat'));
 
 % define mask
 t_ref = 5936;
@@ -68,15 +67,14 @@ for i=1:numel(t)
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     img = data_mat.data(bbox_row,bbox_col,:,t(i));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
-    tex = texture_mat.texture(bbox_row,bbox_col,:,t(i));
-    tex_bg = texture_median_mat.texture_median(bbox_row,bbox_col,:);
+    img_entropy = entropy_mat.entropy(bbox_row,bbox_col,:,t(i));
     tic
-    imgs_filtered = detectSmoke2(img,img_bg,tex,tex_bg,filter_bank);
+    imgs_filtered = detectSmoke2(img,img_bg,img_entropy,filter_bank);
     toc
     
     % visualize images
     fig = figure(50);
-    img_cols = 7;
+    img_cols = 8;
     img_rows = 3;
     fig_idx = 1;
 
@@ -170,7 +168,27 @@ for i=1:numel(t)
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = label2rgb(imgs_filtered.tex_seg_clean);
+    I = imgs_filtered.tex_seg_clean;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_bs;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_bs_thr;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.img_smoke;
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+    I = imgs_filtered.img_smoke_clean;
     str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);

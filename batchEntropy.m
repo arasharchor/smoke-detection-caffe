@@ -28,21 +28,21 @@ if(local_cluster.NumWorkers > num_workers + 1)
 end
 parpool('local',num_workers);
 
-% compute texture for every image
-texture = zeros(size(data),'uint8');
+% compute entropy for every image
+entropy = zeros(size(data),'uint8');
 parfor t=1:size(data,4)
     fprintf('Processing frame %d\n',t);
     img = double(data(:,:,:,t));
     img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
     img_DoG = mat2gray(abs(diffOfGaussian(img_lcn,0.5,3)));
     img_entropy = mat2gray(entropyfilt(img_DoG,true(9,9)));
-    texture(:,:,:,t) = im2uint8(img_entropy);
+    entropy(:,:,:,t) = im2uint8(img_entropy);
 end
 
 % save file
-filename = 'texture.mat';
+filename = 'entropy.mat';
 fprintf('Saving %s\n',filename);
-save(fullfile(path,filename),'texture','-v7.3');
+save(fullfile(path,filename),'entropy','-v7.3');
 
 % close workers
 delete(gcp('nocreate'));
