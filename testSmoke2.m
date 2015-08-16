@@ -33,7 +33,6 @@ path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
 label_mat = matfile(fullfile(path,'label.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
-entropy_mat = matfile(fullfile(path,'entropy.mat'));
 
 % define mask
 t_ref = 5936;
@@ -46,17 +45,7 @@ else
 end
 
 % compute filter bank (Laws' texture energy measures)
-kernel{1} = [1,4,6,4,1]; % L5 = average gray level
-kernel{2} = [-1,-2,0,2,1]; % E5 = edges
-kernel{3} = [-1,0,2,0,-1]; % S5 = spots
-kernel{4} = [1,-4,6,-4,1]; % R5 = ripples
-kernel{5} = [-1,2,0,-2,1]; % W5 = waves
-filter_bank = zeros(5,5,25);
-for i=1:5
-    for j=1:5
-        filter_bank(:,:,(i-1)*5+j) = kernel{i}'*kernel{j};
-    end
-end
+filter_bank = getFilterbank();
 
 for i=1:numel(t)
     if(t(i)<3) 
@@ -67,9 +56,8 @@ for i=1:numel(t)
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     img = data_mat.data(bbox_row,bbox_col,:,t(i));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
-    img_entropy = entropy_mat.entropy(bbox_row,bbox_col,:,t(i));
     tic
-    imgs_filtered = detectSmoke2(img,img_bg,img_entropy,filter_bank);
+    imgs_filtered = detectSmoke2(img,img_bg,filter_bank);
     toc
     
     % visualize images
