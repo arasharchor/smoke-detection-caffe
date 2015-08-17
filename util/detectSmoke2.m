@@ -39,7 +39,7 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     feature = feature*coeff;
 
     % k-means clustering
-    K = 20;
+    K = 25;
     [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',2);
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     
@@ -66,9 +66,9 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     r = img_lcn(:,:,1);
     g = img_lcn(:,:,2);
     b = img_lcn(:,:,3);
-    r_thr = 0.8;
-    g_thr = 0.7;
-    b_thr = 0.7;
+    r_thr = 0.7;
+    g_thr = 0.6;
+    b_thr = 0.6;
     img_black_px = r<r_thr & g<g_thr & b<b_thr;
     tex_seg_rm_nonblack(~img_black_px) = 0;
     tex_seg_rm_nonblack_filtered = removeLabelNoise(tex_seg_rm_nonblack);
@@ -117,6 +117,7 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     % smooth the result
     img_smoke_clean = morphology(img_smoke,2,'close');
     img_smoke_clean = removeSmallRegions(img_smoke_clean,200);
+    img_smoke_clean = im2bw(img_smoke_clean,0);
 
     % return images
     imgs_filtered.img_lcn = img_lcn;
