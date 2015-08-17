@@ -30,7 +30,7 @@ data_median = data_median.median(bbox_row,bbox_col,:,:);
 
 % allocate spaces
 num_imgs = size(data,4);
-responses_all = cell(num_imgs,1);
+response = zeros(num_imgs,1);
 label_predict = false(size(data,1),size(data,2),1,size(data,4));
 has_label_predict = false(1,size(data,4));
 
@@ -52,9 +52,10 @@ parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
     img = data(:,:,:,t);
     img_bg = data_median(:,:,:,t);
-    imgs_filtered = detectSmoke2(img,img_bg,filter_bank);
+    [val,imgs_filtered] = detectSmoke2(img,img_bg,filter_bank);
+    response(t) = val;
     label_predict(:,:,:,t) = imgs_filtered.img_smoke_clean;
-    if(sum(imgs_filtered.img_smoke_clean(:))>0)
+    if(val>0)
         has_label_predict(t) = true;
     end
 end
@@ -62,21 +63,9 @@ end
 % close workers
 delete(gcp('nocreate'));
 
-% process features
-fprintf('Computing feature vector\n');
-fields = fieldnames(responses_all{3});
-for i=1:length(fields)
-    feature.(fields{i}) = zeros(num_imgs,1);
-end
-for j=3:num_imgs
-    for k=1:length(fields)
-        feature.(fields{k})(j) = responses_all{j}.(fields{k});
-    end
-end
-
 % save file
-fprintf('Saving feature.mat\n');
-save(fullfile(path,'feature.mat'),'feature','-v7.3');
+fprintf('Saving response.mat\n');
+save(fullfile(path,'response.mat'),'response','-v7.3');
 fprintf('Saving label_predict.mat\n');
 save(fullfile(path,'label_predict.mat'),'label_predict','-v7.3');
 fprintf('Saving has_label_predict.mat\n');

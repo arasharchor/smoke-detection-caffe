@@ -1,4 +1,4 @@
-function imgs_filtered = detectSmoke2( img,img_bg,filter_bank )
+function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
 	% local contrast normalization
     img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
 
@@ -141,4 +141,5 @@ function imgs_filtered = detectSmoke2( img,img_bg,filter_bank )
     imgs_filtered.img_bs_thr = img_bs_thr;
     imgs_filtered.img_smoke = img_smoke;
     imgs_filtered.img_smoke_clean = img_smoke_clean;
+    val = sum(img_smoke_clean(:));
 end
