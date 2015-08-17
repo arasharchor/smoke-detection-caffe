@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-05-01.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 

@@ -39,8 +39,8 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     feature = feature*coeff;
 
     % k-means clustering
-    K = 25;
-    [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',2);
+    K = 20;
+    [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',3);
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     
     % filter the texture image
@@ -55,7 +55,7 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     b = img_histeq(:,:,3);
     rg_thr = 0.1;
     gb_thr = 0.1;
-    rb_thr = 0.15;
+    rb_thr = 0.2;
     img_gray_px = abs(r-g)<rg_thr & abs(r-b)<rb_thr & abs(g-b)<gb_thr;
     tex_seg_rm_nongray(~img_gray_px) = 0;
     tex_seg_rm_nongray_filtered = removeSmallRegions(tex_seg_rm_nongray,25);
@@ -63,12 +63,12 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
 
     % remove non-black segments
     tex_seg_rm_nonblack = tex_seg_rm_nongray_filtered;
-    r = img_lcn(:,:,1);
-    g = img_lcn(:,:,2);
-    b = img_lcn(:,:,3);
-    r_thr = 0.7;
-    g_thr = 0.6;
-    b_thr = 0.6;
+    r = img_adj(:,:,1);
+    g = img_adj(:,:,2);
+    b = img_adj(:,:,3);
+    r_thr = 0.5;
+    g_thr = 0.5;
+    b_thr = 0.7;
     img_black_px = r<r_thr & g<g_thr & b<b_thr;
     tex_seg_rm_nonblack(~img_black_px) = 0;
     tex_seg_rm_nonblack_filtered = removeLabelNoise(tex_seg_rm_nonblack);
