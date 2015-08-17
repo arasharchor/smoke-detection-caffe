@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -26,13 +26,12 @@ sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 response = filter1D(response,1);
 
 % find local max
-min_peak_prominence = 200;
-min_peak_height = 100;
+min_peak_prominence = 10;
+min_peak_height = 50;
 min_peak_distance = 50;
-thr = 10;
+thr = 5;
 max_peak_width = 100;
-% [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
-[pks,locs,w,p] = findpeaks(response);
+[pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 
 % remove night time idx and peaks that are too high
 idx_remove = find(pks>4000 | locs<day_min_idx | locs>day_max_idx);

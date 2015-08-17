@@ -39,7 +39,7 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     feature = feature*coeff;
 
     % k-means clustering
-    K = 20;
+    K = 25;
     [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',3);
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     
