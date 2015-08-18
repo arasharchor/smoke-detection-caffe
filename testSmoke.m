@@ -36,9 +36,9 @@ texture_mat = matfile(fullfile(path,'texture.mat'));
 texture_median_mat = matfile(fullfile(path,'texture_median.mat'));
 
 % define mask
-t_ref = 5936;
-img = data_mat.data(:,:,:,t_ref);
 if(select_box == 1)
+    t_ref = 5936;
+    img = data_mat.data(:,:,:,t_ref);
     [bbox_row,bbox_col] = selectBound(img);
     save(fullfile(path,'bbox.mat'),'bbox_row','bbox_col');
 else
@@ -46,7 +46,7 @@ else
 end
 
 for i=1:numel(t)
-    if(t(i)<3) 
+    if(t(i)<3)
         continue;
     end
     

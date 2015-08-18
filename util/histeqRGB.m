@@ -1,7 +1,11 @@
-function img_histeq = histeqRGB( img )
-    img_histeq = rgb2hsv(img);
-%     img_histeq(:,:,3) = histeq(img_histeq(:,:,3));
-    img_histeq(:,:,3) = adapthisteq(img_histeq(:,:,3));
-    img_histeq = hsv2rgb(img_histeq);
+function imgs_histeq = histeqRGB( imgs )
+    imgs_histeq = double(imgs);
+    for i=1:size(imgs,4)
+        img = imgs(:,:,:,i);
+        img = rgb2hsv(img);
+        img(:,:,3) = adapthisteq(img(:,:,3));
+        img = hsv2rgb(img);
+        imgs_histeq(:,:,:,i) = img;
+    end
 end
 

@@ -15,9 +15,9 @@ function imgs_median = computeMedian( imgs,range,use_gpu_array )
             pool(:,:,end) = imgs(:,:,ptr_end);
         end
         if(use_gpu_array)
-            imgs_median(:,:,t) = gather(mean(pool,3));
+            imgs_median(:,:,t) = gather(median(pool,3));
         else
-            imgs_median(:,:,t) = mean(pool,3);
+            imgs_median(:,:,t) = median(pool,3);
         end
     end
 end

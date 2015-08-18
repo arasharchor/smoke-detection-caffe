@@ -21,9 +21,9 @@ target_dir = 'images';
 path = fullfile(target_dir,date_path);
 
 % define mask
-t_ref = 5936;
-img = imread(fullfile(path,[num2str(t_ref),'.jpg']));
 if(select_box == 1)
+    t_ref = 5936;
+    img = imread(fullfile(path,[num2str(t_ref),'.jpg']));
     [bbox_row,bbox_col] = selectBound(img);
     save(fullfile(path,'bbox.mat'),'bbox_row','bbox_col');
 else

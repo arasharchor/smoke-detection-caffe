@@ -20,9 +20,9 @@ path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
 
 % define mask
-t_ref = 5936;
-img = data_mat.data(:,:,:,t_ref);
 if(select_box == 1)
+    t_ref = 5936;
+    img = data_mat.data(:,:,:,t_ref);
     [bbox_row,bbox_col] = selectBound(img);
     save(fullfile(path,'bbox.mat'),'bbox_row','bbox_col');
 else
