@@ -42,8 +42,8 @@ parpool('local',num_workers);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
-    imgs = data(:,:,:,t-2:t);
-    [responses,~] = computeResponse(imgs);
+    img = data(:,:,:,t);
+    [responses,~] = computeResponse(img);
     responses_all{t} = responses;
 end
 

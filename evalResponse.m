@@ -33,7 +33,7 @@ end
 
 % plot ground truth and features
 img_cols = 1;
-img_rows = 5;
+img_rows = 3;
 figure(98)
 
 subplot(img_rows,img_cols,1)
@@ -51,93 +51,11 @@ set(gca,'YTick',[]);
 title('Sum of S channel of HSV')
 
 subplot(img_rows,img_cols,3)
-plot(feature.img_s_diff,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of temporal difference of S channel')
-
-subplot(img_rows,img_cols,4)
-plot(feature.img_v,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of V channel of HSV')
-
-subplot(img_rows,img_cols,5)
-plot(feature.img_v_diff,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of temporal difference of V channel')
-
-tightfig;
-
-figure(99)
-
-subplot(img_rows,img_cols,1)
-plot(sum_smoke_pixel,'r')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
-
-subplot(img_rows,img_cols,2)
 plot(feature.img_DoG,'b')
 xlim([day_min_idx day_max_idx])
 set(gca,'YTickLabel',[]);
 set(gca,'YTick',[]);
-title('Sum of difference of Gaussian (DoG)')
-
-subplot(img_rows,img_cols,3)
-plot(feature.img_DoG_diff,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of temporal difference of DoG')
-
-subplot(img_rows,img_cols,4)
-plot(feature.img_entropy,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of local entropy of temporal difference')
-
-subplot(img_rows,img_cols,5)
-plot(feature.img_rgb_sum,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of RGB')
-
-tightfig;
-
-figure(100)
-
-subplot(img_rows,img_cols,1)
-plot(sum_smoke_pixel,'r')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title(['Distribution of Smoke ( ',date_path,dataset_path,tile_path,' )'])
-
-subplot(img_rows,img_cols,2)
-plot(feature.img_rgb_diff,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of difference of RGB')
-
-subplot(img_rows,img_cols,3)
-plot(feature.wavelet_energy,'b')
-xlim([day_min_idx day_max_idx])
-set(gca,'YTickLabel',[]);
-set(gca,'YTick',[]);
-title('Sum of wavelet energy')
-
-subplot(img_rows,img_cols,4)
-
-subplot(img_rows,img_cols,5)
+title('Sum of DoG')
 
 tightfig;
 

@@ -1,43 +1,12 @@
-function [ responses,imgs_filtered ] = computeResponse( imgs )
-    % image smoothing
-    imgs_smooth = gaussianSmooth(imgs,0.5);
-    
+function [ responses,imgs_filtered ] = computeResponse( img )
     % convert to hsv
-    imgs_hsv = rgb2hsv_4D(imgs_smooth);
-    imgs_filtered.img_s = imgs_hsv(:,:,2,end);
+    imgs_hsv = rgb2hsv(img);
+    imgs_filtered.img_s = imgs_hsv(:,:,2);
     responses.img_s = sum(imgs_filtered.img_s(:));
-    imgs_filtered.img_v = imgs_hsv(:,:,3,end);
-    responses.img_v = sum(imgs_filtered.img_v(:));
-    
-    % three frame differencing
-    img_hsv_diff = threeFrameDiff(imgs_hsv,'Normalize');
-    imgs_filtered.img_s_diff = img_hsv_diff(:,:,2);
-    responses.img_s_diff = sum(imgs_filtered.img_s_diff(:));
-    imgs_filtered.img_v_diff = img_hsv_diff(:,:,3);
-    responses.img_v_diff = sum(imgs_filtered.img_v_diff(:));
     
     % compute difference of Gaussian
-    imgs_DoG = diffOfGaussian(imgs_smooth,0.5,3);
-    imgs_filtered.img_DoG = imgs_DoG(:,:,:,end);
-    responses.img_DoG = sum(imgs_filtered.img_DoG(:));
-    
-    % three frame differencing of DoG
-    img_DoG_diff = mat2gray(threeFrameDiff(imgs_DoG));
-    img_DoG_diff(img_DoG_diff<0.1) = 0;
-    imgs_filtered.img_DoG_diff = img_DoG_diff;
-    responses.img_DoG_diff = sum(img_DoG_diff(:));
-    
-    % compute entropy image of DoG
-    img_entropy = entropyfilt(img_DoG_diff,true(21,21));
-    imgs_filtered.img_entropy = img_entropy;
-    responses.img_entropy = sum(img_entropy(:));
-    
-    % compute rgb color sum and diff
-    imgs_smooth_double = im2double(imgs_smooth);
-    responses.img_rgb_sum = sum(imgs_smooth_double(:));
-    responses.img_rgb_diff = rgbDiff(imgs_smooth_double);
-    
-    % compute wavelet energy
-    [~,cH,cV,cD] = dwt2(imgs_smooth(:,:,:,end),'db1');
-    responses.wavelet_energy = sum(cH(:).^2+cV(:).^2+cD(:).^2);
+    img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
+    img_DoG = mat2gray(abs(diffOfGaussian(img_lcn,0.5,3)));
+    imgs_filtered.img_DoG = img_DoG;
+    responses.img_DoG = sum(img_DoG(:));
 end
