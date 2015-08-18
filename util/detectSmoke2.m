@@ -1,7 +1,6 @@
 function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
 	% local contrast normalization
     img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
-    img_lcn = imadjustRGB(img_lcn);
     
     % color adjustment
     img_adj = imadjustRGB(img);
@@ -40,8 +39,8 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     feature = feature*coeff;
 
     % k-means clustering
-    K = 25;
-    [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',3);
+    K = 20;
+    [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',5);
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     
     % filter the texture image

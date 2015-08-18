@@ -9,5 +9,6 @@ caffe/*.solverstate
 *.asv
 images/
 frames/**/*.mat
+frames/**/*.js
 !frames/**/has_label.mat
 !frames/**/label.mat
