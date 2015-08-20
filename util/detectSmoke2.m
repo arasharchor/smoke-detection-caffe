@@ -1,7 +1,8 @@
 function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
 	% local contrast normalization
     img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
-    
+    img_bg_lcn = mat2gray(localnormalize(double(gaussianSmooth(img_bg,0.5)),128,128));
+
     % color adjustment
     img_adj = imadjustRGB(img);
 
@@ -111,6 +112,10 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     img_bs_thr = morphology(img_bs_thr,2,'close');
     img_bs_thr = removeLabelNoise(img_bs_thr);
     
+    % background subtraction of DoG
+    img_bg_DoG = mat2gray(abs(diffOfGaussian(img_bg_lcn,0.5,3)));
+    img_bs_DoG = mat2gray(backgroundSubtraction(img_DoG,img_bg_DoG,'Normalize'));
+    
     % finalize the result
     img_smoke = tex_seg_clean & img_bs_thr;
     
@@ -138,6 +143,8 @@ function [val,imgs_filtered] = detectSmoke2( img,img_bg,filter_bank )
     imgs_filtered.img_entropy_gray_px = img_entropy_gray_px;
     imgs_filtered.tex_seg_rm_highfreq = tex_seg_rm_highfreq;
     imgs_filtered.tex_seg_clean = tex_seg_clean;
+    imgs_filtered.img_bg_DoG = img_bg_DoG;
+    imgs_filtered.img_bs_DoG = img_bs_DoG;
     imgs_filtered.img_bs = img_bs;
     imgs_filtered.img_bs_thr = img_bs_thr;
     imgs_filtered.img_smoke = img_smoke;

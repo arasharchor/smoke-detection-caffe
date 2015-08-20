@@ -4,13 +4,16 @@ addpath(genpath('util'));
 select_box = 0;
 
 % t = 5936;
-t = 7543;
+% t = 7543;
+% t = 7000;
 % t = 6617;
 % t = 4406;
 % t = 9011;
 % t = 12929;
+% t = 4369;
+% t = 5969;
 % t = [10312,10523];
-% t = [4369,4406,5108,5936,6613,6617,7298,7435,7543,9011,12929,12566];
+t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9011,12929,12566];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
@@ -74,145 +77,174 @@ for i=1:numel(t)
     img = data_mat.data(bbox_row,bbox_col,:,t(i));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
     tic
-    [val,imgs_filtered] = detectSmoke2(img,img_bg,filter_bank);
+    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank);
     toc
     
     % visualize images
     fig = figure(50);
-    img_cols = 9;
+    img_cols = 7;
     img_rows = 3;
     fig_idx = 1;
 
     I = img;
-    str = '';
+    str = 'img';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.img_lcn;
-    str = '';
+    I = imgs_filtered.imgs_HFCD.img_DoG;
+    str = 'img_DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.img_adj;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_histeq;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = label2rgb(imgs_filtered.tex_seg_filtered);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = imgs_filtered.img_gray_px;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg_rm_nongray);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg_rm_nongray_filtered);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_black_px;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg_rm_nonblack);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg_rm_nonblack_filtered);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_DoG;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
-    
-    I = imgs_filtered.img_entropy;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = imgs_filtered.img_entropy_white_px;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_entropy_black_px;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = imgs_filtered.img_entropy_gray_px;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = label2rgb(imgs_filtered.tex_seg_rm_highfreq);
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.tex_seg_clean;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
     I = img_bg;
+    str = 'img_bg';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.imgs_HFCD.img_bg_DoG;
+    str = 'img_bg_DoG';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.imgs_HFCD.img_bs_DoG;
+    str = 'img_bs_DoG';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
+    str = 'img_bs_DoG_thr';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
+    str = 'img_bs_DoG_thr_entropy';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    I = imgs_filtered.HFCD;
+    str = 'HFCD';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    img_masked = imadjustRGB(img);
+    img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
+    I = img_masked;
     str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    plot_flag_0 = sum(imgs_filtered.HFCD(:))>0;
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_bg_histeq;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img_bg_histeq';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_bs;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img_bs';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_bs_thr;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img_bs_thr';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.IICD;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'IICD';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.HFCD_IICD;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'HFCD_IICD';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    plot_flag_1 = sum(imgs_filtered.HFCD_IICD(:))>0;
+    
+    if(plot_flag_1)
+        I = imgs_filtered.imgs_TS.img_histeq;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img_histeq';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex_seg';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.TS);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'TS';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = imgs_filtered.imgs_BRF.img_adj;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img_adj';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_group_white);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex_seg_group_white';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_gray);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex_seg_gray';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.BRF);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'BRF';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-    I = imgs_filtered.img_bg_DoG;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_bs_DoG;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_bs;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = imgs_filtered.img_bs_thr;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.img_smoke;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-    I = imgs_filtered.img_smoke_clean;
-    str = '';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
     % print figure
     print_dir = 'figs';
     if ~exist(print_dir,'dir')

@@ -1,4 +1,4 @@
-function imgs_filtered = textureSeg( img,filter_bank )
+function imgs_filtered = textureSeg_old( img,filter_bank )
     % local contrast normalization
     img_lcn = mat2gray(localnormalize(double(gaussianSmooth(img,0.5)),128,128));
 %     img_lcn = histeqRGB(img_lcn);
