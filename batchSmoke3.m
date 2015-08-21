@@ -44,7 +44,7 @@ end
 local_cluster = parcluster('local');
 num_workers = 3;
 if(local_cluster.NumWorkers > num_workers + 1)
-    num_workers = local_cluster.NumWorkers;
+    num_workers = local_cluster.NumWorkers/2;
 end
 parpool('local',num_workers);
 

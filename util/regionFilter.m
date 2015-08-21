@@ -14,8 +14,11 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
     tex_seg_size = removeRegions(tex_seg_gray,'larger',numel(img(:,:,1))*0.15);
     
     % remove segments which do not have enough changes
-    tex_seg_change = removeRegions(tex_seg_size,'noChange',0.65,HFCD_IICD);
+    tex_seg_change = removeRegions(tex_seg_size,'noChange',0.6,HFCD_IICD);
     tex_seg_change = removeRegions(tex_seg_change,'smaller',20);
+    
+    % remove white segments
+    tex_seg_nonwhite = removeRegions(tex_seg_change,'nonWhite',0.85,img_adj);
     
     % return images
     imgs_BRF.tex_seg_shape = tex_seg_shape;
@@ -24,6 +27,7 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
     imgs_BRF.tex_seg_gray = tex_seg_gray;
     imgs_BRF.tex_seg_size = tex_seg_size;
     imgs_BRF.tex_seg_change = tex_seg_change;
-    BRF = im2bw(tex_seg_change,0);
+    imgs_BRF.tex_seg_nonwhite = tex_seg_nonwhite;
+    BRF = im2bw(tex_seg_nonwhite,0);
 end
 

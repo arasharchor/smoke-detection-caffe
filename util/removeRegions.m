@@ -41,7 +41,6 @@ function label_clean = removeRegions( label,option,thr1,img,thr2 )
                 end
             elseif(strcmp(option,'nonWhite'))
                 img_gray = im2double(rgb2gray(img));
-                median(img_gray(idx))
                 if(median(img_gray(idx))>thr1)
                     channel(idx) = 0;
                 end
