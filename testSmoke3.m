@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 5936;
+t = 5936;
 % t = 7543;
 % t = 7000;
 % t = 6617;
@@ -12,8 +12,10 @@ select_box = 0;
 % t = 12929;
 % t = 4369;
 % t = 5969;
+% t = 4544;
+% t = 7111;
 % t = [10312,10523];
-t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9011,12929,12566];
+% t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9011,12929,12566];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
@@ -37,6 +39,12 @@ t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9011,12929,12566];
 %      13220 13234 13382 13389 13406 13411 13418 13431 13448 13458 13577 ...
 %      13579 13584 13587 13599 13608 13615 13622 13830 13835 13861 13867 ...
 %      13954 13962];
+
+% t = [4327 4447 4544 4623 4694 4766 4847 4910 4982 5068 5150 5216 5303 ...
+%      5367 5422 5485 5590 5688 5740 5808 5864 5936 6027 6110 6210 6457 ...
+%      6616 6891 7111 7439 7543 8977 9400 9508 9605 9716 9778 9890 10657 ...
+%      11619 12075 12322 12495 12548 12636 12727 12932 13013 13219 13383 ...
+%      13447 13830 13953];
 
 % t = [5071 5133 5191 5260 5326 5395 5495 5574 5687 5783 5836 5938 6001 6089 ...
 %      6166 6269 6365 6417 6475 6543 6604 6684 6749 6935 7005 7065 7204 7407 ...
@@ -82,7 +90,7 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(50);
-    img_cols = 7;
+    img_cols = 8;
     img_rows = 3;
     fig_idx = 1;
 
@@ -92,32 +100,32 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_DoG;
-    str = 'img_DoG';
+    str = 'img-DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = img_bg;
-    str = 'img_bg';
+    str = 'img-bg';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bg_DoG;
-    str = 'img_bg_DoG';
+    str = 'img-bg-DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG;
-    str = 'img_bs_DoG';
+    str = 'img-bs-DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
-    str = 'img_bs_DoG_thr';
+    str = 'img-bs-DoG-thr';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
-    str = 'img_bs_DoG_thr_entropy';
+    str = 'img-bs-DoG-thr-entropy';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -134,13 +142,22 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     plot_flag_0 = sum(imgs_filtered.HFCD(:))>0;
+
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_histeq;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-histeq';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     if(plot_flag_0)
         I = imgs_filtered.imgs_IICD.img_bg_histeq;
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img_bg_histeq';
+    str = 'img-bg-histeq';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -149,7 +166,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img_bs';
+    str = 'img-bs';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -158,7 +175,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img_bs_thr';
+    str = 'img-bs-thr';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -176,27 +193,18 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'HFCD_IICD';
+    str = 'HFCD-IICD';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     plot_flag_1 = sum(imgs_filtered.HFCD_IICD(:))>0;
     
     if(plot_flag_1)
-        I = imgs_filtered.imgs_TS.img_histeq;
-    else
-        I = ones(size(img))*0.5;
-    end
-    str = 'img_histeq';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    if(plot_flag_1)
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
     else
         I = ones(size(img))*0.5;
     end
-    str = 'tex_seg';
+    str = 'tex-seg';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -210,11 +218,20 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_shape);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex-seg-shape';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
         I = imgs_filtered.imgs_BRF.img_adj;
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img_adj';
+    str = 'img-adj';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -223,7 +240,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'tex_seg_group_white';
+    str = 'tex-seg-group-white';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -232,12 +249,30 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'tex_seg_gray';
+    str = 'tex-seg-gray';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+   
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_size);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex-seg-size';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     if(plot_flag_1)
-        I = label2rgb(imgs_filtered.BRF);
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_change);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex-seg-change';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = imgs_filtered.BRF;
     else
         I = ones(size(img))*0.5;
     end

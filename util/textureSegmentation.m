@@ -1,10 +1,7 @@
 function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank )
     % texture segmentation using the provided filter bank
-    % histogram equalization for enhancing texture
-    img_histeq = histeqRGB(img);
-
     % normalize image
-    img_normalized = double(img_histeq);
+    img_normalized = double(img);
     for i=1:size(img,3)
         channel = img_normalized(:,:,i);
         img_normalized(:,:,i) = (channel - mean(channel(:)))./255;
@@ -44,7 +41,6 @@ function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank )
     tex_seg_smooth = morphology(tex_seg_smooth,2,'close');
 
     % return images
-    imgs_TS.img_histeq = img_histeq;
     imgs_TS.tex_seg = tex_seg;
     TS = tex_seg_smooth;
 end

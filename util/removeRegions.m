@@ -11,6 +11,9 @@ function label_clean = removeRegions( label,option,thr1,img,thr2 )
     for c=1:numel(channel_idx)
         channel = (label==channel_idx(c));
         CC = bwconncomp(channel);
+        if(strcmp(option,'nonRect'))
+            stats = regionprops(CC,'BoundingBox');
+        end
         for i=1:CC.NumObjects
             idx = CC.PixelIdxList{i};
             if(strcmp(option,'smaller'))
@@ -34,6 +37,19 @@ function label_clean = removeRegions( label,option,thr1,img,thr2 )
                 end
             elseif(strcmp(option,'noChange'))
                 if(sum(img(idx))/numel(idx)<thr1)
+                    channel(idx) = 0;
+                end
+            elseif(strcmp(option,'nonWhite'))
+                img_gray = im2double(rgb2gray(img));
+                median(img_gray(idx))
+                if(median(img_gray(idx))>thr1)
+                    channel(idx) = 0;
+                end
+            elseif(strcmp(option,'nonRect'))
+                bbox = stats(i).BoundingBox;
+                if(bbox(3)/bbox(4)>thr1 && numel(idx)/(bbox(3)*bbox(4))>thr2)
+                    channel(idx) = 0;
+                elseif(bbox(3)/bbox(4)>thr1*1.5)
                     channel(idx) = 0;
                 end
             end

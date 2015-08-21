@@ -7,8 +7,8 @@ caffe/*.swp
 caffe/*.caffemodel
 caffe/*.solverstate
 *.asv
+*.js
 images/
 frames/**/*.mat
-frames/**/*.js
 !frames/**/has_label.mat
 !frames/**/label.mat

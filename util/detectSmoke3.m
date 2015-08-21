@@ -19,7 +19,7 @@ function [ val,imgs_filtered ] = detectSmoke3( img,img_bg,filter_bank )
     
     % third pass: texture segmentation and basic region filter
     if(sum(imgs_filtered.HFCD_IICD(:))>0)
-        [TS,imgs_TS] = textureSegmentation(img,filter_bank);
+        [TS,imgs_TS] = textureSegmentation(imgs_IICD.img_histeq,filter_bank);
         imgs_filtered.imgs_TS = imgs_TS;
         imgs_filtered.TS = TS;
         [BRF,imgs_BRF] = regionFilter(img,TS,imgs_IICD,HFCD_IICD);
