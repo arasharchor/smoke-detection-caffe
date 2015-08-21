@@ -44,16 +44,15 @@ end
 local_cluster = parcluster('local');
 num_workers = 3;
 if(local_cluster.NumWorkers > num_workers + 1)
-    num_workers = local_cluster.NumWorkers/2;
+    num_workers = local_cluster.NumWorkers;
 end
 parpool('local',num_workers);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
-    img = data(:,:,:,t);
-    imgs_last = data(:,:,:,t-1);
+    imgs = data(:,:,:,t-1:t);
     img_bg = data_median(:,:,:,t);
-    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_last);
+    [val,imgs_filtered] = detectSmoke3(imgs(:,:,:,end),img_bg,filter_bank,imgs(:,:,:,end-1));
     response(t) = val;
     label_predict(:,:,:,t) = imgs_filtered.BRF;
     if(val>0)
