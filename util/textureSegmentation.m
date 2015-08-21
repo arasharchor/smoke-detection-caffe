@@ -1,4 +1,4 @@
-function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank )
+function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank,K )
     % texture segmentation using the provided filter bank
     % normalize image
     img_normalized = double(img);
@@ -30,7 +30,6 @@ function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank )
     feature = feature*coeff;
     
     % k-means clustering
-    K = 20;
     [~,idx] = vl_kmeans(feature',K,'maxNumIterations',5,'algorithm','elkan','initialization','plusplus','NumRepetitions',5);
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     

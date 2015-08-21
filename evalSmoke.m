@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-05-01.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -23,10 +23,10 @@ load(fullfile(path,'bbox.mat'));
 sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
 
 % Gaussian smoothing
-response = filter1D(response,1);
+% response = filter1D(response,1);
 
 % find local max
-min_peak_prominence = 10;
+min_peak_prominence = 20;
 min_peak_height = 50;
 min_peak_distance = 50;
 thr = 5;
