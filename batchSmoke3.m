@@ -46,6 +46,9 @@ num_workers = 3;
 if(local_cluster.NumWorkers > num_workers + 1)
     num_workers = local_cluster.NumWorkers;
 end
+if(num_workers>12)
+    num_workers = 12;
+end
 parpool('local',num_workers);
 
 parfor t=3:num_imgs
