@@ -51,8 +51,9 @@ parpool('local',num_workers);
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
     img = data(:,:,:,t);
+    imgs_last = data(:,:,:,t-1);
     img_bg = data_median(:,:,:,t);
-    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank);
+    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_last);
     response(t) = val;
     label_predict(:,:,:,t) = imgs_filtered.BRF;
     if(val>0)
