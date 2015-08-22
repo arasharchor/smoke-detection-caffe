@@ -34,9 +34,9 @@ function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank,K )
     tex_seg = uint8(reshape(idx,size_origin(1),size_origin(2)));
     
     % smooth the texture image
-    tex_seg_smooth = removeRegions(tex_seg,'smaller',20);
+    tex_seg_smooth = removeRegions(tex_seg,'smaller',10);
     tex_seg_smooth = removeLabelNoise(tex_seg_smooth);
-    tex_seg_smooth = removeRegions(tex_seg_smooth,'smaller',150);
+    tex_seg_smooth = removeRegions(tex_seg_smooth,'smaller',80);
     tex_seg_smooth = morphology(tex_seg_smooth,2,'close');
 
     % return images

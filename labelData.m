@@ -4,7 +4,7 @@ addpath(genpath('util'));
 show_has_label_only = 0;
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-03.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -22,6 +22,6 @@ has_label_idx = find(has_label==1);
 
 % label images
 global t
-t = 13039;
+t = 4300;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerLabelData,r_json.frames,data_mat,label_mat,has_label_mat,has_label_idx,show_has_label_only});

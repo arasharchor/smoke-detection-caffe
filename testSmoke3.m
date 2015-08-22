@@ -14,7 +14,9 @@ t = 5936;
 % t = 5969;
 % t = 4544;
 % t = 7111;
+% t = [4847,4847,4847,4847,4847,4847,4847,4847,4847];
 % t = [10312,10523];
+% t = 12566;
 % t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9011,12929,12566];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
@@ -98,7 +100,7 @@ for i=1:numel(t)
     
     % visualize images
     fig = figure(50);
-    img_cols = 10;
+    img_cols = 11;
     img_rows = 3;
     fig_idx = 1;
 
@@ -139,13 +141,6 @@ for i=1:numel(t)
     
     I = imgs_filtered.HFCD;
     str = 'HFCD';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    img_masked = imadjustRGB(img);
-    img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
-    I = img_masked;
-    str = '';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -250,8 +245,19 @@ for i=1:numel(t)
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    plot_flag_1 = sum(imgs_filtered.HFCD_IICD(:))>0;
+    if(plot_flag_0)
+        img_masked = histeqRGB(img);
+        img_masked(repmat(imgs_filtered.HFCD_IICD==0,1,1,3)) = 0;
+        I = img_masked;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = '';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
+    plot_flag_1 = sum(imgs_filtered.HFCD_IICD(:))>0;
+
     if(plot_flag_1)
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
     else
@@ -293,7 +299,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'tex-seg-group-white';
+    str = 'tex-seg-group';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
