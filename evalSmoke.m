@@ -27,7 +27,7 @@ response = filter1D(response,1);
 
 % find local max
 min_peak_prominence = 20;
-min_peak_height = 200;
+min_peak_height = 50;
 min_peak_distance = 50;
 thr = 5;
 max_peak_width = 100;
@@ -60,7 +60,7 @@ title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 subplot(img_rows,img_cols,2)
 plot(response,'b')
 xlim([day_min_idx day_max_idx])
-title('Background subtraction')
+title('Smoke detection')
 hold on
 plot(locs,pks,'ro')
 hold off

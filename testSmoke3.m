@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-t = 5936;
+% t = 5936;
 % t = 7543;
 % t = 7000;
 % t = 6617;
