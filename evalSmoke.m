@@ -3,7 +3,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_str = '2015-05-03';
+date_path = [date_str,'.timemachine/'];
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -84,6 +85,6 @@ response(1:day_min_idx) = 0;
 response(day_max_idx:end) = 0;
 response = round(response);
 js = array2json(response,predict);
-fileID = fopen(fullfile(path,'smoke.js'),'w');
+fileID = fopen(fullfile(path,['smoke-',date_str,'.js']),'w');
 fprintf(fileID,js);
 fclose(fileID);
