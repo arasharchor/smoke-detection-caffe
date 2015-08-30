@@ -1,5 +1,5 @@
 function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math)
-    font_size = 11;
+    font_size = 10;
     nl = sprintf('\n');
     xlabel_offset = 15;
     

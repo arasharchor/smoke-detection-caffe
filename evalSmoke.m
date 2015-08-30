@@ -43,7 +43,7 @@ p(idx_remove) = [];
 % prediction
 predict = false(size(response));
 for j=1:length(locs)
-    w_ = w*2;
+    w_ = w(j)*2;
     predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
 end
 
