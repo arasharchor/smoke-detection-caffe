@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 5936;
+t = 5936;
 % t = 7543;
 % t = 7000;
 % t = 6617;
@@ -14,10 +14,10 @@ select_box = 0;
 % t = 5969;
 % t = 4544;
 % t = 7111;
-% t = [4847,4847,4847,4847,4847,4847,4847,4847,4847];
+% t = 4847;
 % t = [10312,10523];
 % t = 12566;
-t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
+% t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
@@ -52,15 +52,17 @@ t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
 %      6166 6269 6365 6417 6475 6543 6604 6684 6749 6935 7005 7065 7204 7407 ...
 %      8530 8827 9055 9805 9944 10549 10778 11009 13742 13869 13934];
 
-t = [5271 5365 5541 5654 5740 5812 5912 6097 6198 6256 6359 6425 6480 6534 ... 
-     6588 6670 6730 6808 6897 6972 7034 7085 7160 7221 7272 7323 7399 7454 ...
-     7505 7782 7841 8531 8607 8833 9051 9188 9284 9442 9689 9771 9830 9944 ...
-     10550 10775 11026 11339 13738 13869];
+% t = [5271 5365 5541 5654 5740 5812 5912 6097 6198 6256 6359 6425 6480 6534 ... 
+%      6588 6670 6730 6808 6897 6972 7034 7085 7160 7221 7272 7323 7399 7454 ...
+%      7505 7782 7841 8531 8607 8833 9051 9188 9284 9442 9689 9771 9830 9944 ...
+%      10550 10775 11026 11339 13738 13869];
 
 % t = 11026; 
  
+t = [7531:7595,4327:4427,5900:6000];
+
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -91,26 +93,28 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    img = data_mat.data(bbox_row,bbox_col,:,t(i));
-    imgs_last = data_mat.data(bbox_row,bbox_col,:,t(i)-1);
+    span = 5;
+    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i)+span);
+    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,3));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
+    img = imgs(:,:,:,2);
     tic
-    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_last);
+    [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_fd);
     toc
     
     % visualize images
     fig = figure(50);
-    img_cols = 11;
-    img_rows = 3;
+    img_cols = 9;
+    img_rows = 4;
     fig_idx = 1;
 
-    I = img;
+    I = imgs(:,:,:,2);
     str = 'img';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.imgs_HFCD.img_DoG;
-    str = 'img-DoG';
+    I = imgs_filtered.imgs_HFCD.img_bg_DoG;
+    str = 'img-bg-DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -119,8 +123,8 @@ for i=1:numel(t)
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.imgs_HFCD.img_bg_DoG;
-    str = 'img-bg-DoG';
+    I = imgs_filtered.imgs_HFCD.img_DoG;
+    str = 'img-DoG';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -192,7 +196,7 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     if(plot_flag_0)
-        I = imgs_last;
+        I = imgs_fd(:,:,:,1);
     else
         I = ones(size(img))*0.5;
     end
@@ -201,25 +205,79 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
     if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_last_histeq;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-last-histeq';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_last_diff;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-last-diff';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_last_diff_thr;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-last-diff-thr';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_last_diff_thr_smooth;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-last-diff-thr-smooth';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_next_histeq;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-next-histeq';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_next_diff;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-next-diff';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_next_diff_thr;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-next-diff-thr';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
+        I = imgs_filtered.imgs_IICD.img_next_diff_thr_smooth;
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'img-next-diff-thr-smooth';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_0)
         I = imgs_filtered.imgs_IICD.img_diff;
-    else
-        I = ones(size(img))*0.5;
-    end
-    str = 'img-diff';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    if(plot_flag_0)
-        I = imgs_filtered.imgs_IICD.img_diff_thr;
-    else
-        I = ones(size(img))*0.5;
-    end
-    str = 'img-diff-thr';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    if(plot_flag_0)
-        I = imgs_filtered.imgs_IICD.img_diff_thr_smooth;
     else
         I = ones(size(img))*0.5;
     end
@@ -246,7 +304,7 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     if(plot_flag_0)
-        img_masked = histeqRGB(img);
+        img_masked = histeqRGB(imgs(:,:,:,2));
         img_masked(repmat(imgs_filtered.HFCD_IICD==0,1,1,3)) = 0;
         I = img_masked;
     else

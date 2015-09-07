@@ -4,7 +4,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-05-03.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -53,9 +53,11 @@ parpool('local',num_workers);
 
 parfor t=3:num_imgs
     fprintf('Processing frame %d\n',t);
-    imgs = data(:,:,:,t-1:t);
+    span = 5;
+    imgs = data(:,:,:,t-span:span:t+span);
     img_bg = data_median(:,:,:,t);
-    [val,imgs_filtered] = detectSmoke3(imgs(:,:,:,end),img_bg,filter_bank,imgs(:,:,:,end-1));
+    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,3));
+    [val,imgs_filtered] = detectSmoke3(imgs(:,:,:,2),img_bg,filter_bank,imgs_fd);
     response(t) = val;
     label_predict(:,:,:,t) = imgs_filtered.BRF;
     if(val>0)

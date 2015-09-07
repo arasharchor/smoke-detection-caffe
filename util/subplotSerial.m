@@ -1,7 +1,9 @@
 function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math)
     font_size = 10;
+%     font_size = 20;
     nl = sprintf('\n');
     xlabel_offset = 15;
+%     xlabel_offset = 5;
     
     [c,r] = ind2sub([img_cols img_rows],fig_idx);
     hspan = 0.005;

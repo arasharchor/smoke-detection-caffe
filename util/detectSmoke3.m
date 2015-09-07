@@ -1,12 +1,13 @@
-function [ val,imgs_filtered ] = detectSmoke3( img,img_bg,filter_bank,imgs_last2 )
+function [ val,imgs_filtered ] = detectSmoke3( img,img_bg,filter_bank,imgs_fd )
     % first pass: high frequency change detection
     [HFCD,imgs_HFCD] = highFreqChangeDetection(img,img_bg);
     imgs_filtered.imgs_HFCD = imgs_HFCD;
     imgs_filtered.HFCD = HFCD;
+    thr_sum_img = 0;
     
     % second pass: image intensity change detection
-    if(sum(imgs_filtered.HFCD(:))>0)
-        [IICD,imgs_IICD] = imgIntensityChangeDetection(img,img_bg,imgs_last2);
+    if(sum(imgs_filtered.HFCD(:))>thr_sum_img)
+        [IICD,imgs_IICD] = imgIntensityChangeDetection(img,img_bg,imgs_fd);
         imgs_filtered.imgs_IICD = imgs_IICD;
         imgs_filtered.IICD = IICD;
         % combine HFCD and IICD
@@ -18,7 +19,7 @@ function [ val,imgs_filtered ] = detectSmoke3( img,img_bg,filter_bank,imgs_last2
     end
     
     % third pass: texture segmentation and basic region filter
-    if(sum(imgs_filtered.HFCD_IICD(:))>0)
+    if(sum(imgs_filtered.HFCD_IICD(:))>thr_sum_img)
         K = 25;
         [TS,imgs_TS] = textureSegmentation(imgs_IICD.img_histeq,filter_bank,K);
         imgs_filtered.imgs_TS = imgs_TS;

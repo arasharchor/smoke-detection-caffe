@@ -1,4 +1,4 @@
-function [ responses,imgs_filtered ] = computeResponse( img )
+function [ responses,imgs_filtered ] = computeFeature( img )
     % convert to hsv
     imgs_hsv = rgb2hsv(img);
     imgs_filtered.img_s = imgs_hsv(:,:,2);
