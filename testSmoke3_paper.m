@@ -40,10 +40,10 @@ for i=1:numel(t)
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     span = 1;
-    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span*2:span:t(i));
-    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,2));
+    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
+    imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
-    img = imgs(:,:,:,3);
+    img = imgs(:,:,:,2);
     tic
     [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_fd);
     toc
@@ -129,17 +129,17 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_IICD.img_last_histeq;
-    str = 'img-last2-histeq';
+    str = 'img-last-histeq';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_IICD.img_last_diff_thr;
-    str = 'img-last2-diff-thr';
+    str = 'img-last-diff-thr';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_IICD.img_last_diff_thr_smooth;
-    str = 'img-last2-diff-thr-smooth';
+    str = 'img-last-diff-thr-smooth';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     

@@ -55,10 +55,10 @@ parpool('local',num_workers);
 parfor t=day_min_idx:day_max_idx
     fprintf('Processing frame %d\n',t);
     span = 1;
-    imgs = data(:,:,:,t-span*2:span:t);
+    imgs = data(:,:,:,t-span:span:t);
     img_bg = data_median(:,:,:,t);
-    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,2));
-    [val,imgs_filtered] = detectSmoke3(imgs(:,:,:,3),img_bg,filter_bank,imgs_fd);
+    imgs_fd = imgs(:,:,:,1);
+    [val,imgs_filtered] = detectSmoke3(imgs(:,:,:,2),img_bg,filter_bank,imgs_fd);
     response(t) = val;
     label_predict(:,:,:,t) = imgs_filtered.BRF;
     if(val>0)
