@@ -75,21 +75,23 @@ for i=1:numel(t)
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG;
-    str = '$BS_{DoG}$';
+    str = '$S_{DoG}$';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
-    str = '$S_{DoG}>thr1$';
+    str = '$S_{DoG}>T_{1}$';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
     I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
-    str = '$\mathrm{Entropyfilt}(S_{DoG}>thr1)$';
+    str = '$E_{DoG}>T_{2}$';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
-    I = imgs_filtered.HFCD;
+    img_masked = img;
+    img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
+    I = img_masked;
     str = 'HFCD';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
