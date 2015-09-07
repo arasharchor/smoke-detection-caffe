@@ -51,7 +51,8 @@ if(num_workers>12)
 end
 parpool('local',num_workers);
 
-parfor t=3:num_imgs
+[day_min_idx,day_max_idx] = getDayIdx();
+parfor t=day_min_idx:day_max_idx
     fprintf('Processing frame %d\n',t);
     span = 5;
     imgs = data(:,:,:,t-span:span:t+span);
