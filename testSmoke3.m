@@ -59,7 +59,7 @@ t = 5936;
 
 % t = 11026; 
  
-t = [7531:7595,4327:4427,5900:6000];
+% t = [7531:7595,4327:4427,5900:6000];
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -93,11 +93,11 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 5;
-    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i)+span);
-    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,3));
+    span = 1;
+    imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span*2:span:t(i));
+    imgs_fd = cat(4,imgs(:,:,:,1),imgs(:,:,:,2));
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
-    img = imgs(:,:,:,2);
+    img = imgs(:,:,:,3);
     tic
     [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_fd);
     toc
@@ -108,7 +108,7 @@ for i=1:numel(t)
     img_rows = 4;
     fig_idx = 1;
 
-    I = imgs(:,:,:,2);
+    I = img;
     str = 'img';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
@@ -200,7 +200,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-last';
+    str = 'img-last2';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
@@ -209,7 +209,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-last-histeq';
+    str = 'img-last2-histeq';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -218,7 +218,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-last-diff';
+    str = 'img-last2-diff';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -227,7 +227,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-last-diff-thr';
+    str = 'img-last2-diff-thr';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -236,7 +236,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-last-diff-thr-smooth';
+    str = 'img-last2-diff-thr-smooth';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -245,7 +245,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-next-histeq';
+    str = 'img-last-histeq';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -254,7 +254,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-next-diff';
+    str = 'img-last-diff';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -263,7 +263,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-next-diff-thr';
+    str = 'img-last-diff-thr';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
@@ -272,7 +272,7 @@ for i=1:numel(t)
     else
         I = ones(size(img))*0.5;
     end
-    str = 'img-next-diff-thr-smooth';
+    str = 'img-last-diff-thr-smooth';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
