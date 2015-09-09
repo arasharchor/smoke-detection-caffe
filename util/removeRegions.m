@@ -64,7 +64,7 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
                     [f,xi] = ksdensity(img(idx),'bandwidth',0.01,'npoints',100);
                     % find local max
                     min_peak_prominence = 0.05;
-                    min_peak_height = 3;
+                    min_peak_height = 4;
                     min_peak_distance = 0;
                     thr = 0;
                     max_peak_width = 100;
@@ -72,7 +72,7 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
                     mu = mean(double(img(idx)));
                     num_peaks = numel(pks);
                     intensity = double(median(img2(idx)))/255;
-                    if(num_peaks<=thr1(2) && intensity<=thr2)
+                    if(mu>=thr1(1) && num_peaks<=thr1(2) && intensity<=thr2)
                         channel(idx) = 0;
                     end
 %                     figure

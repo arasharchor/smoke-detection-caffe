@@ -24,7 +24,7 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD,img_bg )
     
     % remove shadow
 %     tex_seg_nonshadow = im2bw(tex_seg_nonwhite,0);
-    tex_seg_nonshadow = removeRegions(tex_seg_nonwhite,'shadow',[0.15,1],backgroundSubtraction(img,img_bg,'Normalize'),0.5,img);
+    tex_seg_nonshadow = removeRegions(tex_seg_nonwhite,'shadow',[0.1,1],backgroundSubtraction(img,img_bg,'Normalize'),0.5,img);
     
     % return images
     imgs_BRF.tex_seg_shape = tex_seg_shape;
