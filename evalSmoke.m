@@ -29,7 +29,7 @@ response = filter1D(response,1);
 % find local max
 min_peak_prominence = 20;
 min_peak_height = 50;
-min_peak_distance = 60;
+min_peak_distance = 50;
 thr = 5;
 max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
