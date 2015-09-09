@@ -7,8 +7,8 @@ function filter_bank = getFilterbank()
     kernel{end+1} = [-1,0,2,0,-1]; % S5 = spots
     kernel{end+1} = [1,-4,6,-4,1]; % R5 = ripples
     kernel{end+1} = [-1,2,0,-2,1]; % W5 = waves
-    filter_bank = zeros(5,5,25);
     L = length(kernel);
+    filter_bank = zeros(L,L,L^2);
     for i=1:L
         for j=1:L
             filter_bank(:,:,(i-1)*L+j) = kernel{i}'*kernel{j};

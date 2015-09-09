@@ -3,7 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 % set data source
-date_str = '2015-05-03';
+date_str = '2015-05-29';
 date_path = [date_str,'.timemachine/'];
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
@@ -35,7 +35,7 @@ max_peak_width = 100;
 [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
 
 % remove night time idx and peaks that are too high
-idx_remove = find(pks>4000 | locs<day_min_idx | locs>day_max_idx);
+idx_remove = find(pks>10000 | locs<day_min_idx | locs>day_max_idx);
 pks(idx_remove) = [];
 locs(idx_remove) = [];
 w(idx_remove) = [];

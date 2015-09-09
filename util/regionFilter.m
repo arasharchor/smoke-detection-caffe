@@ -16,7 +16,7 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
     
     % remove segments which do not have enough changes
     tex_seg_change = removeRegions(tex_seg_size,'noChangeWhiteLabel',0.7,img_adj,0.6,HFCD_IICD);
-    tex_seg_change = removeRegions(tex_seg_change,'noChange',0.6,HFCD_IICD);
+    tex_seg_change = removeRegions(tex_seg_change,'noChange',0.5,HFCD_IICD);
     tex_seg_change = removeRegions(tex_seg_change,'smaller',20);
     
     % remove white labels

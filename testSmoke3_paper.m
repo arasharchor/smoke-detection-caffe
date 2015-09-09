@@ -3,7 +3,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-t = 7543;
+% t = 7543;
+t = 6617;
 % t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
 % t = [7543,6617];
 
@@ -39,7 +40,7 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 1;
+    span = 5;
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
@@ -48,113 +49,189 @@ for i=1:numel(t)
     [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_fd);
     toc
     
-    % visualize images
-    fig = figure(51);
-    img_cols = 4;
-    img_rows = 2;
-    fig_idx = 1;
+    plot_HFCD = true;
+    plot_IICD = true;
+    plot_TEX = true;
     
-    I = img;
-    str = '$I_{t}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = img_bg;
-    str = '$B_{t}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_HFCD.img_DoG;
-    str = '$I_{DoG}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_HFCD.img_bg_DoG;
-    str = '$B_{DoG}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_HFCD.img_bs_DoG;
-    str = '$S_{DoG}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
-    str = '$S_{DoG}>T_{1}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
-    str = '$E_{DoG}>T_{2}$';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    img_masked = img;
-    img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
-    I = img_masked;
-    str = 'HFCD';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    if(plot_HFCD)
+        % visualize images
+        fig = figure(51);
+        img_cols = 4;
+        img_rows = 2;
+        fig_idx = 1;
 
-    % print figure
-    print_dir = 'figs';
-    if ~exist(print_dir,'dir')
-        mkdir(print_dir);
+        I = img;
+        str = '$I_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = img_bg;
+        str = '$B_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_HFCD.img_DoG;
+        str = '$I_{dog}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_HFCD.img_bg_DoG;
+        str = '$B_{dog}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_HFCD.img_bs_DoG;
+        str = '$S_{dog}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
+        str = '$S_{dog}>T_{1}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
+        str = '$E_{dog}>T_{2}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        img_masked = img;
+        img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
+        I = img_masked;
+        str = '$M_{dog}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_1']),'-dpng','-r0')
     end
-    set(gcf,'PaperPositionMode','auto')
-    print(fig,fullfile(print_dir,[num2str(t(i)),'_1']),'-dpng','-r0')
     
-    % visualize images
-    fig = figure(52);
-    img_cols = 4;
-    img_rows = 2;
-    fig_idx = 1;
-    
-    I = imgs_filtered.imgs_IICD.img_histeq;
-    str = 'img-histeq';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_bg_histeq;
-    str = 'img-bg-histeq';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_bs_thr;
-    str = 'img-bs-thr';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_bs_thr_smooth;
-    str = 'img-bs-thr-smooth';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_last_histeq;
-    str = 'img-last-histeq';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_last_diff_thr;
-    str = 'img-last-diff-thr';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.imgs_IICD.img_last_diff_thr_smooth;
-    str = 'img-last-diff-thr-smooth';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    I = imgs_filtered.IICD;
-    str = 'IICD';
-    math = '';
-    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-    
-    % print figure
-    print_dir = 'figs';
-    if ~exist(print_dir,'dir')
-        mkdir(print_dir);
+    if(plot_IICD)
+        % visualize images
+        fig = figure(52);
+        img_cols = 4;
+        img_rows = 2;
+        fig_idx = 1;
+
+        I = imgs_filtered.imgs_IICD.img_histeq;
+        str = '$I_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_bg_histeq;
+        str = '$B_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_bs_thr;
+        str = '$S_{heq}>T_{3}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_bs_thr_smooth;
+        str = '$M_{heq1}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_last_histeq;
+        str = '$I''_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_last_diff_thr;
+        str = '$F_{heq}>T_{4}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = imgs_filtered.imgs_IICD.img_last_diff_thr_smooth;
+        str = '$M_{heq2}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        img_masked = imgs_filtered.imgs_IICD.img_histeq;
+        img_masked(repmat(imgs_filtered.IICD==0,1,1,3)) = 0;
+        I = img_masked;
+        str = '$M_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_2']),'-dpng','-r0')
     end
-    set(gcf,'PaperPositionMode','auto')
-    print(fig,fullfile(print_dir,[num2str(t(i)),'_2']),'-dpng','-r0')
+    
+    if(plot_TEX)
+        % visualize images
+        fig = figure(53);
+        img_cols = 5;
+        img_rows = 2;
+        fig_idx = 1;
+        
+        I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
+        str = '$G_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = label2rgb(imgs_filtered.TS);
+        str = '$G_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_shape);
+        str = 'shape';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        
+        I = imgs_filtered.imgs_BRF.img_adj;
+        str = 'img-adj';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_group);
+        str = 'group';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_gray);
+        str = 'gray';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_size);
+        str = 'size';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_change);
+        str = 'change';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonwhite);
+        str = 'nonwhite';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
+
+        I = imgs_filtered.BRF;
+        str = 'BRF';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_3']),'-dpng','-r0')  
+    end
 end
