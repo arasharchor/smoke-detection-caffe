@@ -3,8 +3,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 7543;
-t = 6617;
+t = 7543;
+% t = 6617;
 % t = 9007;
 % t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
 % t = [7543,6617];
@@ -41,7 +41,7 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 2;
+    span = getTemporalSpan();
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
@@ -173,57 +173,29 @@ for i=1:numel(t)
     if(plot_TEX)
         % visualize images
         fig = figure(53);
-        img_cols = 5;
+        img_cols = 4;
         img_rows = 2;
         fig_idx = 1;
         
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
-        str = '$G_{t}$';
+        str = '$R_{t}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
         I = label2rgb(imgs_filtered.TS);
-        str = '$G_{t}$';
+        str = '$R_{smooth}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_shape);
-        str = 'shape';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-        
-        I = imgs_filtered.imgs_BRF.img_adj;
-        str = 'img-adj';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_group);
-        str = 'group';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_gray);
-        str = 'gray';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-        
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_size);
-        str = 'size';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_change);
-        str = 'change';
-        math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
-        
-        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonwhite);
-        str = 'nonwhite';
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonshadow);
+        str = '$R_{filter}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
 
-        I = imgs_filtered.BRF;
-        str = 'BRF';
+        img_masked = img;
+        img_masked(repmat(imgs_filtered.BRF==0,1,1,3)) = 0;
+        I = img_masked;
+        str = '$M_{t}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
         

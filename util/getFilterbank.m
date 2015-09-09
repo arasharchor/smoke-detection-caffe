@@ -1,8 +1,7 @@
 function filter_bank = getFilterbank()
     % compute filter bank (Laws' texture energy measures)
     kernel = {};
-    kernel{end+1} = [1,4,6,4,1]; % L5 = average gray level
-%     kernel{end+1} = [1,2,3,2,1]; % L5 = average gray level
+    kernel{end+1} = [1,2,3,2,1]; % L5 = average gray level
     kernel{end+1} = [-1,-2,0,2,1]; % E5 = edges
     kernel{end+1} = [-1,0,2,0,-1]; % S5 = spots
     kernel{end+1} = [1,-4,6,-4,1]; % R5 = ripples

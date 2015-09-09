@@ -1,14 +1,20 @@
-function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math)
-    font_size = 10;
-%     font_size = 27;
-    nl = sprintf('\n');
-    xlabel_offset = 15;
-%     xlabel_offset = 5;
+function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math) 
+    useLarge = false;
     
+    if(useLarge==true)
+        font_size = 27;
+        xlabel_offset = 5;
+        vspan = 0.11;
+    else
+        font_size = 10;
+        xlabel_offset = 15;
+        vspan = 0.1;
+    end
+
+    nl = sprintf('\n');
     [c,r] = ind2sub([img_cols img_rows],fig_idx);
     hspan = 0.005;
-    vspan = 0.1;
-%     vspan = 0.11;
+
     subplot('Position',[(c-1)/img_cols+hspan/2, 1-(r)/img_rows+vspan/1.5, 1/img_cols-hspan, 1/img_rows-vspan])
 %     subplot(img_rows,img_cols,fig_idx);
     imshow(I,'border','tight')

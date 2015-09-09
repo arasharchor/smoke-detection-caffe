@@ -54,7 +54,7 @@ parpool('local',num_workers);
 [day_min_idx,day_max_idx] = getDayIdx();
 parfor t=day_min_idx:day_max_idx
     fprintf('Processing frame %d\n',t);
-    span = 2;
+    span = getTemporalSpan();
     imgs = data(:,:,:,t-span:span:t);
     img_bg = data_median(:,:,:,t);
     imgs_fd = imgs(:,:,:,1);

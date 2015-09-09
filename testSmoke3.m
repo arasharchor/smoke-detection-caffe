@@ -3,42 +3,37 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
+% 2015-05-01
 % black smoke
 % t = 5936;
 % t = 7543;
 % t = 6613;
-
 % gray smoke
 % t = 7298;
 % t = 7438;
 % t = 6617;
 % t = 7435;
-
 % steam + smoke
 % t = 5108;
 % t = 4369;
-
 % shadow + steam
 % t = 6205;
-
 % white smoke
 % t = 12929;
 % t = 12566;
-
 % steam
 % t = 5969;
 % t = 4406;
 % t = 9776;
 % t = 4544;
-
 % shadow
 % t = 4847;
 % t = 9007;
 % t = 9010;
 % t = 9011;
+% t = 9778;
 % t = 10312;
 % t = 10523;
-
 % nothing
 % t = 7000;
 % t = 7111;
@@ -48,6 +43,10 @@ select_box = 0;
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
+
+% 2015-05-01
+% t = 13869;
+% t = 13935;
 
 % t = [4371 4412 4448 4483 4531 4565 4606 4649 4680 4723 4773 4819 4872 ...
 %      4916 4981 5032 5069 5108 5152 5192 5231 5279 5325 5368 5410 5449 ...
@@ -120,7 +119,7 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 2;
+    span = getTemporalSpan();
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
