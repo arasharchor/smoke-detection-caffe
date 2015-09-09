@@ -1,4 +1,4 @@
-function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
+function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD,img_bg )
     % remove segments which do not have correct shapes
     tex_seg_shape = removeRegions(TS,'nonRect',2.5,[],0.4);
 
@@ -20,7 +20,11 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
     tex_seg_change = removeRegions(tex_seg_change,'smaller',20);
     
     % remove white labels
-    tex_seg_nonwhite = removeRegions(tex_seg_change,'nonWhite',0.9,img_adj);
+    tex_seg_nonwhite = removeRegions(tex_seg_change,'white',0.9,img_adj);
+    
+    % remove shadow
+%     tex_seg_nonshadow = im2bw(tex_seg_nonwhite,0);
+    tex_seg_nonshadow = removeRegions(tex_seg_nonwhite,'shadow',[0.15,1],backgroundSubtraction(img,img_bg,'Normalize'),0.5,img);
     
     % return images
     imgs_BRF.tex_seg_shape = tex_seg_shape;
@@ -30,6 +34,7 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD )
     imgs_BRF.tex_seg_size = tex_seg_size;
     imgs_BRF.tex_seg_change = tex_seg_change;
     imgs_BRF.tex_seg_nonwhite = tex_seg_nonwhite;
-    BRF = im2bw(tex_seg_nonwhite,0);
+    imgs_BRF.tex_seg_nonshadow = tex_seg_nonshadow;
+    BRF = im2bw(tex_seg_nonshadow,0);
 end
 

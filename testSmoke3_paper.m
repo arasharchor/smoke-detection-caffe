@@ -5,6 +5,7 @@ select_box = 0;
 
 % t = 7543;
 t = 6617;
+% t = 9007;
 % t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
 % t = [7543,6617];
 
@@ -40,7 +41,7 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 5;
+    span = 3;
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));

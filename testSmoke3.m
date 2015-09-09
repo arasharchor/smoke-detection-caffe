@@ -3,22 +3,46 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 5936;
+% black smoke
+t = 5936;
 % t = 7543;
-% t = 7000;
+% t = 6613;
+
+% gray smoke
+% t = 7298;
+% t = 7438;
 % t = 6617;
-% t = 4406;
-% t = 9011;
-% t = 9007;
-% t = 12929;
+% t = 7435;
+
+% steam + smoke
+% t = 5108;
 % t = 4369;
-% t = 5969;
-% t = 4544;
-% t = 7111;
-% t = 4847;
-% t = [10312,10523];
+
+% shadow + steam
+% t = 6205;
+
+% white smoke
+% t = 12929;
 % t = 12566;
-t = [4369,4406,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566];
+
+% steam
+% t = 5969;
+% t = 4406;
+% t = 4544;
+
+% shadow
+% t = 4847;
+% t = 9007;
+% t = 9011;
+% t = 10312;
+% t = 10523;
+
+% nothing
+% t = 7000;
+% t = 7111;
+% t = 7577;
+
+% t = [4369,4406,4847,5108,5936,7000,6613,6617,7298,7435,7543,9007,9011,12929,12566,6205];
 % t = [5936,6617,7438,7543,7577,9008,12494,12566,12929,6205];
 % t = [4369,5108,5936,6613,6617,7298,7435,7543];
 % t = [4406,4615,4860,4953,4995,5562,5969,6212,7327,7643,9014,9688,10078,10195,10312,10523,13100,13190,13418,13583,13871];
@@ -94,7 +118,7 @@ for i=1:numel(t)
     
     % crop an image and detect smoke
     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
-    span = 1;
+    span = 3;
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,t(i));
@@ -350,6 +374,15 @@ for i=1:numel(t)
         I = ones(size(img))*0.5;
     end
     str = 'tex-seg-nonwhite';
+    math = '';
+    fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+    
+    if(plot_flag_1)
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonshadow);
+    else
+        I = ones(size(img))*0.5;
+    end
+    str = 'tex-seg-nonshadow';
     math = '';
     fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
     
