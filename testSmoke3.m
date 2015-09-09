@@ -4,7 +4,7 @@ addpath(genpath('util'));
 select_box = 0;
 
 % black smoke
-t = 5936;
+% t = 5936;
 % t = 7543;
 % t = 6613;
 
@@ -28,6 +28,7 @@ t = 5936;
 % steam
 % t = 5969;
 % t = 4406;
+% t = 9776;
 % t = 4544;
 
 % shadow

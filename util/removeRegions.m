@@ -72,7 +72,7 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
                     mu = mean(double(img(idx)));
                     num_peaks = numel(pks);
                     intensity = double(median(img2(idx)))/255;
-                    if(mu>=thr1(1) && num_peaks<=thr1(2) && intensity<=thr2)
+                    if(num_peaks<=thr1(2) && intensity<=thr2)
                         channel(idx) = 0;
                     end
 %                     figure
