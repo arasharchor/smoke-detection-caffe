@@ -64,22 +64,35 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
                     [f,xi] = ksdensity(img(idx),'bandwidth',0.01,'npoints',100);
                     % find local max
                     min_peak_prominence = 0.05;
-                    min_peak_height = 2.5;
+                    min_peak_height = 2;
                     min_peak_distance = 0;
                     thr = 0;
                     max_peak_width = 100;
                     [pks,locs,~,~] = findpeaks(f,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
-                    mu = mean(double(img(idx)));
-                    num_peaks = numel(pks);
                     intensity = double(median(img2(idx)))/255;
-                    if(mu>=thr1(1) && num_peaks<=thr1(2) && intensity<=thr2)
+                    pks_thr = [];
+                    locs_thr = [];
+                    [pks_max, idx_max] = max(pks);
+                    locs_max = locs(idx_max);
+                    thr = max(pks)*0.55;
+                    for k=1:numel(pks)
+                        if(pks(k)>thr)
+                            pks_thr(end+1) = pks(k);
+                            locs_thr(end+1) = locs(k);
+                        end
+                    end
+                    if(xi(locs_max)>=thr1(1) && numel(pks_thr)<=thr1(2) && intensity<=thr2)
                         channel(idx) = 0;
                     end
 %                     figure
 %                     plot(xi,f)
 %                     xlim([-0.1 0.7])
 %                     hold on
-%                     plot(xi(locs),pks,'ro')
+%                     plot(xi(locs_thr),pks_thr,'ro')
+%                     hold on
+%                     plot([-0.1,0.7],[thr,thr],'r--','LineWidth',1)
+%                     hold on
+%                     plot([xi(locs_max),xi(locs_max)],[0,pks_max],'r--','LineWidth',1)
 %                     hold off
                 elseif(strcmp(option,'nonRect'))
                     bbox = stats(i).BoundingBox;
