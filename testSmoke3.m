@@ -104,9 +104,9 @@ if(select_box == 1)
     t_ref = 5936;
     img = data_mat.data(:,:,:,t_ref);
     [bbox_row,bbox_col] = selectBound(img);
-    save(fullfile(path,'bbox.mat'),'bbox_row','bbox_col');
+    save(fullfile(target_dir,'bbox.mat'),'bbox_row','bbox_col');
 else
-    load(fullfile(path,'bbox.mat'));
+    load(fullfile(target_dir,'bbox.mat'));
 end
 
 % compute filter bank (Laws' texture energy measures)

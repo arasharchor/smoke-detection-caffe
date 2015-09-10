@@ -24,9 +24,9 @@ if(select_box == 1)
     t_ref = 5936;
     img = data_mat.data(:,:,:,t_ref);
     [bbox_row,bbox_col] = selectBound(img);
-    save(fullfile(path,'bbox.mat'),'bbox_row','bbox_col');
+    save(fullfile(target_dir,'bbox.mat'),'bbox_row','bbox_col');
 else
-    load(fullfile(path,'bbox.mat'));
+    load(fullfile(target_dir,'bbox.mat'));
 end
 
 % compute filter bank (Laws' texture energy measures)
@@ -51,6 +51,7 @@ for i=1:numel(t)
     plot_HFCD = true;
     plot_IICD = true;
     plot_TEX = true;
+    option = 'largeFont';
     
     if(plot_HFCD)
         % visualize images
@@ -62,44 +63,44 @@ for i=1:numel(t)
         I = img;
         str = '$I_{t}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = img_bg;
         str = '$B_{t}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_HFCD.img_DoG;
         str = '$I_{dog}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_HFCD.img_bg_DoG;
         str = '$B_{dog}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_HFCD.img_bs_DoG;
         str = '$S_{dog}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr;
         str = '$S_{dog}>T_{1}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_HFCD.img_bs_DoG_thr_entropy;
         str = '$E_{dog}>T_{2}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         img_masked = img;
         img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
         I = img_masked;
         str = '$M_{dog}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         % print figure
         print_dir = 'figs';
@@ -120,44 +121,44 @@ for i=1:numel(t)
         I = imgs_filtered.imgs_IICD.img_histeq;
         str = '$I_{heq}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_bg_histeq;
         str = '$B_{heq}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_bs_thr;
         str = '$S_{heq}>T_{3}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_bs_thr_smooth;
         str = '$M_{heq1}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_last_histeq;
         str = '$I''_{heq}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_last_diff_thr;
         str = '$F_{heq}>T_{4}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_last_diff_thr_smooth;
         str = '$M_{heq2}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         img_masked = imgs_filtered.imgs_IICD.img_histeq;
         img_masked(repmat(imgs_filtered.IICD==0,1,1,3)) = 0;
         I = img_masked;
         str = '$M_{heq}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         % print figure
         print_dir = 'figs';
@@ -178,34 +179,34 @@ for i=1:numel(t)
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
         str = '$R_{t}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = label2rgb(imgs_filtered.TS);
         str = '$R_{smooth}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_BRF.img_adj;
         str = '$I_{adj}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
         
         I = imgs_filtered.HFCD_IICD;
         str = '$M_{cd} = M_{dog} \;\&\; M_{heq}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
           
         I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonshadow);
         str = '$R_{filter}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math); 
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option); 
 
         img_masked = img;
         img_masked(repmat(imgs_filtered.BRF==0,1,1,3)) = 0;
         I = img_masked;
         str = '$M_{t}$';
         math = '';
-        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
         
         % print figure
         print_dir = 'figs';

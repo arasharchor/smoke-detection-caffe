@@ -1,7 +1,7 @@
-function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math) 
-    useLarge = true;
-    
-    if(useLarge==true)
+function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math,option) 
+    narginchk(7,8)
+
+    if(nargin==8 && strcmp(option,'largeFont'))
         font_size = 27;
         xlabel_offset = 5;
         vspan = 0.11;
