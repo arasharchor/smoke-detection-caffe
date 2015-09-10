@@ -4,8 +4,8 @@ addpath(genpath('util'));
 select_box = 0;
 
 % t = 7543;
-% t = 6617;
-t = 10300;
+t = 6617;
+% t = 10300;
 
 % set data source
 date_path = '2015-05-02.timemachine/';
@@ -171,10 +171,10 @@ for i=1:numel(t)
     if(plot_TEX)
         % visualize images
         fig = figure(53);
-        img_cols = 4;
+        img_cols = 3;
         img_rows = 2;
         fig_idx = 1;
-        
+                
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
         str = '$R_{t}$';
         math = '';
@@ -185,6 +185,16 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
 
+        I = imgs_filtered.imgs_BRF.img_adj;
+        str = '$I_{adj}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+        
+        I = imgs_filtered.HFCD_IICD;
+        str = '$M_{cd} = M_{dog} \;\&\; M_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math);
+          
         I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonshadow);
         str = '$R_{filter}$';
         math = '';

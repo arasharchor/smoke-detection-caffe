@@ -1,5 +1,5 @@
 function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math) 
-    useLarge = false;
+    useLarge = true;
     
     if(useLarge==true)
         font_size = 27;

@@ -5,13 +5,13 @@ select_box = 0;
 
 % 2015-05-01
 % black smoke
-t = 5936;
+% t = 5936;
 % t = 7543;
 % t = 6613;
 % gray smoke
 % t = 7298;
 % t = 7438;
-% t = 6617;
+t = 6617;
 % t = 7435;
 % steam + smoke
 % t = 5108;
