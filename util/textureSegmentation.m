@@ -2,6 +2,7 @@ function [ TS,imgs_TS ] = textureSegmentation( img,filter_bank,K )
     % texture segmentation using the provided filter bank
     % normalize image
     img_normalized = double(img);
+    img_normalized = normalizeRGB(img_normalized);
     for i=1:size(img,3)
         channel = img_normalized(:,:,i);
         img_normalized(:,:,i) = (channel - mean(channel(:)))./255;
