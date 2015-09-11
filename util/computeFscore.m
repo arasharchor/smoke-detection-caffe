@@ -3,10 +3,11 @@ function fscore = computeFscore( label,predict )
     [predict_start_raw,predict_end_raw] = computeSegments(predict);
     
     % merge unreasonable labels
+    thr = 30;
     label_start = [];
     label_end = [];
     while numel(label_start_raw)>1
-        if(label_start_raw(2)-label_end_raw(1)<10)
+        if(label_start_raw(2)-label_end_raw(1)<thr)
             label_end_raw(1) = label_end_raw(2);
             label(label_end_raw(1):label_start_raw(2)) = 1;
             label_start_raw(2) = [];
@@ -25,7 +26,7 @@ function fscore = computeFscore( label,predict )
     predict_start = [];
     predict_end = [];
     while numel(predict_start_raw)>1
-        if(predict_start_raw(2)-predict_end_raw(1)<10)
+        if(predict_start_raw(2)-predict_end_raw(1)<thr)
             predict_end_raw(1) = predict_end_raw(2);
             predict(predict_end_raw(1):predict_start_raw(2)) = 1;
             predict_start_raw(2) = [];

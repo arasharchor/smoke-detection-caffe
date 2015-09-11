@@ -1,4 +1,3 @@
 function span = getTemporalSpan()
-    span = 2;
+    span = 1;
 end
-
