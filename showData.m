@@ -20,7 +20,7 @@ data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
 % read mask
 fprintf('Loading bbox.mat\n');
-load(fullfile(path,'bbox.mat'));
+load(fullfile(target_dir,'bbox.mat'));
 
 % find frames that have labels
 has_label_predict = has_label_predict_mat.has_label_predict;

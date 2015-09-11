@@ -3,10 +3,10 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% 2015-05-01
+% 2015-05-02
 % t = [5936,6617,7543];
 % black smoke
-% t = 5936;
+t = 5936;
 % t = 7543;
 % t = 6613;
 % gray smoke
@@ -91,7 +91,7 @@ select_box = 0;
 % t = [7531:7595,4327:4427,5900:6000];
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
