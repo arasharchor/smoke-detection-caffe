@@ -23,7 +23,8 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD,img_bg )
     tex_seg_nonwhite = removeRegions(tex_seg_change,'white',0.9,img_adj);
     
     % remove shadow
-    tex_seg_nonshadow = removeRegions(tex_seg_nonwhite,'shadow',[0.09,1],backgroundSubtraction(img,img_bg,'Normalize'),0.5,img);
+    img_bs = backgroundSubtraction(img,img_bg,'Normalize');
+    tex_seg_nonshadow = removeRegions(tex_seg_nonwhite,'shadow',[0.09,1],img_bs,0.5,img);
     
     % return images
     imgs_BRF.tex_seg_shape = tex_seg_shape;
@@ -33,6 +34,7 @@ function [ BRF,imgs_BRF ] = regionFilter( img,TS,imgs_IICD,HFCD_IICD,img_bg )
     imgs_BRF.tex_seg_size = tex_seg_size;
     imgs_BRF.tex_seg_change = tex_seg_change;
     imgs_BRF.tex_seg_nonwhite = tex_seg_nonwhite;
+    imgs_BRF.img_bs = img_bs;
     imgs_BRF.tex_seg_nonshadow = tex_seg_nonshadow;
     BRF = im2bw(tex_seg_nonshadow,0);
 end

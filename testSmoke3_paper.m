@@ -3,8 +3,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-% t = 7543;
-t = 6617;
+t = 7543;
+% t = 6617;
 % t = 10300;
 
 % set data source
@@ -95,9 +95,7 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
-        img_masked = img;
-        img_masked(repmat(imgs_filtered.HFCD==0,1,1,3)) = 0;
-        I = img_masked;
+        I = imgs_filtered.HFCD;
         str = '$M_{dog}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
@@ -153,9 +151,7 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
-        img_masked = imgs_filtered.imgs_IICD.img_histeq;
-        img_masked(repmat(imgs_filtered.IICD==0,1,1,3)) = 0;
-        I = img_masked;
+        I = imgs_filtered.IICD;
         str = '$M_{heq}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
@@ -172,7 +168,7 @@ for i=1:numel(t)
     if(plot_TEX)
         % visualize images
         fig = figure(53);
-        img_cols = 3;
+        img_cols = 4;
         img_rows = 2;
         fig_idx = 1;
                 
@@ -191,6 +187,11 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
         
+        I = mat2gray(imgs_filtered.imgs_BRF.img_bs);
+        str = '$S_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
         I = imgs_filtered.HFCD_IICD;
         str = '$M_{cd} = M_{dog} \;\&\; M_{heq}$';
         math = '';
@@ -201,10 +202,15 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option); 
 
-        img_masked = img;
+        I = imgs_filtered.BRF;
+        str = '$M_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        img_masked = imgs_filtered.imgs_BRF.img_adj;
         img_masked(repmat(imgs_filtered.BRF==0,1,1,3)) = 0;
         I = img_masked;
-        str = '$M_{t}$';
+        str = '$I_{adj}(M_{t})$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
         

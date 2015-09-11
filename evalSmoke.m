@@ -3,6 +3,7 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 date = {'2015-05-01','2015-05-02','2015-05-03'};
+% date = {'2015-05-02'};
 
 % read mask
 target_dir = 'frames';
@@ -25,9 +26,10 @@ for idx=1:numel(date)
 
     % count the number of true smoke pixels in each images
     sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
-
+    truth = double(sum_smoke_pixel>0);
+    
     % Gaussian smoothing
-    response = filter1D(response,1);
+    response = filter1D(response,0.5);
 
     % find local max
     min_peak_prominence = 10;
@@ -50,7 +52,8 @@ for idx=1:numel(date)
         w_ = w(j)*2;
         predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
     end
-
+    predict = double(predict);
+    
     % plot ground truth and prediction
     fig = figure(98);
     img_cols = 1;
@@ -70,14 +73,14 @@ for idx=1:numel(date)
     hold off
 
     subplot(img_rows,img_cols,3)
-    bar(uint8(sum_smoke_pixel>0),'r')
+    bar(truth,'r')
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
     title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
 
     subplot(img_rows,img_cols,4)
-    bar(uint8(predict),'b')
+    bar(predict,'b')
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
@@ -103,4 +106,7 @@ for idx=1:numel(date)
     fileID = fopen(fullfile(js_dir,['smoke-',date{idx},'.js']),'w');
     fprintf(fileID,js);
     fclose(fileID);
+    
+    % compute F-score
+    fscore = computeFscore(truth,predict)
 end
