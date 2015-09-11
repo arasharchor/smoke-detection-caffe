@@ -62,30 +62,30 @@ for idx=1:numel(date)
     subplot(img_rows,img_cols,1)
     bar(sum_smoke_pixel,'r')
     xlim([day_min_idx day_max_idx])
-    title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
+    title(['Ground truth ( ',date{idx},' )'])
 
     subplot(img_rows,img_cols,2)
     plot(response,'b')
     xlim([day_min_idx day_max_idx])
-    title('Smoke detection')
+    title('Response of smoke detection')
     hold on
     plot(locs,pks,'ro')
     hold off
-
+    
     subplot(img_rows,img_cols,3)
-    bar(truth,'r')
-    xlim([day_min_idx day_max_idx])
-    set(gca,'YTickLabel',[]);
-    set(gca,'YTick',[]);
-    title(['Ground truth of Smoke ( ',date_path,dataset_path,tile_path,' )'])
-
-    subplot(img_rows,img_cols,4)
     bar(predict,'b')
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
-    title('Background subtraction')
+    title('Predicted frames containing smoke')
 
+    subplot(img_rows,img_cols,4)
+    bar(truth,'r')
+    xlim([day_min_idx day_max_idx])
+    set(gca,'YTickLabel',[]);
+    set(gca,'YTick',[]);
+    title('Ground truth')
+    
     % print figure
     print_dir = 'figs';
     if ~exist(print_dir,'dir')
