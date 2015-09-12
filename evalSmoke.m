@@ -2,14 +2,14 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 
-% date = {'2015-05-01','2015-05-02','2015-05-03'};
+date = {'2015-05-01','2015-05-02','2015-05-03'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
 
 % 2015-05-01 after steam
-date = {'2015-05-01'};
-day_min_idx = 7900;
+% date = {'2015-05-01'};
+% day_min_idx = 7900;
 
 % 2015-05-02 after steam
 % date = {'2015-05-02'};
@@ -50,7 +50,7 @@ for idx=1:numel(date)
     min_peak_width = 1.2;
     max_peak_width = 5;
     [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width,'MinPeakWidth',min_peak_width);
-
+    
     % remove night time idx and peaks that are too high
     idx_remove = find(pks>10000 | locs<day_min_idx | locs>day_max_idx);
     pks(idx_remove) = [];

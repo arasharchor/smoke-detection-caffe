@@ -42,7 +42,7 @@ function fscore = computeFscore( label,predict )
     predict_end(end+1) = predict_end_raw(1);
     
     % compute true positives and false positives
-    % 80% of the predictons in a segment are true labels
+    % 30% of the predictons in a segment are true labels
     TP = 0;
     FP = 0;
     for i=1:numel(predict_start)
