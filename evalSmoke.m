@@ -2,7 +2,7 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 
-date = {'2015-05-01','2015-05-02','2015-05-03'};
+% date = {'2015-05-01','2015-05-02','2015-05-03'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
@@ -12,7 +12,7 @@ date = {'2015-05-01','2015-05-02','2015-05-03'};
 % day_min_idx = 7900;
 
 % 2015-05-02 after steam
-% date = {'2015-05-02'};
+date = {'2015-05-02'};
 % day_min_idx = 6800; 
 
 % 2015-05-03 after steam
@@ -38,21 +38,23 @@ for idx=1:numel(date)
     % count the number of true smoke pixels in each images
     sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
     truth = double(sum_smoke_pixel>0);
+    truth(1:day_min_idx) = 0;
+    truth(day_max_idx:end) = 0;
     
     % Gaussian smoothing
     response = filter1D(response,0.5);
 
-    % find local max
+    % find local max with steam
     min_peak_prominence = 150;
     min_peak_height = 150;
-    min_peak_distance = 30;
+    min_peak_distance = 0;
     thr = 0;
-    min_peak_width = 1.2;
-    max_peak_width = 5;
+    min_peak_width = 1.15;
+    max_peak_width = 6;
     [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width,'MinPeakWidth',min_peak_width);
     
-    % remove night time idx and peaks that are too high
-    idx_remove = find(pks>10000 | locs<day_min_idx | locs>day_max_idx);
+    % remove night time idx
+    idx_remove = find(locs<day_min_idx | locs>day_max_idx);
     pks(idx_remove) = [];
     locs(idx_remove) = [];
     w(idx_remove) = [];
@@ -91,12 +93,12 @@ for idx=1:numel(date)
     set(gca,'YTick',[]);
     title('Predicted frames containing smoke')
 
-    subplot(img_rows,img_cols,4)
-    bar(truth,'r')
-    xlim([day_min_idx day_max_idx])
-    set(gca,'YTickLabel',[]);
-    set(gca,'YTick',[]);
-    title('Ground truth')
+%     subplot(img_rows,img_cols,4)
+%     bar(truth,'r')
+%     xlim([day_min_idx day_max_idx])
+%     set(gca,'YTickLabel',[]);
+%     set(gca,'YTick',[]);
+%     title('Ground truth')
     
     % print figure
     print_dir = 'figs';
