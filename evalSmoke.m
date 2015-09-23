@@ -1,6 +1,7 @@
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
+use_simple_label = false;
 
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
 
@@ -8,11 +9,11 @@ addpath(genpath('util'));
 [day_min_idx,day_max_idx] = getDayIdx();
 
 % 2015-05-01 after steam
-% date = {'2015-05-01'};
+date = {'2015-05-01'};
 % day_min_idx = 7900;
 
 % 2015-05-02 after steam
-date = {'2015-05-02'};
+% date = {'2015-05-02'};
 % day_min_idx = 6800; 
 
 % 2015-05-03 after steam
@@ -29,19 +30,23 @@ for idx=1:numel(date)
     date_path = [date{idx},'.timemachine/'];
     dataset_path = 'crf26-12fps-1424x800/';
     tile_path = '1/2/2.mp4';
-
-    % read ground truth and responses
     path = fullfile(target_dir,date_path,dataset_path,tile_path);
-    load(fullfile(path,'label.mat'));
-    load(fullfile(path,'response.mat'));
 
-    % count the number of true smoke pixels in each images
-    sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
-    truth = double(sum_smoke_pixel>0);
+    % load ground truth
+    if(use_simple_label)
+        load(fullfile(path,'label_simple.mat'));
+        truth = double(label_simple);
+    else
+        load(fullfile(path,'label.mat'));
+        % count the number of true smoke pixels in each images
+        sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
+        truth = double(sum_smoke_pixel>0);
+    end
     truth(1:day_min_idx) = 0;
     truth(day_max_idx:end) = 0;
-    
-    % Gaussian smoothing
+        
+    % Gaussian smooth the prediction
+    load(fullfile(path,'response.mat'));
     response = filter1D(response,0.5);
 
     % find local max with steam
@@ -70,35 +75,46 @@ for idx=1:numel(date)
     
     % plot ground truth and prediction
     fig = figure(98);
+    fig_idx = 1;
     img_cols = 1;
-    img_rows = 4;
+    if(use_simple_label)
+        img_rows = 3;
+    else
+        img_rows = 4;
+    end
 
-    subplot(img_rows,img_cols,1)
-    bar(sum_smoke_pixel,'r')
-    xlim([day_min_idx day_max_idx])
-    title(['Ground truth ( ',date{idx},' )'])
+    if(~use_simple_label)
+        subplot(img_rows,img_cols,fig_idx)
+        bar(sum_smoke_pixel,'r')
+        xlim([day_min_idx day_max_idx])
+        title(['Ground truth ( ',date{idx},' )'])
+        fig_idx = fig_idx + 1;
+    end
 
-    subplot(img_rows,img_cols,2)
+    subplot(img_rows,img_cols,fig_idx)
     plot(response,'b')
     xlim([day_min_idx day_max_idx])
     title('Response of smoke detection')
     hold on
     plot(locs,pks,'ro')
     hold off
+    fig_idx = fig_idx + 1;
     
-    subplot(img_rows,img_cols,3)
+    subplot(img_rows,img_cols,fig_idx)
     bar(predict,'b')
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
     title('Predicted frames containing smoke')
+    fig_idx = fig_idx + 1;
 
-%     subplot(img_rows,img_cols,4)
-%     bar(truth,'r')
-%     xlim([day_min_idx day_max_idx])
-%     set(gca,'YTickLabel',[]);
-%     set(gca,'YTick',[]);
-%     title('Ground truth')
+    subplot(img_rows,img_cols,fig_idx)
+    bar(truth,'r')
+    xlim([day_min_idx day_max_idx])
+    set(gca,'YTickLabel',[]);
+    set(gca,'YTick',[]);
+    title('Ground truth')
+    fig_idx = fig_idx + 1;
     
     % print figure
     print_dir = 'figs';
@@ -123,5 +139,5 @@ for idx=1:numel(date)
     
     % compute F-score
     fscore = computeFscore(truth,predict);
-    fscore.date = date{idx}
+    fscore.date = date{idx};
 end

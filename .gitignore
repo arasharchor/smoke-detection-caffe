@@ -12,4 +12,5 @@ images/
 frames/**/*.mat
 !frames/**/has_label.mat
 !frames/**/label.mat
+!frames/**/label_simple.mat
 !frames/bbox.mat

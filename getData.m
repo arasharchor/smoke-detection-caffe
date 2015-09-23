@@ -2,7 +2,10 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 
-date = {'2015-05-01','2015-05-02','2015-05-03'};
+% date = {'2015-05-01','2015-05-02','2015-05-03'};
+% date = {'2015-05-04','2015-05-05','2015-05-06'};
+
+date = {'2015-05-05','2015-05-06'};
 
 for idx=1:numel(date)
     % set data source
@@ -13,12 +16,13 @@ for idx=1:numel(date)
 
     % download video and related information
     fprintf('Downloading video\n');
-    urlwrite(strcat(url_path,date_path,dataset_path,tile_path),'tile.mp4');
+    tilename = [date{idx},'-tile.mp4'];
+    urlwrite(strcat(url_path,date_path,dataset_path,tile_path),tilename);
     tm_json = JSON.parse(urlread(strcat(url_path,date_path,'tm.json')));
     r_json = JSON.parse(urlread(strcat(url_path,date_path,dataset_path,'r.json')));
 
     % read video and create directory
-    tile = VideoReader('tile.mp4');
+    tile = VideoReader(tilename);
     target_dir = 'frames';
     path = fullfile(target_dir,date_path,dataset_path,tile_path);
     if ~exist(path,'dir')
@@ -34,6 +38,7 @@ for idx=1:numel(date)
     data = zeros(img_height,img_width,3,r_json.frames,'uint8');
     label = false(img_height,img_width,1,r_json.frames);
     has_label = false(1,r_json.frames);
+    label_simple = false(1,r_json.frames);
     data(:,:,:,1) = img;
     %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
 
@@ -44,13 +49,18 @@ for idx=1:numel(date)
         %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
     end
 
+    % delete video
+    delete(tilename);
+    
     % save files
     fprintf('Saving data.mat\n');
     save(fullfile(path,'data.mat'),'data','-v7.3');
-    fprintf('Saving label.mat\n');
-    save(fullfile(path,'label.mat'),'label','-v7.3');
-    fprintf('Saving has_label.mat\n');
-    save(fullfile(path,'has_label.mat'),'has_label','-v7.3');
+%     fprintf('Saving label.mat\n');
+%     save(fullfile(path,'label.mat'),'label','-v7.3');
+%     fprintf('Saving has_label.mat\n');
+%     save(fullfile(path,'has_label.mat'),'has_label','-v7.3');
+    fprintf('Saving label_simple.mat\n');
+    save(fullfile(path,'label_simple.mat'),'label_simple','-v7.3');
     fprintf('Saving file info.mat\n');
     save(fullfile(path,'info.mat'),'tm_json','r_json','url_path','dataset_path','tile_path','img_height','img_width');
     fprintf('Done\n');
