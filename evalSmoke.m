@@ -1,15 +1,16 @@
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
-use_simple_label = false;
+use_simple_label = true;
 
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
+date = {'2015-05-04','2015-05-05','2015-05-06'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
 
 % 2015-05-01 after steam
-date = {'2015-05-01'};
+% date = {'2015-05-01'};
 % day_min_idx = 7900;
 
 % 2015-05-02 after steam
@@ -113,7 +114,7 @@ for idx=1:numel(date)
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
-    title('Ground truth')
+    title(['Ground truth ( ',date{idx},' )'])
     fig_idx = fig_idx + 1;
     
     % print figure
@@ -138,6 +139,7 @@ for idx=1:numel(date)
     fclose(fileID);
     
     % compute F-score
+    truth = (truth>0);
     fscore = computeFscore(truth,predict);
-    fscore.date = date{idx};
+    fscore.date = date{idx}
 end

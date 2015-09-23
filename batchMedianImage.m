@@ -37,11 +37,11 @@ for idx=1:numel(date)
         median = zeros(size(data_mat,'data'),'uint8');
         if(use_gpu_array)
             for i=1:3
-                median(:,:,i,:) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j),use_gpu_array);
+                median(:,:,i,:) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j),use_gpu_array,date{idx});
             end
         else
             parfor i=1:3
-                median(:,:,i,:) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j),use_gpu_array);
+                median(:,:,i,:) = computeMedian(squeeze(data_mat.data(:,:,i,:)),ranges(j),use_gpu_array,date{idx});
             end
         end
         % save file

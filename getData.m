@@ -4,8 +4,7 @@ addpath(genpath('util'));
 
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
 % date = {'2015-05-04','2015-05-05','2015-05-06'};
-
-date = {'2015-05-05','2015-05-06'};
+date = {'2015-05-07','2015-05-08','2015-05-09'};
 
 for idx=1:numel(date)
     % set data source
@@ -39,6 +38,7 @@ for idx=1:numel(date)
     label = false(img_height,img_width,1,r_json.frames);
     has_label = false(1,r_json.frames);
     label_simple = false(1,r_json.frames);
+    label_simple = uint8(label_simple);
     data(:,:,:,1) = img;
     %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
 
