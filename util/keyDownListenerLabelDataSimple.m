@@ -7,8 +7,8 @@ function keyDownListenerLabelDataSimple( src,event,num_frames,data_mat,label_sim
             t = t + 1;
             update_flag = true;
         elseif(show_has_label_only==1 && t<label_simple_idx(end))
-            next = find(has_label_idx>t);
-            t = has_label_idx(next(1));
+            next = find(label_simple_idx>t);
+            t = label_simple_idx(next(1));
             update_flag = true;
         end
     elseif(strcmp(event.Key,'leftarrow'))
@@ -16,8 +16,8 @@ function keyDownListenerLabelDataSimple( src,event,num_frames,data_mat,label_sim
             t = t - 1;
             update_flag = true;
         elseif(show_has_label_only==1 && t>label_simple_idx(1))
-            previous = find(has_label_idx<t);
-            t = has_label_idx(previous(end));   
+            previous = find(label_simple_idx<t);
+            t = label_simple_idx(previous(end));   
             update_flag = true;
         end
     elseif(strcmp(event.Key,'1'))

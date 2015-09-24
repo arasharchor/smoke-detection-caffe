@@ -2,9 +2,12 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 use_simple_label = true;
+smoke_level = 2;
 
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
-date = {'2015-05-04','2015-05-05','2015-05-06'};
+% date = {'2015-05-04','2015-05-05','2015-05-06'};
+% date = {'2015-05-07','2015-05-08','2015-05-09'};
+date = {'2015-05-07'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
@@ -139,7 +142,7 @@ for idx=1:numel(date)
     fclose(fileID);
     
     % compute F-score
-    truth = (truth>0);
+    truth = (truth>=smoke_level);
     fscore = computeFscore(truth,predict);
     fscore.date = date{idx}
 end
