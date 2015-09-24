@@ -6,7 +6,7 @@ function keyDownListenerLabelDataSimple( src,event,num_frames,data_mat,label_sim
         if(show_has_label_only==0 && t<num_frames)
             t = t + 1;
             update_flag = true;
-        elseif(show_has_label_only==1 && t<label_simple_idx(end))
+        elseif(show_has_label_only>0 && t<label_simple_idx(end))
             next = find(label_simple_idx>t);
             t = label_simple_idx(next(1));
             update_flag = true;
@@ -15,7 +15,7 @@ function keyDownListenerLabelDataSimple( src,event,num_frames,data_mat,label_sim
         if(show_has_label_only==0 && t>1)
             t = t - 1;
             update_flag = true;
-        elseif(show_has_label_only==1 && t>label_simple_idx(1))
+        elseif(show_has_label_only>0 && t>label_simple_idx(1))
             previous = find(label_simple_idx<t);
             t = label_simple_idx(previous(end));   
             update_flag = true;

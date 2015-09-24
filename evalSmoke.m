@@ -4,11 +4,11 @@ addpath(genpath('util'));
 use_simple_label = true;
 smoke_level = 2;
 
-% date = {'2015-05-01','2015-05-02','2015-05-03','2015-05-04','2015-05-05','2015-05-06','2015-05-07'};
+% date = {'2015-05-01','2015-05-02','2015-05-03','2015-05-04','2015-05-05','2015-05-06','2015-05-07','2015-05-08'};
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
 % date = {'2015-05-04','2015-05-05','2015-05-06'};
 % date = {'2015-05-07','2015-05-08','2015-05-09'};
-date = {'2015-05-08'};
+date = {'2015-05-09'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
@@ -81,7 +81,7 @@ for idx=1:numel(date)
 
     % compute F-score
     fscore = computeFscore(truth>=smoke_level,predict);
-    fscore.date = date{idx};
+    fscore.date = date{idx}
     
     % plot ground truth and prediction
     fig = figure(98);
