@@ -4,10 +4,11 @@ addpath(genpath('util'));
 use_simple_label = true;
 smoke_level = 2;
 
+% date = {'2015-05-01','2015-05-02','2015-05-03','2015-05-04','2015-05-05','2015-05-06','2015-05-07'};
 % date = {'2015-05-01','2015-05-02','2015-05-03'};
 % date = {'2015-05-04','2015-05-05','2015-05-06'};
 % date = {'2015-05-07','2015-05-08','2015-05-09'};
-date = {'2015-05-07'};
+date = {'2015-05-08'};
 
 % parameters
 [day_min_idx,day_max_idx] = getDayIdx();
@@ -48,7 +49,8 @@ for idx=1:numel(date)
     end
     truth(1:day_min_idx) = 0;
     truth(day_max_idx:end) = 0;
-        
+    truth(truth<smoke_level) = 0;
+    
     % Gaussian smooth the prediction
     load(fullfile(path,'response.mat'));
     response = filter1D(response,0.5);
@@ -76,6 +78,10 @@ for idx=1:numel(date)
         predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
     end
     predict = double(predict);
+
+    % compute F-score
+    fscore = computeFscore(truth>=smoke_level,predict);
+    fscore.date = date{idx};
     
     % plot ground truth and prediction
     fig = figure(98);
@@ -109,7 +115,9 @@ for idx=1:numel(date)
     xlim([day_min_idx day_max_idx])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
-    title('Predicted frames containing smoke')
+    round_to = 2;
+    fscore_str = ['(',num2str(round(fscore.precision,round_to)),', ',num2str(round(fscore.recall,round_to)),', ',num2str(round(fscore.score,round_to)),')'];
+    title(['Predicted frames: (precision, recall, fscore) = ',fscore_str])
     fig_idx = fig_idx + 1;
 
     subplot(img_rows,img_cols,fig_idx)
@@ -140,9 +148,4 @@ for idx=1:numel(date)
     fileID = fopen(fullfile(js_dir,['smoke-',date{idx},'.js']),'w');
     fprintf(fileID,js);
     fclose(fileID);
-    
-    % compute F-score
-    truth = (truth>=smoke_level);
-    fscore = computeFscore(truth,predict);
-    fscore.date = date{idx}
 end
