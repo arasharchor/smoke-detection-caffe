@@ -31,7 +31,7 @@ for idx=1:numel(date)
 
     % compute first frame
     img_scale = 0.25;
-    fprintf('Processing frame 1\n');
+    fprintf('Processing frame 1 of %s\n',date{idx});
     img = imresize(readFrame(tile),img_scale);
     img_height = size(img,1);
     img_width = size(img,2);
@@ -45,7 +45,7 @@ for idx=1:numel(date)
 
     % separate video into frames
     for i=2:r_json.frames
-        fprintf('Processing frame %d\n', i);
+        fprintf('Processing frame %d of %s\n',i,date{idx});
         data(:,:,:,i) = imresize(readFrame(tile),img_scale);
         %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
     end
