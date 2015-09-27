@@ -1,0 +1,3 @@
+getData
+batchMedianImage
+% batchSmoke3
