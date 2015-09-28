@@ -6,7 +6,7 @@ select_box = 0;
 % 2015-05-02
 % t = [5936,6617,7543];
 % black smoke
-t = 5936;
+% t = 5936;
 % t = 7543;
 % t = 6613;
 % gray smoke
@@ -90,8 +90,10 @@ t = 5936;
  
 % t = [7531:7595,4327:4427,5900:6000];
 
+t = 6446;
+
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-01-26.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -121,7 +123,7 @@ for i=1:numel(t)
     end
     
     % crop an image and detect smoke
-    img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
+%     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     span = getTemporalSpan();
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);

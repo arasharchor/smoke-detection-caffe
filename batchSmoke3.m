@@ -72,7 +72,7 @@ for idx=1:numel(date)
     % save file
     fprintf('Saving response.mat of %s\n',date{idx});
     save(fullfile(path,'response.mat'),'response','-v7.3');
-    fprintf('Saving label_predict.mat\n of %s',date{idx});
+    fprintf('Saving label_predict.mat of %s\n',date{idx});
     save(fullfile(path,'label_predict.mat'),'label_predict','-v7.3');
     fprintf('Saving has_label_predict.mat of %s\n',date{idx});
     save(fullfile(path,'has_label_predict.mat'),'has_label_predict','-v7.3');
