@@ -12,10 +12,12 @@ url_path = 'http://api.sunrise-sunset.org/json?lat=40.505911&lng=-80.06967&date=
 sun = containers.Map;
 for i=1:numel(date_all)
     date = date_all(i);
-    fprintf('Processing date %s\n',datestr(date));
-    json = JSON.parse(urlread([url_path,datestr(date)]));
-    sunrise = datestr(json.results.sunrise,'HH:MM:SS');
-    sunset = datestr(json.results.sunset,'HH:MM:SS');
+    fprintf('Processing date %s\n',datestr(date,'yyyy-mm-dd'));
+    json = JSON.parse(urlread([url_path,datestr(date,'yyyy-mm-dd')]));
+    sunrise_UTC = datetime([datestr(date),' ',json.results.sunrise],'TimeZone','UTC');
+    sunset_UTC = datetime([datestr(date),' ',json.results.sunset],'TimeZone','UTC');
+    sunrise = datestr(sunrise_UTC,'HH:MM:SS');
+    sunset = datestr(sunset_UTC,'HH:MM:SS');
     obj.sunrise = sunrise;
     obj.sunset = sunset;
     sun(datestr(date,'yyyy-mm-dd')) = obj;

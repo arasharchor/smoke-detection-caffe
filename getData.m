@@ -4,6 +4,8 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 
 date = getProcessingDates();
+target_dir = 'frames';
+load(fullfile(target_dir,'sun.mat'));
 
 for idx=1:numel(date)
     % set data source
@@ -21,7 +23,6 @@ for idx=1:numel(date)
 
     % read video and create directory
     tile = VideoReader(tilename);
-    target_dir = 'frames';
     path = fullfile(target_dir,date_path,dataset_path,tile_path);
     if ~exist(path,'dir')
         mkdir(path);
@@ -48,10 +49,15 @@ for idx=1:numel(date)
         %imwrite(img,fullfile(path,strcat(num2str(i),'.png')),'png');
     end
 
+    % compute sunrise and sunset frames
+    [sunrise_frame,sunset_frame] = getDayIdx(date{idx},sun(date{idx}).sunrise,sun(date{idx}).sunset,tm_json.capture_times);
+
     % delete video
     delete(tilename);
     
     % save files
+    fprintf('Saving sun_frame.mat\n');
+    save(fullfile(path,'sun_frame.mat'),'sunrise_frame','sunset_frame','-v7.3');
     fprintf('Saving data.mat\n');
     save(fullfile(path,'data.mat'),'data','-v7.3');
 %     fprintf('Saving label.mat\n');
