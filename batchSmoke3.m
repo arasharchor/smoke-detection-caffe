@@ -54,8 +54,8 @@ for idx=1:numel(date)
     label_predict = false(size(data,1),size(data,2),1,size(data,4));
     has_label_predict = false(1,size(data,4));
 
-    [day_min_idx,day_max_idx] = getDayIdx();
-    parfor t=day_min_idx:day_max_idx
+    load(fullfile(path,'sun_frame.mat'));
+    parfor t=sunrise_frame:sunset_frame
         fprintf('Processing frame %d of %s\n',t,date{idx});
         span = getTemporalSpan();
         imgs = data(:,:,:,t-span:span:t);

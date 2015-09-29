@@ -12,6 +12,7 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 load(fullfile(path,'info.mat'));
+load(fullfile(path,'sun_frame.mat'));
 data_mat = matfile(fullfile(path,'data.mat'));
 label_simple_mat = matfile(fullfile(path,'label_simple.mat'),'Writable',true);
 
@@ -22,7 +23,8 @@ label_simple_idx = find(label_simple>=show_has_label_only);
 % label images
 global t
 global toggle
-t = 5809;
+t = sunrise_frame;
+% t = 5809;
 toggle = -1;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerLabelDataSimple,r_json.frames,data_mat,label_simple_mat,label_simple_idx,show_has_label_only});

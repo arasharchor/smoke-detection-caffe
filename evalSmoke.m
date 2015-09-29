@@ -4,26 +4,7 @@ addpath(genpath('util'));
 use_simple_label = true;
 smoke_level = 2;
 
-% date = {'2015-05-01','2015-05-02','2015-05-03','2015-05-04','2015-05-05','2015-05-06','2015-05-07','2015-05-08','2015-05-09'};
-% date = {'2015-05-01','2015-05-02','2015-05-03'};
-% date = {'2015-05-04','2015-05-05','2015-05-06'};
-% date = {'2015-05-07','2015-05-08','2015-05-09'};
-date = {'2015-02-10'};
-
-% parameters
-[day_min_idx,day_max_idx] = getDayIdx();
-
-% 2015-05-01 after steam
-% date = {'2015-05-01'};
-% day_min_idx = 7900;
-
-% 2015-05-02 after steam
-% date = {'2015-05-02'};
-% day_min_idx = 6800; 
-
-% 2015-05-03 after steam
-% date = {'2015-05-03'};
-% day_min_idx = 6700;
+date = getProcessingDates();
 
 % read mask
 target_dir = 'frames';
@@ -36,7 +17,17 @@ for idx=1:numel(date)
     dataset_path = 'crf26-12fps-1424x800/';
     tile_path = '1/2/2.mp4';
     path = fullfile(target_dir,date_path,dataset_path,tile_path);
+    load(fullfile(path,'sun_frame.mat'));
+    
+    % 2015-05-01 after steam
+    % sunrise_frame = 7900;
 
+    % 2015-05-02 after steam
+    % sunrise_frame = 6800; 
+
+    % 2015-05-03 after steam
+    % sunrise_frame = 6700;
+    
     % load ground truth
     if(use_simple_label)
         load(fullfile(path,'label_simple.mat'));
@@ -47,8 +38,8 @@ for idx=1:numel(date)
         sum_smoke_pixel = sum(reshape(label(bbox_row,bbox_col,:,:),[],size(label,4)));
         truth = double(sum_smoke_pixel>0);
     end
-    truth(1:day_min_idx) = 0;
-    truth(day_max_idx:end) = 0;
+    truth(1:sunrise_frame) = 0;
+    truth(sunset_frame:end) = 0;
     truth(truth<smoke_level) = 0;
     
     % Gaussian smooth the prediction
@@ -65,7 +56,7 @@ for idx=1:numel(date)
     [pks,locs,w,p] = findpeaks(response,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width,'MinPeakWidth',min_peak_width);
     
     % remove night time idx
-    idx_remove = find(locs<day_min_idx | locs>day_max_idx);
+    idx_remove = find(locs<sunrise_frame | locs>sunset_frame);
     pks(idx_remove) = [];
     locs(idx_remove) = [];
     w(idx_remove) = [];
@@ -96,14 +87,14 @@ for idx=1:numel(date)
     if(~use_simple_label)
         subplot(img_rows,img_cols,fig_idx)
         bar(sum_smoke_pixel,'r')
-        xlim([day_min_idx day_max_idx])
+        xlim([sunrise_frame sunset_frame])
         title(['Ground truth ( ',date{idx},' )'])
         fig_idx = fig_idx + 1;
     end
 
     subplot(img_rows,img_cols,fig_idx)
     plot(response,'b')
-    xlim([day_min_idx day_max_idx])
+    xlim([sunrise_frame sunset_frame])
     title('Response of smoke detection')
     hold on
     plot(locs,pks,'ro')
@@ -112,7 +103,7 @@ for idx=1:numel(date)
     
     subplot(img_rows,img_cols,fig_idx)
     bar(predict,'b')
-    xlim([day_min_idx day_max_idx])
+    xlim([sunrise_frame sunset_frame])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
     round_to = 2;
@@ -122,7 +113,7 @@ for idx=1:numel(date)
 
     subplot(img_rows,img_cols,fig_idx)
     bar(truth,'r')
-    xlim([day_min_idx day_max_idx])
+    xlim([sunrise_frame sunset_frame])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
     title(['Ground truth ( ',date{idx},' )'])
@@ -141,8 +132,8 @@ for idx=1:numel(date)
     if ~exist(js_dir,'dir')
         mkdir(js_dir);
     end
-    response(1:day_min_idx) = 0;
-    response(day_max_idx:end) = 0;
+    response(1:sunrise_frame) = 0;
+    response(sunset_frame:end) = 0;
     response = round(response);
     js = array2json(response,predict);
     fileID = fopen(fullfile(js_dir,['smoke-',date{idx},'.js']),'w');
