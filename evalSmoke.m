@@ -40,7 +40,10 @@ for idx=1:numel(date)
     end
     truth(1:sunrise_frame) = 0;
     truth(sunset_frame:end) = 0;
-    truth(truth<smoke_level) = 0;
+    truth_plot = truth;
+    if(use_simple_label)
+        truth(truth<smoke_level) = 0;
+    end
     
     % Gaussian smooth the prediction
     load(fullfile(path,'response.mat'));
@@ -71,7 +74,11 @@ for idx=1:numel(date)
     predict = double(predict);
 
     % compute F-score
-    fscore = computeFscore(truth>=smoke_level,predict);
+    if(use_simple_label)
+        fscore = computeFscore(truth>=smoke_level,predict);
+    else
+        fscore = computeFscore(truth,predict);
+    end
     fscore.date = date{idx}
     
     % plot ground truth and prediction
@@ -112,7 +119,7 @@ for idx=1:numel(date)
     fig_idx = fig_idx + 1;
 
     subplot(img_rows,img_cols,fig_idx)
-    bar(truth,'r')
+    bar(truth_plot,'r')
     xlim([sunrise_frame sunset_frame])
     set(gca,'YTickLabel',[]);
     set(gca,'YTick',[]);
