@@ -2,7 +2,7 @@ tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
-use_gpu_array = false;
+use_gpu_array = true;
 
 date = getProcessingDates();
 
