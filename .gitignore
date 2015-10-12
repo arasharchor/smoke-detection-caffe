@@ -10,6 +10,7 @@ caffe/*.solverstate
 js/
 json/
 images/
+errorLog.txt
 frames/**/*.mat
 !frames/**/has_label.mat
 !frames/**/label.mat

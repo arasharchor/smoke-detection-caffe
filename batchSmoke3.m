@@ -10,6 +10,9 @@ target_dir = 'frames';
 fprintf('Loading bbox.mat\n');
 load(fullfile(target_dir,'bbox.mat'));
 
+% parameters
+span = getTemporalSpan();
+
 % create workers
 try
     fprintf('Closing any pools...\n');
@@ -28,7 +31,7 @@ end
 parpool('local',num_workers);
 
 for idx=1:numel(date)
-        try
+    try
         % set data source
         date_path = [date{idx},'.timemachine/'];
         dataset_path = 'crf26-12fps-1424x800/';
@@ -58,7 +61,6 @@ for idx=1:numel(date)
         load(fullfile(path,'sun_frame.mat'));
         parfor t=sunrise_frame:sunset_frame
             fprintf('Processing frame %d of %s\n',t,date{idx});
-            span = getTemporalSpan();
             imgs = data(:,:,:,t-span:span:t);
             img_bg = data_median(:,:,:,t);
             imgs_fd = imgs(:,:,:,1);
@@ -79,6 +81,7 @@ for idx=1:numel(date)
         save(fullfile(path,'has_label_predict.mat'),'has_label_predict','-v7.3');
     catch ME
         fprintf('Error detecting smoke of date %s\n',date{idx});
+        logError(ME);
     end
 end
 
