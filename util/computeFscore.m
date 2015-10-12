@@ -1,45 +1,10 @@
-function fscore = computeFscore( label,predict )
-    [label_start_raw,label_end_raw] = computeSegments(label);
-    [predict_start_raw,predict_end_raw] = computeSegments(predict);
+function fscore = computeFscore( label_raw,predict_raw )
+    [label_start_raw,label_end_raw] = computeSegments(label_raw);
+    [predict_start_raw,predict_end_raw] = computeSegments(predict_raw);
     
     % merge unreasonable labels
-    thr = 30;
-    label_start = [];
-    label_end = [];
-    while numel(label_start_raw)>1
-        if(label_start_raw(2)-label_end_raw(1)<thr)
-            label_end_raw(1) = label_end_raw(2);
-            label(label_end_raw(1):label_start_raw(2)) = 1;
-            label_start_raw(2) = [];
-            label_end_raw(2) = [];
-        else
-            label_start(end+1) = label_start_raw(1);
-            label_end(end+1) = label_end_raw(1);
-            label_start_raw(1) = [];
-            label_end_raw(1) = [];
-        end
-    end
-    label_start(end+1) = label_start_raw(1);
-    label_end(end+1) = label_end_raw(1);
-    
-    % merge unreasonable predictions
-    predict_start = [];
-    predict_end = [];
-    while numel(predict_start_raw)>1
-        if(predict_start_raw(2)-predict_end_raw(1)<thr)
-            predict_end_raw(1) = predict_end_raw(2);
-            predict(predict_end_raw(1):predict_start_raw(2)) = 1;
-            predict_start_raw(2) = [];
-            predict_end_raw(2) = [];
-        else
-            predict_start(end+1) = predict_start_raw(1);
-            predict_end(end+1) = predict_end_raw(1);
-            predict_start_raw(1) = [];
-            predict_end_raw(1) = [];
-        end
-    end
-    predict_start(end+1) = predict_start_raw(1);
-    predict_end(end+1) = predict_end_raw(1);
+    [label_start,label_end,label] = mergeSegments(label_start_raw,label_end_raw,label_raw);
+    [predict_start,predict_end,predict] = mergeSegments(predict_start_raw,predict_end_raw,predict_raw);
     
     % compute true positives and false positives
     % 30% of the predictons in a segment are true labels
