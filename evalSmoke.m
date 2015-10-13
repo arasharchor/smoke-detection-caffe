@@ -23,7 +23,7 @@ smoke = [];
 
 % parameters
 sigma = 0.5;
-max_response = 500;
+max_response = 300;
 
 for idx=1:numel(date)
     try
