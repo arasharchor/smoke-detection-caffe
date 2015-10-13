@@ -27,7 +27,6 @@ max_response = 500;
 
 for idx=1:numel(date)
     try
-        date{idx} = '2015-06-55';
         fprintf('Processing date %s\n',date{idx});
 
         % set data source
