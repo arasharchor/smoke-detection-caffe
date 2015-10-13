@@ -23,7 +23,7 @@ smoke = [];
 
 % parameters
 sigma = 0.5;
-max_response = 300;
+max_response = 500;
 
 for idx=1:numel(date)
     try
@@ -154,7 +154,7 @@ for idx=1:numel(date)
         end
 
         % output a json file
-        js_dir = 'js';
+        js_dir = 'json/metadata';
         if ~exist(js_dir,'dir')
             mkdir(js_dir);
         end
@@ -162,17 +162,18 @@ for idx=1:numel(date)
         response(sunset_frame:end) = -30;
         response = round(response);
         response(response>max_response) = max_response;
-        js = array2json(response,predict);
-        fileID = fopen(fullfile(js_dir,['smoke-',date{idx},'.js']),'w');
-        fprintf(fileID,js);
-        fclose(fileID);
+        metadata = struct();
+        metadata.response = response';
+        [frames_start,frames_end] = computeSegments(predict);
+        [frames_start,frames_end,~] = mergeSegments(frames_start,frames_end,predict);
+        metadata.frames_start = frames_start;
+        metadata.frames_end = frames_end;
+        savejson('',metadata,fullfile(js_dir,['smoke-',date{idx},'.json']));
 
         % save data for uploading to esdr
         load(fullfile(path,'info.mat'));
         datetime_all = posixtime(datetime(tm_json.capture_times,'TimeZone','America/New_York'));
         datetime_all = datetime_all';
-%         datetime_all = datetime_all(sunrise_frame:sunset_frame);
-%         response = response(sunrise_frame:sunset_frame);
         smoke = cat(1,smoke,cat(2,datetime_all,response));
     catch ME
         fprintf('Error detecting smoke of date %s\n',date{idx});
