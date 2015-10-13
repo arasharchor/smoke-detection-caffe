@@ -27,6 +27,7 @@ max_response = 500;
 
 for idx=1:numel(date)
     try
+        date{idx} = '2015-06-55';
         fprintf('Processing date %s\n',date{idx});
 
         % set data source
@@ -178,6 +179,7 @@ for idx=1:numel(date)
     catch ME
         fprintf('Error detecting smoke of date %s\n',date{idx});
         logError(ME);
+        continue;
     end
 end
 

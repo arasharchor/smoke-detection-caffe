@@ -73,6 +73,7 @@ for idx=1:numel(date)
     catch ME
         fprintf('Error getting data for date %s\n',date{idx});
         logError(ME);
+        continue;
     end
 end
 toc

@@ -53,6 +53,7 @@ for idx=1:numel(date)
     catch ME
         fprintf('Error processing median image of date %s\n',date{idx});
         logError(ME);
+        continue;
     end
 end
 

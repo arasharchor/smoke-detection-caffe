@@ -82,6 +82,7 @@ for idx=1:numel(date)
     catch ME
         fprintf('Error detecting smoke of date %s\n',date{idx});
         logError(ME);
+        continue;
     end
 end
 
