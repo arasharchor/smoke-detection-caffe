@@ -35,6 +35,9 @@ for idx=1:numel(date)
         tile_path = '1/2/2.mp4';
         path = fullfile(target_dir,date_path,dataset_path,tile_path);
         load(fullfile(path,'sun_frame.mat'));
+        if(sunrise_frame < 100)
+            sunrise_frame = 100;
+        end
 
         % 2015-05-01 after steam
         % sunrise_frame = 7900;
@@ -69,7 +72,15 @@ for idx=1:numel(date)
         predict = false(size(response));
         for j=1:length(locs)
             w_ = w(j)*2;
-            predict(round(locs(j)-w_):round(locs(j)+w_)) = true;
+            seg_start = round(locs(j)-w_);
+            seg_end = round(locs(j)+w_);
+            if(seg_start < 1)
+                seg_start = 1;
+            end
+            if(seg_end > numel(predict))
+                seg_end = numel(predict);
+            end
+            predict(seg_start:seg_end) = true;
         end
         predict = double(predict);
 
@@ -158,6 +169,7 @@ for idx=1:numel(date)
         if ~exist(js_dir,'dir')
             mkdir(js_dir);
         end
+        
         response(1:sunrise_frame) = -30;
         response(sunset_frame:end) = -30;
         response = round(response);

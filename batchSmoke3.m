@@ -59,6 +59,9 @@ for idx=1:numel(date)
         has_label_predict = false(1,size(data,4));
 
         load(fullfile(path,'sun_frame.mat'));
+        if(sunrise_frame < span + 1)
+            sunrise_frame = span + 1;
+        end
         parfor t=sunrise_frame:sunset_frame
             fprintf('Processing frame %d of %s\n',t,date{idx});
             imgs = data(:,:,:,t-span:span:t);
