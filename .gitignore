@@ -32,9 +32,8 @@ frames/
 !frames/2015-09-09.timemachine
 !frames/2015-10-05.timemachine
 !frames/bbox.mat
+!frames/sun.mat
 !frames/**/has_label.mat
 !frames/**/label.mat
 !frames/**/label_simple.mat
-!frames/**/sun.mat
-!frames/**/sun_frame.mat
 
