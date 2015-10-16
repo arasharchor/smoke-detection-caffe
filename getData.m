@@ -2,6 +2,8 @@ tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
+generateComplexLabel = false;
+generateSimpleLabel = false;
 
 date = getProcessingDates();
 target_dir = 'frames';
@@ -61,14 +63,18 @@ for idx=1:numel(date)
         save(fullfile(path,'sun_frame.mat'),'sunrise_frame','sunset_frame','-v7.3');
         fprintf('Saving data.mat\n');
         save(fullfile(path,'data.mat'),'data','-v7.3');
-    %     fprintf('Saving label.mat\n');
-    %     save(fullfile(path,'label.mat'),'label','-v7.3');
-    %     fprintf('Saving has_label.mat\n');
-    %     save(fullfile(path,'has_label.mat'),'has_label','-v7.3');
-        fprintf('Saving label_simple.mat\n');
-        save(fullfile(path,'label_simple.mat'),'label_simple','-v7.3');
         fprintf('Saving file info.mat\n');
         save(fullfile(path,'info.mat'),'tm_json','r_json','url_path','dataset_path','tile_path','img_height','img_width');
+        if(generateComplexLabel)
+            fprintf('Saving label.mat\n');
+            save(fullfile(path,'label.mat'),'label','-v7.3');
+            fprintf('Saving has_label.mat\n');
+            save(fullfile(path,'has_label.mat'),'has_label','-v7.3');
+        end
+        if(generateSimpleLabel)
+            fprintf('Saving label_simple.mat\n');
+            save(fullfile(path,'label_simple.mat'),'label_simple','-v7.3');
+        end
         fprintf('Done\n');
     catch ME
         fprintf('Error getting data for date %s\n',date{idx});
