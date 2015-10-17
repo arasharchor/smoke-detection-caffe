@@ -69,6 +69,9 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
                     thr = 0;
                     max_peak_width = 100;
                     [pks,locs,~,~] = findpeaks(f,'MinPeakProminence',min_peak_prominence,'MinPeakHeight',min_peak_height,'MinPeakDistance',min_peak_distance,'Threshold',thr,'MaxPeakWidth',max_peak_width);
+                    if(numel(pks)==0)
+                        return;
+                    end
                     intensity = double(median(img2(idx)))/255;
                     pks_thr = [];
                     locs_thr = [];
