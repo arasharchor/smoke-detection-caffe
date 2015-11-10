@@ -3,12 +3,17 @@ addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
 
-t = 7543;
-% t = 6617;
-% t = 10300;
+% t = 6616;
+% t = 5936;
+% t = 4847;
+% t = 9776;
+% t = 7000;
+
+% 2015-05-01
+t = [10772,10772,10772,10772];
 
 % set data source
-date_path = '2015-05-02.timemachine/';
+date_path = '2015-05-01.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -16,7 +21,7 @@ tile_path = '1/2/2.mp4';
 target_dir = 'frames';
 path = fullfile(target_dir,date_path,dataset_path,tile_path);
 data_mat = matfile(fullfile(path,'data.mat'));
-label_mat = matfile(fullfile(path,'label.mat'));
+% label_mat = matfile(fullfile(path,'label.mat'));
 data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
 
 % define mask
@@ -38,7 +43,7 @@ for i=1:numel(t)
     end
     
     % crop an image and detect smoke
-    img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
+%     img_label = label_mat.label(bbox_row,bbox_col,:,t(i));
     span = getTemporalSpan();
     imgs = data_mat.data(bbox_row,bbox_col,:,t(i)-span:span:t(i));
     imgs_fd = imgs(:,:,:,1);
@@ -171,7 +176,7 @@ for i=1:numel(t)
         img_cols = 4;
         img_rows = 2;
         fig_idx = 1;
-                
+             
         I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
         str = '$R_{t}$';
         math = '';
@@ -221,5 +226,117 @@ for i=1:numel(t)
         end
         set(gcf,'PaperPositionMode','auto')
         print(fig,fullfile(print_dir,[num2str(t(i)),'_3']),'-dpng','-r0')  
+    end
+    
+    if(plot_TEX)
+        % visualize images
+        fig = figure(54);
+        img_cols = 4;
+        img_rows = 2;
+        fig_idx = 1;
+        
+        I = img;
+        str = '$I_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = imgs_filtered.imgs_IICD.img_histeq;
+        str = '$I_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
+        str = '$R_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        I = label2rgb(imgs_filtered.TS);
+        str = '$R_{smooth}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_4']),'-dpng','-r0')  
+    end
+  
+    if(plot_TEX)
+        % visualize images
+        fig = figure(55);
+        img_cols = 6;
+        img_rows = 2;
+        fig_idx = 1;
+
+        I = label2rgb(imgs_filtered.TS);
+        str = '$R_{smooth}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_shape);
+        str = 'shape';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+         
+        I = imgs_filtered.imgs_BRF.img_adj;
+        str = '$I_{adj}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_group);
+        str = 'group';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_gray);
+        str = 'grayish';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_size);
+        str = 'size';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = imgs_filtered.HFCD_IICD;
+        str = '$M_{cd} = M_{dog} \;\&\; M_{heq}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_change);
+        str = 'change';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonwhite);
+        str = 'nonwhite';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = mat2gray(imgs_filtered.imgs_BRF.img_bs);
+        str = '$S_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        I = label2rgb(imgs_filtered.imgs_BRF.tex_seg_nonshadow);
+        str = 'nonshadow';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);        
+
+        I = imgs_filtered.BRF;
+        str = '$M_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_5']),'-dpng','-r0')  
     end
 end

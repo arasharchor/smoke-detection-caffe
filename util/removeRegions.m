@@ -7,7 +7,11 @@ function label_clean = removeRegions( label,option,thr1,img,thr2,img2 )
         r = img(:,:,1);
         g = img(:,:,2);
         b = img(:,:,3);
+%         gray = rgb2gray(img);
     end
+%     if(nargin>=6 && size(img2,3)>1)
+%         gray2 = rgb2gray(img2);
+%     end
     for c=1:numel(channel_idx)
         channel = (label==channel_idx(c));
         if(strcmp(option,'noChangeWhiteLabel'))

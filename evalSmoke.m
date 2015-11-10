@@ -3,8 +3,8 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 use_simple_label = true;
-% plot_result = true;
-plot_result = false;
+plot_result = true;
+% plot_result = false;
 smoke_level = 2;
 
 date = getProcessingDates();
@@ -100,13 +100,15 @@ for idx=1:numel(date)
             truth_plot = truth;
             if(use_simple_label)
                 truth(truth<smoke_level) = 0;
+                truth_plot = truth_plot-smoke_level+1;
+                truth_plot(truth_plot<0) = 0;
             end
 
             % compute F-score
             if(use_simple_label)
-                fscore = computeFscore(truth>=smoke_level,predict);
+                [fscore,predict_merged] = computeFscore(truth>=smoke_level,predict);
             else
-                fscore = computeFscore(truth,predict);
+                [fscore,predict_merged] = computeFscore(truth,predict);
             end
             fscore.date = date{idx}
 
@@ -138,7 +140,7 @@ for idx=1:numel(date)
             fig_idx = fig_idx + 1;
 
             subplot(img_rows,img_cols,fig_idx)
-            bar(predict,'b')
+            bar(predict_merged,'b')
             xlim([sunrise_frame sunset_frame])
             set(gca,'YTickLabel',[]);
             set(gca,'YTick',[]);
