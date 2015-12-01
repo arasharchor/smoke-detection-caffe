@@ -2,18 +2,49 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
+plot_HFCD = false;
+plot_IICD = false;
+plot_TEX = false;
+plot_SEG = false;
+plot_BRF = false;
+plot_SUMMARY = true;
 
 % t = 6616;
-% t = 5936;
-% t = 4847;
-% t = 9776;
-% t = 7000;
 
 % 2015-05-01
-t = [10772,10772,10772,10772];
+% t = [10772,10772,10772,10772];
+
+% 2015-05-27
+t = [2035,2035,2035,2035,2035];
+
+% true positive
+% 2015-05-02
+% t = 4847;
+% t = 5936;
+% t = 6617;
+% t = 9776;
+
+% true negative
+% 2015-05-02
+% t = 7000;
+
+% false positive
+% 2015-05-02
+% t = [5969,5969,5969];
+% 2015-05-28
+% t = [7171,7171,7171,7171,7171];
+% 2015-09-09
+% t = 11940;
+
+% false negative
+% 2015-05-02
+% t = 12566;
+% t = [6613,6613,6613];
+% 2015-01-26
+% t = 6446;
 
 % set data source
-date_path = '2015-05-01.timemachine/';
+date_path = '2015-05-27.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -53,9 +84,6 @@ for i=1:numel(t)
     [val,imgs_filtered] = detectSmoke3(img,img_bg,filter_bank,imgs_fd);
     toc
     
-    plot_HFCD = true;
-    plot_IICD = true;
-    plot_TEX = true;
     option = 'largeFont';
     
     if(plot_HFCD)
@@ -122,12 +150,12 @@ for i=1:numel(t)
         fig_idx = 1;
 
         I = imgs_filtered.imgs_IICD.img_histeq;
-        str = '$I_{heq}$';
+        str = '$I_{heq} = \mathrm{CLAHE}(I_t)$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_bg_histeq;
-        str = '$B_{heq}$';
+        str = '$B_{heq} = \mathrm{CLAHE}(B_t)$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
@@ -142,7 +170,7 @@ for i=1:numel(t)
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.imgs_IICD.img_last_histeq;
-        str = '$I''_{heq}$';
+        str = '$I''_{heq} = \mathrm{CLAHE}(I_{t-2})$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
@@ -157,7 +185,7 @@ for i=1:numel(t)
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
         I = imgs_filtered.IICD;
-        str = '$M_{heq}$';
+        str = '$M_{heq} = M_{heq1} \;\&\; M_{heq2}$';
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
 
@@ -228,7 +256,7 @@ for i=1:numel(t)
         print(fig,fullfile(print_dir,[num2str(t(i)),'_3']),'-dpng','-r0')  
     end
     
-    if(plot_TEX)
+    if(plot_SEG)
         % visualize images
         fig = figure(54);
         img_cols = 4;
@@ -264,7 +292,7 @@ for i=1:numel(t)
         print(fig,fullfile(print_dir,[num2str(t(i)),'_4']),'-dpng','-r0')  
     end
   
-    if(plot_TEX)
+    if(plot_BRF)
         % visualize images
         fig = figure(55);
         img_cols = 6;
@@ -331,6 +359,64 @@ for i=1:numel(t)
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
         
+        % print figure
+        print_dir = 'figs';
+        if ~exist(print_dir,'dir')
+            mkdir(print_dir);
+        end
+        set(gcf,'PaperPositionMode','auto')
+        print(fig,fullfile(print_dir,[num2str(t(i)),'_5']),'-dpng','-r0')  
+    end
+    
+    if(plot_SUMMARY)
+        % visualize images
+        fig = figure(55);
+        img_cols = 4;
+        img_rows = 2;
+        fig_idx = 1;
+        
+        I = img;
+        str = '$I_{t}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = img_bg;
+        str = 'Background';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        I = imgs_fd(:,:,:,1);
+        str = '$I_{t-2}$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = imgs_filtered.HFCD_IICD;
+        str = 'Moving Pixels';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);        
+        
+        I = label2rgb(imgs_filtered.imgs_TS.tex_seg);
+        str = 'Segmentation';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+        
+        I = label2rgb(imgs_filtered.TS);
+        str = 'Smoothed Regions';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
+        I = imgs_filtered.BRF;
+        str = 'Prediction';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);        
+
+        img_masked = img;
+        img_masked(repmat(imgs_filtered.BRF==0,1,1,3)) = 0;
+        I = img_masked;
+        str = '$I_{t}(\mathrm{Prediction})$';
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+
         % print figure
         print_dir = 'figs';
         if ~exist(print_dir,'dir')

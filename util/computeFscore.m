@@ -7,8 +7,8 @@ function [fscore,predict] = computeFscore( label_raw,predict_raw )
     [predict_start,predict_end,predict] = mergeSegments(predict_start_raw,predict_end_raw,predict_raw);
 
     % compute true positives and false positives
-    % (FP) the segment is smaller than 720 and no predictons in a segment are true labels
-    % (FP) the segment is larger than 720 and less than 30% of the predictons in a segment are true labels
+    % (FP) the segment is smaller than 240 and no predictons in a segment are true labels
+    % (FP) the segment is larger than 240 and less than 30% of the predictons in a segment are true labels
     TP = 0;
     FP = 0;
     predict_tmp = predict;

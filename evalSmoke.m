@@ -40,13 +40,31 @@ for idx=1:numel(date)
         end
 
         % 2015-05-01 after steam
-        % sunrise_frame = 7900;
+%         sunrise_frame = 7900;
 
         % 2015-05-02 after steam
-        % sunrise_frame = 6800; 
+%         sunrise_frame = 6800; 
 
         % 2015-05-03 after steam
-        % sunrise_frame = 6700;
+%         sunrise_frame = 6700;
+
+        % 2015-05-04 after steam
+%         sunrise_frame = 5750;
+
+        % 2015-05-05 after steam
+%         sunrise_frame = 8360;
+
+        % 2015-05-06 after steam
+%         sunrise_frame = 8140;
+
+        % 2015-05-07 after steam
+%         sunrise_frame = 7550;
+
+        % 2015-05-08 after steam
+%         sunrise_frame = 6500;
+
+        % 2015-05-09 after steam
+%         sunrise_frame = 6020;
 
         % Gaussian smooth the prediction
         load(fullfile(path,'response.mat'));
@@ -101,6 +119,7 @@ for idx=1:numel(date)
             if(use_simple_label)
                 truth(truth<smoke_level) = 0;
                 truth_plot = truth_plot-smoke_level+1;
+                truth_plot(truth_plot>1) = 1;
                 truth_plot(truth_plot<0) = 0;
             end
 
@@ -117,7 +136,7 @@ for idx=1:numel(date)
             fig_idx = 1;
             img_cols = 1;
             if(use_simple_label)
-                img_rows = 3;
+                img_rows = 4;
             else
                 img_rows = 4;
             end
