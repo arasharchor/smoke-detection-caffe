@@ -3,7 +3,7 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 generateComplexLabel = false;
-generateSimpleLabel = false;
+generateSimpleLabel = true;
 
 date = getProcessingDates();
 target_dir = 'frames';

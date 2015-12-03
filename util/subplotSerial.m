@@ -1,10 +1,16 @@
 function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math,option) 
     narginchk(7,8)
 
-    if(nargin==8 && strcmp(option,'largeFont'))
-        font_size = 27;
-        xlabel_offset = 5;
-        vspan = 0.11;
+    if(nargin==8)
+        if(strcmp(option,'largeFont'))
+            font_size = 27;
+            xlabel_offset = 5;
+            vspan = 0.11;
+        elseif(strcmp(option,'smallGraph'))
+            font_size = 27;
+            xlabel_offset = 1;
+            vspan = 0.11;    
+        end
     else
         font_size = 10;
         xlabel_offset = 15;

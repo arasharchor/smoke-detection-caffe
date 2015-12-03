@@ -2,20 +2,20 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 select_box = 0;
-plot_HFCD = false;
+plot_HFCD = true;
 plot_IICD = false;
 plot_TEX = false;
 plot_SEG = false;
 plot_BRF = false;
-plot_SUMMARY = true;
+plot_SUMMARY = false;
 
-% t = 6616;
+t = 6616;
 
 % 2015-05-01
 % t = [10772,10772,10772,10772];
 
 % 2015-05-27
-t = [2035,2035,2035,2035,2035];
+% t = [2035,2035,2035,2035,2035];
 
 % true positive
 % 2015-05-02
@@ -44,7 +44,7 @@ t = [2035,2035,2035,2035,2035];
 % t = 6446;
 
 % set data source
-date_path = '2015-05-27.timemachine/';
+date_path = '2015-05-02.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
