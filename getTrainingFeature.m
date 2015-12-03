@@ -54,10 +54,6 @@ parfor i=idx
     feature_neg(i,:) = f;
 end
 
-% random permute data points
-feature_pos = feature_pos(randperm(size(feature_pos,1)),:);
-feature_neg = feature_neg(randperm(size(feature_neg,1)),:);
-
 feature = struct();
 feature.pos = feature_pos;
 feature.neg = feature_neg;
