@@ -3,8 +3,8 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 use_simple_label = true;
-% plot_result = true;
-plot_result = false;
+plot_result = true;
+% plot_result = false;
 smoke_level = 2;
 
 date = getProcessingDates();

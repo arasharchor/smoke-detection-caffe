@@ -2,7 +2,7 @@
 .DS_Store
 figs/
 caffe/*.h5
-tile.mp4
+*.mp4
 caffe/*.swp
 caffe/*.caffemodel
 caffe/*.solverstate
@@ -56,6 +56,20 @@ frames/**/*
 !frames/2015-11-15.timemachine/
 !frames/2015-11-15.timemachine/**/
 
+!frames/2015-04-13.timemachine/
+!frames/2015-04-13.timemachine/**/
+!frames/2015-05-15.timemachine/
+!frames/2015-05-15.timemachine/**/
+!frames/2015-06-15.timemachine/
+!frames/2015-06-15.timemachine/**/
+!frames/2015-07-26.timemachine/
+!frames/2015-07-26.timemachine/**/
+!frames/2015-08-24.timemachine/
+!frames/2015-08-24.timemachine/**/
+!frames/2015-09-19.timemachine/
+!frames/2015-09-19.timemachine/**/
+!frames/2015-10-19.timemachine/
+!frames/2015-10-19.timemachine/**/
 !frames/2015-11-26.timemachine/
 !frames/2015-11-26.timemachine/**/
 
