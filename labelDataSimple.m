@@ -4,7 +4,7 @@ addpath(genpath('util'));
 show_has_label_only = 0;
 
 % set data source
-date_path = '2015-08-24.timemachine/';
+date_path = '2015-06-15.timemachine/';
 dataset_path = 'crf26-12fps-1424x800/';
 tile_path = '1/2/2.mp4';
 
@@ -23,8 +23,8 @@ label_simple_idx = find(label_simple>=show_has_label_only);
 % label images
 global t
 global toggle
-% t = sunrise_frame;
-t = 13000;
+t = sunrise_frame;
+% t = 13000;
 toggle = -1;
 fig = figure(1);
 set(fig,'KeyPressFcn',{@keyDownListenerLabelDataSimple,r_json.frames,data_mat,label_simple_mat,label_simple_idx,show_has_label_only});
