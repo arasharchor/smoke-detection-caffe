@@ -5,6 +5,8 @@ addpath(genpath('util'));
 
 target_dir = 'frames';
 load(fullfile(target_dir,'data_train.mat'));
+
+% feature information
 dimension = 30;
 
 % create workers

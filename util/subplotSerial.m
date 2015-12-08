@@ -9,7 +9,11 @@ function fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,header,str,math,opt
         elseif(strcmp(option,'smallGraph'))
             font_size = 27;
             xlabel_offset = 1;
-            vspan = 0.11;    
+            vspan = 0.11;
+        elseif(strcmp(option,'smallGraph2'))
+            font_size = 12;
+            xlabel_offset = 9;
+            vspan = 0.07;
         end
     else
         font_size = 10;
