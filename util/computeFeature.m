@@ -19,12 +19,13 @@ function feature = computeFeature( img,img_bg,img_pre,img_pre2 )
     xi_fd2 = cell(3,1);
     for j=1:3
         [f_bs{j},xi_bs{j}] = ksdensity(img_bs(:),'bandwidth',0.01,'npoints',100);
-        stat_bs = describeDistribution(f_bs{j},xi_bs{j});
         [f_fd{j},xi_fd{j}] = ksdensity(img_fd(:),'bandwidth',0.01,'npoints',100);
-        stat_fd = describeDistribution(f_fd{j},xi_fd{j});
         [f_fd2{j},xi_fd2{j}] = ksdensity(img_fd2(:),'bandwidth',0.01,'npoints',100);
+        stat_bs = describeDistribution(f_bs{j},xi_bs{j});
+        stat_fd = describeDistribution(f_fd{j},xi_fd{j});
         stat_fd2 = describeDistribution(f_fd2{j},xi_fd2{j});
     end
+    
     feature(1,ptr:ptr+numel(stat_bs)*3-1) = [stat_bs,stat_fd,stat_fd2];
     
     ptr = ptr + numel(stat_bs)*3;

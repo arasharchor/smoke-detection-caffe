@@ -58,9 +58,6 @@ num_row_tiles = 4;
 num_col_tiles = 4;
 num_tiles = num_row_tiles*num_col_tiles;
 
-% seperate the bbox into 4x4 tiles
-[tile_col,tile_row] = tileBbox(bbox_col,bbox_row,num_row_tiles,num_col_tiles);
-
 % feature information
 dimension = 30;
 
@@ -77,22 +74,25 @@ for idx=1:numel(t)
     data_mat = matfile(fullfile(path,'data.mat'));
     data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
     
-    % get image data and compute features
+    % get image data
     feature = ones(num_tiles,dimension);
-    imgs = data_mat.data(:,:,:,current_frame-2:current_frame);
-    img_bg = data_median_mat.median(:,:,:,current_frame);
-    tic
+    img = data_mat.data(bbox_row,bbox_col,:,current_frame);
+    img_pre = data_mat.data(bbox_row,bbox_col,:,current_frame-1);
+    img_pre2 = data_mat.data(bbox_row,bbox_col,:,current_frame-2);
+    img_bg = data_median_mat.median(bbox_row,bbox_col,:,current_frame);
+    
+    % seperate image into tiles
+    img = img2Tiles(img,num_row_tiles,num_col_tiles);
+    img_pre = img2Tiles(img_pre,num_row_tiles,num_col_tiles);
+    img_pre2 = img2Tiles(img_pre2,num_row_tiles,num_col_tiles);
+    img_bg = img2Tiles(img_bg,num_row_tiles,num_col_tiles);
+    
+    % compute features
     for k=1:num_tiles
-        [i,j] = ind2sub([num_row_tiles,num_col_tiles],k);
-        img_tile = imgs(tile_row{i},tile_col{j},:,end);
-        img_pre_tile = imgs(tile_row{i},tile_col{j},:,end-1);
-        img_pre2_tile = imgs(tile_row{i},tile_col{j},:,end-2);
-        img_bg_tile = img_bg(tile_row{i},tile_col{j},:);
-        f = computeFeature(img_tile,img_bg_tile,img_pre_tile,img_pre2_tile);
+        f = computeFeature(img{k},img_bg{k},img_pre{k},img_pre2{k});
         f = normalizeFeature(f,feature_max,feature_min);
         feature(k,:) = f;
     end
-    toc
     
     % classification
     label_test = ones(num_tiles,1);
@@ -107,10 +107,7 @@ for idx=1:numel(t)
     
     order = [1,2,3,4;5,6,7,8;9,10,11,12;13,14,15,16];
     for k=1:numel(order)
-        [i,j] = ind2sub([num_row_tiles,num_col_tiles],order(k));
-        img_tile = imgs(tile_row{i},tile_col{j},:,end);
-        
-        I = img_tile;
+        I = img{order(k)};
         str = num2str(label_predict(order(k))==1);
         math = '';
         fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
