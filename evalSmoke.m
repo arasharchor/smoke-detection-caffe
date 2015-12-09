@@ -3,8 +3,8 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 use_simple_label = true;
-plot_result = true;
-% plot_result = false;
+% plot_result = true;
+plot_result = false;
 smoke_level = 2;
 
 date = getProcessingDates();
@@ -23,7 +23,7 @@ smoke = [];
 
 % parameters
 sigma = 0.5;
-max_response = 300;
+max_response = inf;
 
 for idx=1:numel(date)
     try
