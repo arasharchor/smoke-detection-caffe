@@ -7,7 +7,7 @@ target_dir = 'frames';
 load(fullfile(target_dir,'data_train.mat'));
 
 % feature information
-dimension = 30;
+[~,dimension] = computeFeature();
 
 % create workers
 try
@@ -21,8 +21,8 @@ num_workers = 3;
 if(local_cluster.NumWorkers > num_workers + 1)
     num_workers = local_cluster.NumWorkers;
 end
-if(num_workers>10)
-    num_workers = 10;
+if(num_workers>12)
+    num_workers = 12;
 end
 parpool('local',num_workers);
 

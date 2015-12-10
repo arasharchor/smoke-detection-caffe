@@ -3,14 +3,14 @@ clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
 use_simple_label = true;
-% plot_result = true;
-plot_result = false;
+plot_result = true;
+% plot_result = false;
 smoke_level = 2;
+target_dir = 'frames';
 
 date = getProcessingDates();
 
 % read mask
-target_dir = 'frames';
 fprintf('Loading bbox.mat\n');
 load(fullfile(target_dir,'bbox.mat'));
 

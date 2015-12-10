@@ -1,67 +1,81 @@
-function feature = computeFeature( img,img_bg,img_pre,img_pre2 )
-    plot_graph = false;
+function [feature,dimension] = computeFeature( img,img_bg,img_pre,img_pre2,plot_graph )
+    narginchk(0,5)
+    
+    dimension = 588;
+    
+    if(nargin==0)
+        feature = 0;
+        return;
+    elseif(nargin==4)
+        plot_graph = false;
+    end
 
-    dimension = 30;
     feature = zeros(1,dimension);
     
     ptr = 1;
     
     % compute distribution features
-    img_bs = mat2gray(backgroundSubtraction(img,img_bg,'Normalize'));
-    img_fd = mat2gray(backgroundSubtraction(img,img_pre,'Normalize'));
-    img_fd2 = mat2gray(backgroundSubtraction(img,img_pre2,'Normalize'));
+    img_bs = im2uint8(mat2gray(backgroundSubtraction(img,img_bg,'Normalize')));
+    img_fd = im2uint8(mat2gray(backgroundSubtraction(img,img_pre,'Normalize')));
+    img_fd2 = im2uint8(mat2gray(backgroundSubtraction(img,img_pre2,'Normalize')));
     
     f_bs = cell(3,1);
-    xi_bs = cell(3,1);
     f_fd = cell(3,1);
-    xi_fd = cell(3,1);
     f_fd2 = cell(3,1);
-    xi_fd2 = cell(3,1);
+    x = 1:64;
     for j=1:3
-        [f_bs{j},xi_bs{j}] = ksdensity(img_bs(:),'bandwidth',0.01,'npoints',100);
-        [f_fd{j},xi_fd{j}] = ksdensity(img_fd(:),'bandwidth',0.01,'npoints',100);
-        [f_fd2{j},xi_fd2{j}] = ksdensity(img_fd2(:),'bandwidth',0.01,'npoints',100);
-        stat_bs = describeDistribution(f_bs{j},xi_bs{j});
-        stat_fd = describeDistribution(f_fd{j},xi_fd{j});
-        stat_fd2 = describeDistribution(f_fd2{j},xi_fd2{j});
+        edges = 0:4:256;
+        [f_bs{j},~] = histcounts(img_bs(:,:,j),edges,'Normalization','probability');
+        [f_fd{j},~] = histcounts(img_fd(:,:,j),edges,'Normalization','probability');
+        [f_fd2{j},~] = histcounts(img_fd2(:,:,j),edges,'Normalization','probability');
     end
     
-    feature(1,ptr:ptr+numel(stat_bs)*3-1) = [stat_bs,stat_fd,stat_fd2];
+    feature(1,ptr:ptr+numel(f_bs{1})*9-1) = [f_bs{1},f_bs{2},f_bs{3},f_fd{1},f_fd{2},f_fd{3},f_fd2{1},f_fd2{2},f_fd2{3}];
     
-    ptr = ptr + numel(stat_bs)*3;
+    ptr = ptr + numel(f_bs{1})*9;
     
     if(plot_graph)
+        x_lim = [min(x)-1,max(x)+1];
         % visualize distributions
         figure(99);
         img_cols = 3;
         img_rows = 3;
 
         subplot(img_rows,img_cols,1);
-        plot(xi_bs{1},f_bs{1})
-
+        bar(x,f_bs{1})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,2);
-        plot(xi_bs{2},f_bs{2})
-
+        bar(x,f_bs{2})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,3);
-        plot(xi_bs{3},f_bs{3})
-
+        bar(x,f_bs{3})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,4);
-        plot(xi_fd{1},f_fd{1})
-
+        bar(x,f_fd{1})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,5);
-        plot(xi_fd{2},f_fd{2})
-
+        bar(x,f_fd{2})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,6);
-        plot(xi_fd{3},f_fd{3})
-
+        bar(x,f_fd{3})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,7);
-        plot(xi_fd2{1},f_fd2{1})
-
+        bar(x,f_fd2{1})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,8);
-        plot(xi_fd2{2},f_fd2{2})
-
+        bar(x,f_fd2{2})
+        xlim(x_lim)
+        
         subplot(img_rows,img_cols,9);
-        plot(xi_fd2{3},f_fd2{3})
+        bar(x,f_fd2{3})
+        xlim(x_lim)
     end
     
     % compute image features
@@ -82,7 +96,7 @@ function feature = computeFeature( img,img_bg,img_pre,img_pre2 )
         squeeze(sum(sum(img_pre_DoG)))',...
         squeeze(sum(sum(img_pre2_DoG)))'...
         ];
-    
+
     if(plot_graph)
         % visualize images
         figure(100);

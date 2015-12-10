@@ -1,0 +1,4 @@
+getTrainingData
+batchTrainingFeature
+trainSmokeClassifier
+% exit
