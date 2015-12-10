@@ -78,8 +78,8 @@ if(output_label)
     if(local_cluster.NumWorkers > num_workers + 1)
         num_workers = local_cluster.NumWorkers;
     end
-    if(num_workers>3)
-        num_workers = 3;
+    if(num_workers>12)
+        num_workers = 12;
     end
     parpool('local',num_workers);
     
@@ -94,7 +94,7 @@ if(output_label)
     label_neg_bg = cell(numel(date),1);
 
     % process dates
-    parfor idx = 1:numel(date)
+    for idx = 1:numel(date)
         % set data source
         date_path = [date{idx},'.timemachine/'];
         % read frames
@@ -110,8 +110,9 @@ if(output_label)
         img_pos_pre = cell(cell_size,1);
         img_pos_pre2 = cell(cell_size,1);
         % construct positive tiles
-        for k = 1:size(label_pos_idx{idx},1)
+        parfor k = 1:size(label_pos_idx{idx},1)
             frame_num = label_pos_idx{idx}{k,1};
+            fprintf('Process pos frame %d of date %s\n',frame_num,date{idx});
             tile_idx = label_pos_idx{idx}{k,2};
             tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
             tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);
@@ -144,8 +145,9 @@ if(output_label)
         img_neg_pre = cell(cell_size,1);
         img_neg_pre2 = cell(cell_size,1);
         % construct negtive tiles
-        for k = 1:size(label_neg_idx{idx},1)
+        parfor k = 1:size(label_neg_idx{idx},1)
             frame_num = label_neg_idx{idx}{k,1};
+            fprintf('Process neg frame %d of date %s\n',frame_num,date{idx});
             tile_idx = label_neg_idx{idx}{k,2};
             tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
             tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);

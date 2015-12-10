@@ -21,7 +21,7 @@ num_col_tiles = 4;
 num_tiles = num_row_tiles*num_col_tiles;
 
 % feature information
-dimension = 30;
+[~,dimension] = computeFeature();
 
 % create workers
 try
