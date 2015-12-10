@@ -1,4 +1,4 @@
-getTrainingData
-batchTrainingFeature
-trainSmokeClassifier
-% exit
+batchTrainingData
+% batchTrainingFeature
+% trainSmokeClassifier
+exit
