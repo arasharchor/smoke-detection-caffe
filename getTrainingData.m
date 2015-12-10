@@ -21,7 +21,7 @@ load(fullfile(target_dir,'bbox.mat'));
 num_row_tiles = 4;
 num_col_tiles = 4;
 num_tiles = num_row_tiles*num_col_tiles;
-[tile_col,tile_row] = tileBbox(bbox_col,bbox_row,num_row_tiles,num_col_tiles);
+[tile_col,tile_row,col_size,row_size] = tileBbox(bbox_col,bbox_row,num_row_tiles,num_col_tiles);
 
 % find positive and negative label idx
 num_pos_labels = 0;
