@@ -1,3 +1,4 @@
+tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
@@ -77,8 +78,8 @@ if(output_label)
     if(local_cluster.NumWorkers > num_workers + 1)
         num_workers = local_cluster.NumWorkers;
     end
-    if(num_workers>9)
-        num_workers = 9;
+    if(num_workers>3)
+        num_workers = 3;
     end
     parpool('local',num_workers);
     
@@ -99,12 +100,8 @@ if(output_label)
         % read frames
         fprintf('Read images of date %s\n',date{idx});
         path = fullfile(target_dir,date_path,dataset_path,tile_path);
-        data = load(fullfile(path,'data.mat'));
-        data_median = load(fullfile(path,'data_median_60.mat'));
-        % crop images
-        fprintf('Crop images of date %s\n',date{idx});
-        data = data.data(bbox_row,bbox_col,:,:);
-        data_median = data_median.median(bbox_row,bbox_col,:,:);
+        data_mat = matfile(fullfile(path,'data.mat'));
+        data_median_mat = matfile(fullfile(path,'data_median_60.mat'));
         % initialize positive tiles
         fprintf('Compute pos images of date %s\n',date{idx});
         cell_size = size(label_pos_idx{idx},1);
@@ -116,10 +113,10 @@ if(output_label)
         for k = 1:size(label_pos_idx{idx},1)
             frame_num = label_pos_idx{idx}{k,1};
             tile_idx = label_pos_idx{idx}{k,2};
-            tile = img2Tiles(data(:,:,:,frame_num),num_row_tiles,num_col_tiles);
-            tile_pre = img2Tiles(data(:,:,:,frame_num-1),num_row_tiles,num_col_tiles);
-            tile_pre2 = img2Tiles(data(:,:,:,frame_num-2),num_row_tiles,num_col_tiles);
-            tile_bg = img2Tiles(data_median(:,:,:,frame_num),num_row_tiles,num_col_tiles);
+            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
+            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);
+            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2),num_row_tiles,num_col_tiles);
+            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
             img_pos{k} = tile(tile_idx);
             img_pos_pre{k} = tile_pre(tile_idx);
             img_pos_pre2{k} = tile_pre2(tile_idx);
@@ -150,10 +147,10 @@ if(output_label)
         for k = 1:size(label_neg_idx{idx},1)
             frame_num = label_neg_idx{idx}{k,1};
             tile_idx = label_neg_idx{idx}{k,2};
-            tile = img2Tiles(data(:,:,:,frame_num),num_row_tiles,num_col_tiles);
-            tile_pre = img2Tiles(data(:,:,:,frame_num-1),num_row_tiles,num_col_tiles);
-            tile_pre2 = img2Tiles(data(:,:,:,frame_num-2),num_row_tiles,num_col_tiles);
-            tile_bg = img2Tiles(data_median(:,:,:,frame_num),num_row_tiles,num_col_tiles);
+            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
+            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);
+            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2),num_row_tiles,num_col_tiles);
+            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
             img_neg{k} = tile(tile_idx);
             img_neg_pre{k} = tile_pre(tile_idx);
             img_neg_pre2{k} = tile_pre2(tile_idx);
@@ -177,6 +174,7 @@ if(output_label)
     end
 
     data_train = struct();
+    data_train.date = date';
     data_train.label_pos = label_pos;
     data_train.label_pos_bg = label_pos_bg;
     data_train.label_pos_pre = label_pos_pre;
@@ -193,3 +191,4 @@ if(output_label)
     delete(gcp('nocreate'));
     fprintf('Done\n');
 end
+toc
