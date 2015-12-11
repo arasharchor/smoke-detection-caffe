@@ -2,6 +2,7 @@ tic
 clear all;
 addpath(genpath('libs'));
 addpath(genpath('util'));
+warning('off','all')
 
 date = {
     '2015-05-01','2015-05-02','2015-05-03',...
