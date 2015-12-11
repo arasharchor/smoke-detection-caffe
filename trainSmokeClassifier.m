@@ -13,7 +13,7 @@ do_cross_validation = false;
 
 % cross validation
 if(do_cross_validation)
-    fprintf('Cross Validation');
+    fprintf('Cross Validation\n');
     num_folds = 5;
     num_pos = size(feature.pos,1);
     num_neg = size(feature.neg,1);
