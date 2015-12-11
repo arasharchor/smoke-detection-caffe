@@ -97,13 +97,27 @@ for idx=1:numel(t)
     label_predict = svmpredict(label_test,feature,smoke_classifier);
     
     % visualization
-    fig = figure(999);
+    figure(999);
     img_cols = 4;
     img_rows = 4;
     fig_idx = 1;
     option = 'smallGraph2';
     
     order = [1,2,3,4;5,6,7,8;9,10,11,12;13,14,15,16];
+    for k=1:numel(order)
+        I = img{order(k)};
+        str = num2str(label_predict(order(k))==1);
+        math = '';
+        fig_idx = subplotSerial(I,img_rows,img_cols,fig_idx,'',str,math,option);
+    end
+    
+    figure(1000);
+    img_cols = 3;
+    img_rows = 3;
+    fig_idx = 1;
+    option = 'smallGraph2';
+    
+    order = [17,18,19;20,21,22;23,24,25];
     for k=1:numel(order)
         I = img{order(k)};
         str = num2str(label_predict(order(k))==1);
