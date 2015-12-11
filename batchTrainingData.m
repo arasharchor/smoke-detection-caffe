@@ -18,11 +18,8 @@ tile_path = '1/2/2.mp4';
 fprintf('Loading bbox.mat\n');
 load(fullfile(target_dir,'bbox.mat'));
 
-% seperate the bbox into 4x4 tiles
-num_row_tiles = 4;
-num_col_tiles = 4;
-num_tiles = num_row_tiles*num_col_tiles;
-[tile_col,tile_row,col_size,row_size] = tileBbox(bbox_col,bbox_row,num_row_tiles,num_col_tiles);
+% tile information
+[~,num_tiles] = img2Tiles();
 
 % find positive and negative label idx
 label_pos_idx = cell(numel(date),1);
@@ -44,9 +41,8 @@ for idx=1:numel(date)
     true_label_idx = find(label_simple>1);
     num_true_label_idx = numel(true_label_idx);
     for i=1:num_true_label_idx
-        tile_predict = mat2cell(label_predict(:,:,1,true_label_idx(i)),[31,31,31,31],[33,33,33,33]);
-        is_smoke_tile = cellfun(@findSmokeTile,tile_predict,'UniformOutput',false);
-        is_smoke_tile = cell2mat(is_smoke_tile);
+        tile_predict = img2Tiles(label_predict(:,:,1,true_label_idx(i)));
+        is_smoke_tile = cell2mat(cellfun(@findSmokeTile,tile_predict,'UniformOutput',false));
         smoke_tiles = find(is_smoke_tile==1);
         if(numel(smoke_tiles)>0)
             tile_pos_count(idx) = tile_pos_count(idx) + numel(smoke_tiles);
@@ -114,10 +110,10 @@ if(output_label)
             frame_num = label_pos_idx{idx}{k,1};
             fprintf('Process pos frame %d of date %s\n',frame_num,date{idx});
             tile_idx = label_pos_idx{idx}{k,2};
-            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
-            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);
-            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2),num_row_tiles,num_col_tiles);
-            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
+            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num));
+            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1));
+            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2));
+            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num));
             img_pos{k} = tile(tile_idx);
             img_pos_pre{k} = tile_pre(tile_idx);
             img_pos_pre2{k} = tile_pre2(tile_idx);
@@ -149,10 +145,10 @@ if(output_label)
             frame_num = label_neg_idx{idx}{k,1};
             fprintf('Process neg frame %d of date %s\n',frame_num,date{idx});
             tile_idx = label_neg_idx{idx}{k,2};
-            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
-            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1),num_row_tiles,num_col_tiles);
-            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2),num_row_tiles,num_col_tiles);
-            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num),num_row_tiles,num_col_tiles);
+            tile = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num));
+            tile_pre = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-1));
+            tile_pre2 = img2Tiles(data_mat.data(bbox_row,bbox_col,:,frame_num-2));
+            tile_bg = img2Tiles(data_median_mat.median(bbox_row,bbox_col,:,frame_num));
             img_neg{k} = tile(tile_idx);
             img_neg_pre{k} = tile_pre(tile_idx);
             img_neg_pre2{k} = tile_pre2(tile_idx);

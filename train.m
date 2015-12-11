@@ -1,4 +1,5 @@
 batchTrainingData
-% batchTrainingFeature
-% trainSmokeClassifier
+batchTrainingFeature
+trainSmokeClassifier
+batchSmokeClassification
 exit

@@ -1,5 +1,6 @@
-function [feature,dimension] = computeFeature( img,img_bg,img_pre,img_pre2,plot_graph )
+function [ feature,dimension ] = computeFeature( img,img_bg,img_pre,img_pre2,plot_graph )
     narginchk(0,5)
+    nargoutchk(1,2)
     
     dimension = 588;
     
