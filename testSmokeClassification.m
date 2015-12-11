@@ -54,12 +54,10 @@ fprintf('Loading bbox.mat\n');
 load(fullfile(target_dir,'bbox.mat'));
 
 % tile information
-num_row_tiles = 4;
-num_col_tiles = 4;
-num_tiles = num_row_tiles*num_col_tiles;
+[~,num_tiles] = img2Tiles();
 
 % feature information
-dimension = 30;
+[~,dimension] = computeFeature();
 
 for idx=1:numel(t)
     current_frame = t(idx);
@@ -82,10 +80,10 @@ for idx=1:numel(t)
     img_bg = data_median_mat.median(bbox_row,bbox_col,:,current_frame);
     
     % seperate image into tiles
-    img = img2Tiles(img,num_row_tiles,num_col_tiles);
-    img_pre = img2Tiles(img_pre,num_row_tiles,num_col_tiles);
-    img_pre2 = img2Tiles(img_pre2,num_row_tiles,num_col_tiles);
-    img_bg = img2Tiles(img_bg,num_row_tiles,num_col_tiles);
+    img = img2Tiles(img);
+    img_pre = img2Tiles(img_pre);
+    img_pre2 = img2Tiles(img_pre2);
+    img_bg = img2Tiles(img_bg);
     
     % compute features
     for k=1:num_tiles
