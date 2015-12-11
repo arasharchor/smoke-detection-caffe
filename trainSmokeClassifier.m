@@ -37,7 +37,8 @@ if(do_cross_validation)
         % scale testing data to range [0,1]
         feature_test = normalizeFeature(feature_test,feature_max,feature_min);
         % train a SVM
-        model = svmtrain(label_train,feature_train,'-s 0 -t 2 -c 1 -g 0.07');
+%         model = svmtrain(label_train,feature_train,'-s 0 -t 2 -c 1 -g 0.07');
+        model = svmtrain(label_train,feature_train,'-s 0 -t 0 -c 1');
         % compute testing accuracy
         [label_predict,accuracy,decision_values] = svmpredict(label_test,feature_test,model);
         accuracy_all(i) = accuracy(1);

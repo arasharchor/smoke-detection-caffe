@@ -10,7 +10,7 @@ date = {
     '2015-04-02','2015-05-28','2015-06-11','2015-07-08','2015-08-13','2015-09-09','2015-10-05','2015-11-15',...
     '2015-04-13','2015-05-15','2015-06-15','2015-07-26','2015-08-24','2015-09-19','2015-10-19','2015-11-26'};
 
-output_label = true;
+output_label = false;
 
 % read mask
 target_dir = 'frames';
@@ -55,7 +55,7 @@ for idx=1:numel(date)
     false_label_idx(false_label_idx<sunrise_frame) = [];
     false_label_idx(false_label_idx>sunset_frame) = [];
     num_false_label_idx = numel(false_label_idx);
-    step = round(num_false_label_idx/num_true_label_idx*7);
+    step = round(num_false_label_idx/num_true_label_idx*5);
     for i=1:step:num_false_label_idx
         tile_neg_count(idx) = tile_neg_count(idx) + num_tiles;
         label_neg_idx{idx}(end+1,:) = {false_label_idx(i),1:num_tiles};
